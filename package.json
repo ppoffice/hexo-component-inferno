@@ -1,0 +1,39 @@
+{
+  "name": "hexo-component-inferno",
+  "version": "0.0.1",
+  "description": "A collection of Inferno.js layout components and utility scripts for Hexo",
+  "main": "index.js",
+  "repository": "https://github.com/ppoffice/hexo-component-inferno",
+  "author": "ppoffice <zrp1994@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "clean": "rm -rf lib"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "files": [
+    "lib/"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "babel-plugin-inferno": "^6.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-hexo": "^4.1.0",
+    "eslint-plugin-json": "^2.0.1",
+    "eslint-plugin-react": "^7.18.0"
+  },
+  "dependencies": {
+    "ajv": "^6.10.2",
+    "deepmerge": "^4.2.2",
+    "hexo-util": "^1.8.1",
+    "inferno": "^7.3.3",
+    "inferno-create-element": "^7.3.3",
+    "js-yaml": "^3.13.1",
+    "moment": "^2.24.0",
+    "semver": "^7.1.1"
+  }
+}
