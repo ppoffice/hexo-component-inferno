@@ -1,8 +1,8 @@
 /**
  * A utility function for creating classnames from an classname-boolean map.
- * 
+ *
  * @param {object} classname classname-boolean map
- * 
+ *
  * @returns classname string
  */
 module.exports = function(classname) {
