@@ -1,36 +1,5 @@
 const path = require('path');
-
-class Version {
-    constructor(version) {
-        const ver = version.split('.').map(i => parseInt(i, 10));
-        if (ver.length !== 3) {
-            throw new Error('Malformed version number ' + version);
-        }
-        this.major = ver[0];
-        this.minor = ver[1];
-        this.patch = ver[2];
-    }
-
-    toString() {
-        return `${this.major}.${this.minor}.${this.patch}`;
-    }
-}
-
-Version.compare = function(a, b) {
-    if (!(a instanceof Version) || !(b instanceof Version)) {
-        throw new Error('Cannot compare non-Versions');
-    }
-    if (a.major !== b.major) {
-        return a.major - b.major;
-    }
-    if (a.minor !== b.minor) {
-        return a.minor - b.minor;
-    }
-    if (a.patch !== b.patch) {
-        return a.patch - b.patch;
-    }
-    return 0;
-};
+const semver = require('semver');
 
 class Migration {
 
@@ -39,16 +8,16 @@ class Migration {
      * @param {string} head File name of the previous migration
      */
     constructor(version, head) {
-        this.version = new Version(version);
         this.head = head;
+        this.version = version;
     }
 
-    doMigrate(config) {
+    upgrade(config) {
         throw new Error('Not implemented!');
     }
 
     migrate(config) {
-        const result = this.doMigrate(config);
+        const result = this.upgrade(config);
         result.version = this.version.toString();
         return result;
     }
@@ -66,19 +35,15 @@ class Migrator {
             if (!(migration instanceof Migration)) {
                 throw new Error(`Migration ${head} is not a Migration class.`);
             }
+            if (!semver.valid(migration.version)) {
+                throw new Error(`${migration.version} is not a valid version in ${head}`);
+            }
             this.versions.push(migration.version);
             this.migrations[migration.version.toString()] = migration;
             head = migration.head;
         }
 
-        this.versions.sort(Version.compare);
-    }
-
-    isOudated(version) {
-        if (!this.versions.length) {
-            return false;
-        }
-        return Version.compare(new Version(version), this.getLatestVersion()) < 0;
+        this.versions.sort(semver.compare);
     }
 
     getLatestVersion() {
@@ -88,13 +53,17 @@ class Migrator {
         return this.versions[this.versions.length - 1];
     }
 
+    isOudated(version) {
+        return this.getLatestVersion() && semver.lt(version, this.getLatestVersion());
+    }
+
     migrate(config, toVersion = null, callback = null) {
-        const fVer = new Version(config.version);
-        const tVer = toVersion ? new Version(toVersion) : this.getLatestVersion();
+        const fVer = config.version;
+        const tVer = toVersion || this.getLatestVersion();
         // find all migrations whose version is larger than fromVer, smaller or equal to toVer
         // and run migrations on the config one by one
-        return this.versions.filter(ver => Version.compare(ver, fVer) > 0 && Version.compare(ver, tVer) <= 0)
-            .sort(Version.compare)
+        return this.versions.filter(ver => semver.gt(ver, fVer) && !semver.gt(ver, tVer))
+            .sort(semver.compare)
             .reduce((cfg, ver) => {
                 const migration = this.migrations[ver.toString()];
                 const result = migration.migrate(cfg);
@@ -106,7 +75,6 @@ class Migrator {
     }
 }
 
-Migrator.Version = Version;
 Migrator.Migration = Migration;
 
 module.exports = Migrator;

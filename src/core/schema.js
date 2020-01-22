@@ -1,7 +1,7 @@
 const Ajv = require('ajv');
 const path = require('path');
 const deepmerge = require('deepmerge');
-const yaml = require('./yaml');
+const yaml = require('../util/yaml');
 
 const MAGIC = 'c823d4d4';
 
@@ -265,6 +265,7 @@ SchemaLoader.load = (rootSchemaDef, resolveDirs = []) => {
     if (!Array.isArray(resolveDirs)) {
         resolveDirs = [resolveDirs];
     }
+    resolveDirs.push(path.join(__dirname, '../schema/'));
 
     const loader = new SchemaLoader();
     loader.addSchema(rootSchemaDef);
