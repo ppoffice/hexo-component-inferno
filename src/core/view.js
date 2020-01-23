@@ -1,30 +1,41 @@
-const fs = require('fs');
 const path = require('path');
 
-module.exports = hexo => {
-    if (typeof hexo.theme_dir !== 'string') {
-        throw new Error('Hexo theme directory is not defined');
+let themeDir = null;
+
+function _resolve(filename) {
+    if (typeof themeDir !== 'string') {
+        throw new Error('Hexo theme directory is not defined. Please use init(hexo) first.');
     }
 
-    function _resolve(filename) {
-        if (path.isAbsolute(filename)) {
-            return require.resolve(filename);
+    if (path.isAbsolute(filename)) {
+        return require.resolve(filename);
+    }
+    const resolved = [
+        path.join(themeDir, '/layout/', filename),
+        path.join(__dirname, '../view/', filename)
+    ].find(filepath => {
+        try {
+            require.resolve(filepath);
+            return true;
+        } catch (e) {
+            return false;
         }
-        const resolved = [
-            path.join(hexo.theme_dir, '/layout/', filename),
-            path.join(__dirname, '../view/', filename)
-        ].find(fs.existsSync);
+    });
 
-        return resolved ? require.resolve(resolved) : require.resolve(filename);
-    }
+    return require.resolve(resolved ? resolved : filename);
+}
 
-    function _require(filename) {
-        return require(_resolve(filename));
-    }
+function _require(filename) {
+    return require(_resolve(filename));
+}
 
-    _require.resolve = _resolve;
+_require.resolve = _resolve;
 
-    return {
-        require: _require
-    };
+function init(hexo) {
+    themeDir = hexo.theme_dir;
+}
+
+module.exports = {
+    init,
+    require: _require
 };

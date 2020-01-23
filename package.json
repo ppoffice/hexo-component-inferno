@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src",
-    "build": "babel src --out-dir lib",
+    "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
     "clean": "rm -rf lib"
   },
   "directories": {
