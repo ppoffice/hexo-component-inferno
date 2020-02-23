@@ -1,3 +1,7 @@
+/**
+ * Configuration migration utility classes.
+ * @module core/migrate
+ */
 const semver = require('semver');
 
 /**
