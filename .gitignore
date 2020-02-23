@@ -120,3 +120,4 @@ yarn.lock
 
 # Built files
 lib/
+doc/

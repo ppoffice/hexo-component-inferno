@@ -7,9 +7,11 @@
   "author": "ppoffice <zrp1994@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint src",
+    "test": "jest",
+    "lint": "eslint src fixture",
+    "docs": "jsdoc src/**/* -d doc",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
-    "clean": "rm -rf lib",
+    "clean": "rm -rf lib doc coverage",
     "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag $PACKAGE_VERSION && git push --tags"
   },
   "directories": {
@@ -25,10 +27,13 @@
     "babel-plugin-inferno": "^6.1.0",
     "eslint": "^6.8.0",
     "eslint-config-hexo": "^4.1.0",
+    "eslint-plugin-jest": "^23.8.0",
     "eslint-plugin-json": "^2.0.1",
     "eslint-plugin-react": "^7.18.0",
     "hexo": "^4.2.0",
-    "hexo-util": "^1.8.1"
+    "hexo-util": "^1.8.1",
+    "jest": "^25.1.0",
+    "jsdoc": "^3.6.3"
   },
   "dependencies": {
     "ajv": "^6.10.2",

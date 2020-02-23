@@ -16,6 +16,9 @@
       "version": "16.0"
     }
   },
+  "env": {
+    "jest/globals": true
+  },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -23,7 +26,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    "react",
+    "jest"
   ],
   "rules": {
     "react/jsx-uses-vars": "error",
