@@ -7,7 +7,7 @@
   "author": "ppoffice <zrp1994@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
+    "test": "jest lib",
     "lint": "eslint src fixture",
     "docs": "jsdoc src/**/* -d doc",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",

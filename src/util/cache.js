@@ -1,3 +1,7 @@
+/**
+ * View cache utility functions.
+ * @module util/cache
+ */
 const crypto = require('crypto');
 const { Component } = require('inferno'); // eslint-disable-line no-unused-vars
 const { createElement } = require('inferno-create-element');
@@ -18,13 +22,17 @@ module.exports = {
      * @param {string}      prefix      Cache ID prefix
      * @param {Function}    transform   Transform the input props to target props and
      *                                  its result is used to compute cache ID
-     * @returns A cache-enabled component.
-     *          It returns cached JSX element when called if cache ID is found.
-     *          It returns null if the props transform result is empty, which means the props
-     *          passed to the createElement() indicates the element does not need to be created.
-     *          Otherwise, it creates a new element and caches it if the transform function is provided.
-     *          The original component can be accessed from the `_type` property of the return value.
-     *          The props transform function can be accessed from the `_transform` property of the return value.
+     * @returns The original component type as defined in the `type` parameter.
+     *          A cachable functional component is attached to the original component type,
+     *          which uses the `transform` function and the component props to calculate the cache ID.
+     *          The cache ID will be used to determine whether the same element with the exact same
+     *          props has been created and cached. If so, the cached element will be returned.
+     *          If the cache ID can be computed, a new element will be created use the
+     *          `createElement` function of the inferno.js, then it will be cached and returned.
+     *          If the `transform`ed props is empty (!transform(props)), the cachable functional component
+     *          will also return null element when `createElement` is called on it.
+     *          The `transform` function will also be attached as the `transform` property of the cachable
+     *          component.
      */
     cacheComponent(type, prefix, transform) {
         const component = props => {
@@ -41,8 +49,8 @@ module.exports = {
             }
             return cache[cacheId];
         };
-        component._type = type;
-        component._transform = transform;
-        return component;
+        component.transform = transform;
+        type.Cachable = component;
+        return type;
     }
 };

@@ -1,5 +1,5 @@
 const deepmerge = require('deepmerge');
-const {Migration} = require('../../src/core/migrate');
+const {Migration} = require('../../lib/core/migrate');
 
 module.exports = class extends Migration {
     constructor() {

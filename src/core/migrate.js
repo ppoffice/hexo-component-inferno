@@ -71,10 +71,10 @@ class Migrator {
         while (head) {
             const migration = new head(); // eslint-disable-line new-cap
             if (!(migration instanceof Migration)) {
-                throw new Error(`Migration ${head.toString()} is not a Migration class.`);
+                throw new Error(`Migration ${migration.constructor.name} is not a Migration class.`);
             }
             if (!semver.valid(migration.version)) {
-                throw new Error(`${migration.version} is not a valid version in ${head.toString()}`);
+                throw new Error(`${migration.version} is not a valid version in ${migration.constructor.name}}`);
             }
             this.versions.push(migration.version);
             this.migrations[migration.version] = migration;
