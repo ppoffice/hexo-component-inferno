@@ -1,5 +1,5 @@
 /**
- * View utility functions.
+ * View resolver and loader.
  * @module core/view
  */
 const path = require('path');
@@ -8,6 +8,7 @@ let themeDir = null;
 
 /**
  * Resolve the full path of a given view file name.
+ * <p>
  * This function will first look up current theme layout directory and then view directory
  * (lib/view/) in this module and return the full path of the first found file
  * under these directories.
@@ -59,6 +60,7 @@ _require.resolve = _resolve;
 
 /**
  * Initialize module global variables, including the theme directory variable.
+ * <p>
  * Must be used before {@link module:core/view.require} or {@link module:core/view.resolve}.
  *
  * @static

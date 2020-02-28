@@ -1,11 +1,12 @@
 /**
- * Configuration migration utility classes.
+ * Configuration migration classes.
  * @module core/migrate
  */
 const semver = require('semver');
 
 /**
  * Configuration migration base class.
+ * <p>
  * Classes that extend this class will specify the target version for the configuration
  * object to upgrade to.
  * The extended classes should have a constructor that takes no parameters exposed.
@@ -14,7 +15,7 @@ class Migration {
 
     /**
      * @param {string} version Target version.
-     * @param {Migration} head Class of the previous migration.
+     * @param {module:core/migrate~Migration} head Class of the previous migration.
      */
     constructor(version, head) {
         this.head = head;
@@ -50,6 +51,7 @@ class Migration {
 
 /**
  * Configuration upgrade utility class.
+ * <p>
  * This class load a series of {@link Migration} classes following the 'head' property of the
  * head migration.
  * It is used to run the migrations that are before or equal to a given target version
@@ -58,7 +60,7 @@ class Migration {
 class Migrator {
 
     /**
-     * @param {Migration} head The latest migration class to be loaded.
+     * @param {module:core/migrate~Migration} head The latest migration class to be loaded.
      */
     constructor(head) {
 

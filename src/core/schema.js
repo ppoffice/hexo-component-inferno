@@ -1,10 +1,22 @@
+/**
+ * Configuration and validation.
+ * @module core/schema
+ */
 const Ajv = require('ajv');
 const path = require('path');
 const deepmerge = require('deepmerge');
 const yaml = require('../util/yaml');
 
+/**
+ * A magic string for reformating comment lines in the YAML output.
+ * @access private
+ */
 const MAGIC = 'c823d4d4';
 
+/**
+ * Default value for the primitive types.
+ * @access private
+ */
 const PRIMITIVE_DEFAULTS = {
     'null': null,
     'boolean': false,
@@ -15,12 +27,39 @@ const PRIMITIVE_DEFAULTS = {
     'object': {}
 };
 
+/**
+ * The default value wrapper class.
+ */
 class DefaultValue {
+
+    /**
+     * @param {any} value The wrapped default value.
+     * @param {string} description A description of the contained value. Used to produce
+     * the comment string.
+     */
     constructor(value, description) {
         this.value = value;
         this.description = description;
     }
 
+    /**
+     * Merge current default value with another default value.
+     * <p>
+     * The <code>description</code> property of the input will always override the description of current
+     * default value if it exists.
+     * If the <code>value</code> properties of the input and current object are both array, the input
+     * <code>value</code> will be concatenated to the current <code>value</code>.
+     * If the <code>value</code> properties of the input and current object are both object, the input
+     * <code>value</code>'s property will override the property of the current
+     * {@link module:core/schema~DefaultValue} <code>value</code> if they have the
+     * same property name.
+     * Otherwise, <code>deepmerge</code> will be used to merge the <code>value</code> property of input
+     * with it of the current object, unless the <code>value</code> does not exist on the input object.
+     *
+     * @param {any} source The input object to be merged with.
+     * @returns {module:core/schema~DefaultValue} The merge operation will modify the wrapped value in
+     * place. <code>this</code> will be returned.
+     */
     merge(source) {
         if ('description' in source && source.description) {
             this.description = source.description;
@@ -41,6 +80,11 @@ class DefaultValue {
         return this;
     }
 
+    /**
+     * Duplicate the current default value.
+     *
+     * @returns {module:core/schema~DefaultValue} A new instance of the current default value.
+     */
     clone() {
         const result = new DefaultValue(this.value, this.description);
         if (result.value instanceof DefaultValue) {
@@ -53,6 +97,17 @@ class DefaultValue {
         return result;
     }
 
+    /**
+     * Create a new array with comments inserted as new elements right before each child element.
+     * <p>
+     * If current wrapped value is an array and some of its elements are instances of
+     * {@link module:core/schema~DefaultValue}, the element's description will be inserted as a new child
+     * right before the element.
+     * The element itself will also be converted into its commented version using the <code>toCommented</code>
+     * method.
+     *
+     * @returns {Array} A new array with comments and the original elements in the commented form.
+     */
     toCommentedArray() {
         return [].concat(...this.value.map(item => {
             if (item instanceof DefaultValue) {
@@ -67,6 +122,13 @@ class DefaultValue {
         }));
     }
 
+    /**
+     * Create a new object with comments inserted as new properties right before every original properties.
+     * <p>
+     * Works similar to {@link module:core/schema~DefaultValue#toCommentedArray}.
+     *
+     * @returns {Object} A new object with comments and the original property values in the commented form.
+     */
     toCommentedObject() {
         if (this.value instanceof DefaultValue) {
             return this.value.toCommented();
@@ -88,6 +150,14 @@ class DefaultValue {
         return result;
     }
 
+    /**
+     * Call {@link module:core/schema~DefaultValue#toCommentedArray} or
+     * {@link module:core/schema~DefaultValue#toCommentedObject} based on the type of the wrapped value.
+     * <p>
+     * If neither applies, directly return the wrapped value.
+     *
+     * @returns {any} The commented object/array, or the original wrapped value.
+     */
     toCommented() {
         if (Array.isArray(this.value)) {
             return this.toCommentedArray();
@@ -97,6 +167,11 @@ class DefaultValue {
         return this.value;
     }
 
+    /**
+     * Create the YAML string with all the comments from current default value.
+     *
+     * @returns {string} The formatted YAML string.
+     */
     toYaml() {
         const regex = new RegExp('^(\\s*)(?:-\\s*\\\')?' + MAGIC + '.*?:\\s*\\\'?(.*?)\\\'*$', 'mg');
         return yaml.stringify(this.toCommented()).replace(regex, '$1# $2');// restore comments
