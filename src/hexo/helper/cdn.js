@@ -90,10 +90,10 @@ module.exports = function(hexo) {
     });
 
     hexo.extend.helper.register('iconcdn', function() {
-        let { iconfont = 'fontawesome' } = typeof this.config.providers === 'object' ? this.config.providers : {};
-        if (iconfont in PROVIDERS.ICON) {
-            iconfont = PROVIDERS.ICON[iconfont];
+        let { iconcdn = 'fontawesome' } = typeof this.config.providers === 'object' ? this.config.providers : {};
+        if (iconcdn in PROVIDERS.ICON) {
+            iconcdn = PROVIDERS.ICON[iconcdn];
         }
-        return iconfont;
+        return iconcdn;
     });
 };
