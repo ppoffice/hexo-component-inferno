@@ -4,12 +4,11 @@
  */
 const Ajv = require('ajv');
 const path = require('path');
-const deepmerge = require('deepmerge');
+// const deepmerge = require('deepmerge');
 const yaml = require('../util/yaml');
 
 /**
  * A magic string for reformating comment lines in the YAML output.
- * @access private
  */
 const MAGIC = 'c823d4d4';
 
@@ -25,6 +24,18 @@ const PRIMITIVE_DEFAULTS = {
     'string': '',
     'array': [],
     'object': {}
+};
+
+const hasOwnProperty = (obj, prop) => {
+    return Object.prototype.hasOwnProperty.call(obj, prop);
+};
+
+const typeOf = value => {
+    return value === undefined
+        ? 'undefined'
+        : Object.prototype.toString.call(value)
+            .replace(/^\[object\s+([a-z]+)\]$/i, '$1')
+            .toLowerCase();
 };
 
 /**
@@ -43,45 +54,9 @@ class DefaultValue {
     }
 
     /**
-     * Merge current default value with another default value.
-     * <p>
-     * The <code>description</code> property of the input will always override the description of current
-     * default value if it exists.
-     * If the <code>value</code> properties of the input and current object are both array, the input
-     * <code>value</code> will be concatenated to the current <code>value</code>.
-     * If the <code>value</code> properties of the input and current object are both object, the input
-     * <code>value</code>'s property will override the property of the current
-     * {@link module:core/schema~DefaultValue} <code>value</code> if they have the
-     * same property name.
-     * Otherwise, <code>deepmerge</code> will be used to merge the <code>value</code> property of input
-     * with it of the current object, unless the <code>value</code> does not exist on the input object.
-     *
-     * @param {any} source The input object to be merged with.
-     * @returns {module:core/schema~DefaultValue} The merge operation will modify the wrapped value in
-     * place. <code>this</code> will be returned.
-     */
-    merge(source) {
-        if ('description' in source && source.description) {
-            this.description = source.description;
-        }
-        if ('value' in source && source.value) {
-            if (this.value instanceof DefaultValue) {
-                this.value.merge(source.value);
-            } else if (Array.isArray(this.value) && Array.isArray(source.value)) {
-                this.value.concat(...source.value);
-            } else if (typeof this.value === 'object' && typeof source.value === 'object') {
-                for (const key in source.value) {
-                    this.value[key] = source.value[key];
-                }
-            } else {
-                this.value = deepmerge(this.value, source.value);
-            }
-        }
-        return this;
-    }
-
-    /**
      * Duplicate the current default value.
+     * <p>
+     * Wrapped value will be shallow copied.
      *
      * @returns {module:core/schema~DefaultValue} A new instance of the current default value.
      */
@@ -89,12 +64,60 @@ class DefaultValue {
         const result = new DefaultValue(this.value, this.description);
         if (result.value instanceof DefaultValue) {
             result.value = result.value.clone();
-        } else if (Array.isArray(result.value)) {
-            result.value = [].concat(...result.value);
-        } else if (typeof result.value === 'object') {
+        } else if (typeOf(result.value) === 'array') {
+            result.value = [].concat(result.value);
+        } else if (typeOf(result.value) === 'object') {
             result.value = Object.assign({}, result.value);
         }
         return result;
+    }
+
+    /**
+     * Unwrap current {module:core/schema~DefaultValue} if its wrapped value is also a
+     * {module:core/schema~DefaultValue}.
+     * <p>
+     * The description will also be replaced with wrapped value description, if exists.
+     */
+    flatten() {
+        if (this.value instanceof DefaultValue) {
+            this.value.flatten();
+            if (hasOwnProperty(this.value, 'description') && this.value.description) {
+                this.description = this.value.description;
+            }
+            this.value = this.value.value;
+        }
+    }
+
+    /**
+     * Merge current default value with another default value.
+     *
+     * @param {module:core/schema~DefaultValue} source The input object to be merged with. Should have the
+     * same wrapped value type as current wrapped default value.
+     */
+    merge(source) {
+        if (hasOwnProperty(source, 'value') && source.value !== null) {
+            this.flatten();
+            if (source.value instanceof DefaultValue) {
+                source = source.clone();
+                source.flatten();
+            }
+            if (typeOf(source.value) === typeOf(this.value)) {
+                if (this.value instanceof DefaultValue) {
+                    this.value.merge(source);
+                } else if (typeOf(this.value) === 'array') {
+                    this.value = this.value.concat(source.value);
+                } else if (typeOf(this.value) === 'object') {
+                    Object.keys(source.value).forEach(key => { this.value[key] = source.value[key]; });
+                } else {
+                    this.value = source.value;
+                }
+            } else if (typeOf(this.value) === 'undefined' || typeOf(this.value) === 'null') {
+                this.value = source.value;
+            }
+        }
+        if (hasOwnProperty(source, 'description') && source.description) {
+            this.description = source.description;
+        }
     }
 
     /**
@@ -111,12 +134,14 @@ class DefaultValue {
     toCommentedArray() {
         return [].concat(...this.value.map(item => {
             if (item instanceof DefaultValue) {
-                if (typeof item.description !== 'string' || !item.description.trim()) {
+                if (typeOf(item.description) !== 'string' || !item.description.trim()) {
                     return [item.toCommented()];
                 }
                 return item.description.split('\n').map((line, i) => {
                     return MAGIC + i + ': ' + line;
                 }).concat(item.toCommented());
+            } else if (typeOf(item) === 'array' || typeOf(item) === 'object') {
+                return new DefaultValue(item).toCommented();
             }
             return [item];
         }));
@@ -137,12 +162,14 @@ class DefaultValue {
         for (const key in this.value) {
             const item = this.value[key];
             if (item instanceof DefaultValue) {
-                if (typeof item.description === 'string' && item.description.trim()) {
+                if (typeOf(item.description) === 'string' && item.description.trim()) {
                     item.description.split('\n').forEach((line, i) => {
                         result[MAGIC + key + i] = line;
                     });
                 }
                 result[key] = item.toCommented();
+            } else if (typeOf(item) === 'array' || typeOf(item) === 'object') {
+                result[key] = new DefaultValue(item).toCommented();
             } else {
                 result[key] = item;
             }
@@ -159,9 +186,9 @@ class DefaultValue {
      * @returns {any} The commented object/array, or the original wrapped value.
      */
     toCommented() {
-        if (Array.isArray(this.value)) {
+        if (typeOf(this.value) === 'array') {
             return this.toCommentedArray();
-        } else if (typeof this.value === 'object' && this.value !== null) {
+        } else if (typeOf(this.value) === 'object') {
             return this.toCommentedObject();
         }
         return this.value;
@@ -375,6 +402,7 @@ SchemaLoader.load = (rootSchemaDef, resolveDirs = []) => {
 };
 
 module.exports = {
+    MAGIC,
     Schema,
     SchemaLoader,
     DefaultValue
