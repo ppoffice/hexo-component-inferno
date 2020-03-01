@@ -4,7 +4,6 @@
  */
 const Ajv = require('ajv');
 const path = require('path');
-// const deepmerge = require('deepmerge');
 const yaml = require('../util/yaml');
 
 /**
@@ -26,16 +25,18 @@ const PRIMITIVE_DEFAULTS = {
     'object': {}
 };
 
-const hasOwnProperty = (obj, prop) => {
-    return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
 const typeOf = value => {
     return value === undefined
         ? 'undefined'
         : Object.prototype.toString.call(value)
             .replace(/^\[object\s+([a-z]+)\]$/i, '$1')
             .toLowerCase();
+};
+
+const hasOwnProperty = (obj, prop) => {
+    return obj === null || typeOf(obj) === 'undefined'
+        ? false
+        : Object.prototype.hasOwnProperty.call(obj, prop);
 };
 
 function traverseObj(obj, targetKey, handler) {
@@ -118,9 +119,7 @@ class DefaultValue {
                 source.flatten();
             }
             if (typeOf(source.value) === typeOf(this.value)) {
-                if (this.value instanceof DefaultValue) {
-                    this.value.merge(source);
-                } else if (typeOf(this.value) === 'array') {
+                if (typeOf(this.value) === 'array') {
                     this.value = this.value.concat(source.value);
                 } else if (typeOf(this.value) === 'object') {
                     Object.keys(source.value).forEach(key => { this.value[key] = source.value[key]; });
@@ -267,30 +266,28 @@ class Schema {
      * array definition.
      */
     getArrayDefaultValue(def) {
-        let value;
         const defaultValue = new DefaultValue(null, def.description);
         // all array elements have the same type, return the default value for that type
         if (typeOf(def.items) === 'object') {
             const items = Object.assign({}, def.items);
             delete items.oneOf;
-            value = this.getDefaultValue(items);
-        }
-        // additionally, if each array element can be in one of the provided types in <code>oneOf</code>
-        if (typeOf(def.items.oneOf) === 'array') {
-            // for each <code>oneOf</code> element, return a {@link module:core/schema~DefaultValue}
-            defaultValue.value = def.items.oneOf.map(one => {
-                if (!(value instanceof DefaultValue)) {
-                    return this.getDefaultValue(one);
+            let value = this.getDefaultValue(items);
+            // additionally, if each array element can be in one of the provided types in <code>oneOf</code>
+            if (typeOf(def.items.oneOf) === 'array') {
+                // for each <code>oneOf</code> element, return a {@link module:core/schema~DefaultValue}
+                defaultValue.value = def.items.oneOf.map(one => {
+                    // if the <code>items</code> definition also exists, merge it with the <code>oneOf</code>
+                    // {@link module:core/schema~DefaultValue}
+                    const clone = value.clone();
+                    clone.merge(this.getDefaultValue(one));
+                    return clone;
+                });
+            } else {
+                if (typeOf(value) !== 'array') {
+                    value = [value];
                 }
-                // if the <code>items</code> definition also exists, merge it with the <code>oneOf</code>
-                // {@link module:core/schema~DefaultValue}
-                return value.clone().merge(this.getDefaultValue(one));
-            });
-        } else {
-            if (typeOf(value) !== 'array') {
-                value = [value];
+                defaultValue.value = value;
             }
-            defaultValue.value = value;
         }
         return defaultValue;
     }
@@ -358,7 +355,9 @@ class Schema {
         }
         // referred default value always get overwritten by its parent default value
         if (hasOwnProperty(def, '$ref') && def.$ref) {
-            defaultValue = this.getReferredDefaultValue(def).merge(defaultValue);
+            const refDefaultValue = this.getReferredDefaultValue(def);
+            refDefaultValue.merge(defaultValue);
+            defaultValue = refDefaultValue;
         }
         return defaultValue;
     }
@@ -376,7 +375,9 @@ class Schema {
         if (!schema) {
             throw new Error(`Schema ${def.$ref} is not loaded`);
         }
-        return this.getDefaultValue(schema.def).merge({ description: def.description });
+        const defaultValue = this.getDefaultValue(schema.def);
+        defaultValue.merge({ description: def.description });
+        return defaultValue;
     }
 
     /**
@@ -406,6 +407,8 @@ class Schema {
         if (hasOwnProperty(def, '$ref') && def.$ref) {
             return this.getReferredDefaultValue(def);
         }
+        throw new Error('The schema definition must have at least one of the following fields defined:\n'
+            + 'const, default, examples, type, $ref');
     }
 }
 
@@ -483,9 +486,6 @@ SchemaLoader.load = (rootSchemaDef, resolveDirs = []) => {
     loader.addSchema(rootSchemaDef);
 
     function handler($ref) {
-        if (typeOf($ref) !== 'string') {
-            throw new Error('Invalid schema reference id: ' + JSON.stringify($ref));
-        }
         if (loader.getSchema($ref)) {
             return;
         }
