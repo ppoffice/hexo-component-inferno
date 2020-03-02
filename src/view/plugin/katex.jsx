@@ -20,7 +20,7 @@ class KaTeX extends Component {
     }
 }
 
-module.exports = cacheComponent(KaTeX, 'plugin.katex', props => {
+KaTeX.Cacheable = cacheComponent(KaTeX, 'plugin.katex', props => {
     const { head, helper } = props;
     if (head) {
         return null;
@@ -31,3 +31,5 @@ module.exports = cacheComponent(KaTeX, 'plugin.katex', props => {
         autoRenderUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/auto-render.min.js')
     };
 });
+
+module.exports = KaTeX;

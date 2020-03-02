@@ -26,7 +26,7 @@ class Paypal extends Component {
     }
 }
 
-module.exports = cacheComponent(Paypal, 'donate.paypal', props => {
+Paypal.Cacheable = cacheComponent(Paypal, 'donate.paypal', props => {
     const { donate, helper } = props;
 
     return {
@@ -35,3 +35,5 @@ module.exports = cacheComponent(Paypal, 'donate.paypal', props => {
         title: helper.__('donate.' + donate.type)
     };
 });
+
+module.exports = Paypal;

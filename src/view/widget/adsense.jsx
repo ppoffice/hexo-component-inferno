@@ -29,7 +29,7 @@ class AdSense extends Component {
     }
 }
 
-module.exports = cacheComponent(AdSense, 'widget.adsense', props => {
+AdSense.Cacheable = cacheComponent(AdSense, 'widget.adsense', props => {
     const { widget, helper } = props;
     const { client_id, slot_id } = widget;
 
@@ -39,3 +39,5 @@ module.exports = cacheComponent(AdSense, 'widget.adsense', props => {
         slotId: slot_id
     };
 });
+
+module.exports = AdSense;

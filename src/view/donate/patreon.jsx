@@ -19,7 +19,7 @@ class Patreon extends Component {
     }
 }
 
-module.exports = cacheComponent(Patreon, 'donate.petreon', props => {
+Patreon.Cacheable = cacheComponent(Patreon, 'donate.petreon', props => {
     const { donate, helper } = props;
 
     return {
@@ -27,3 +27,5 @@ module.exports = cacheComponent(Patreon, 'donate.petreon', props => {
         title: helper.__('donate.' + donate.type)
     };
 });
+
+module.exports = Patreon;

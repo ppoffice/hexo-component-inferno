@@ -111,7 +111,7 @@ class Toc extends Component {
     }
 }
 
-module.exports = cacheComponent(Toc, 'widget.toc', props => {
+Toc.Cacheable = cacheComponent(Toc, 'widget.toc', props => {
     const { config, page, helper } = props;
     const { layout, content } = page;
 
@@ -124,3 +124,5 @@ module.exports = cacheComponent(Toc, 'widget.toc', props => {
         content
     };
 });
+
+module.exports = Toc;

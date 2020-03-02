@@ -18,6 +18,8 @@ class BdShare extends Component {
     }
 }
 
-module.exports = cacheComponent(BdShare, 'share.bdshare', props => {
+BdShare.Cacheable = cacheComponent(BdShare, 'share.bdshare', props => {
     return {};
 });
+
+module.exports = BdShare;

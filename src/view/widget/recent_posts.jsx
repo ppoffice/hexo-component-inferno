@@ -23,7 +23,7 @@ class RecentPosts extends Component {
     }
 }
 
-module.exports = cacheComponent(RecentPosts, 'widget.recentposts', props => {
+RecentPosts.Cacheable = cacheComponent(RecentPosts, 'widget.recentposts', props => {
     const { site, helper } = props;
     const { has_thumbnail, get_thumbnail, url_for, __, date_xml, date } = helper;
     if (!site.posts.length) {
@@ -45,3 +45,5 @@ module.exports = cacheComponent(RecentPosts, 'widget.recentposts', props => {
         title: __('widget.recents')
     };
 });
+
+module.exports = RecentPosts;

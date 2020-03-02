@@ -9,7 +9,7 @@ class ProgressBar extends Component {
     }
 }
 
-module.exports = cacheComponent(ProgressBar, 'plugin.progressbar', props => {
+ProgressBar.Cacheable = cacheComponent(ProgressBar, 'plugin.progressbar', props => {
     const { head, helper } = props;
     if (!head) {
         return null;
@@ -18,3 +18,5 @@ module.exports = cacheComponent(ProgressBar, 'plugin.progressbar', props => {
         jsUrl: helper.cdn('pace-js', '1.0.2', 'pace.min.js')
     };
 });
+
+module.exports = ProgressBar;

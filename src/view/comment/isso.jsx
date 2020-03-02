@@ -17,10 +17,12 @@ class Isso extends Component {
     }
 }
 
-module.exports = cacheComponent(Isso, 'comment.isso', props => {
+Isso.Cacheable = cacheComponent(Isso, 'comment.isso', props => {
     const { comment } = props;
 
     return {
         url: comment.url
     };
 });
+
+module.exports = Isso;

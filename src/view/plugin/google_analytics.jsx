@@ -18,7 +18,7 @@ class GoogleAnalytics extends Component {
     }
 }
 
-module.exports = cacheComponent(GoogleAnalytics, 'plugin.googleanalytics', props => {
+GoogleAnalytics.Cacheable = cacheComponent(GoogleAnalytics, 'plugin.googleanalytics', props => {
     const { head, plugin } = props;
     if (!head || !plugin.tracking_id) {
         return null;
@@ -27,3 +27,5 @@ module.exports = cacheComponent(GoogleAnalytics, 'plugin.googleanalytics', props
         trackingId: plugin.tracking_id
     };
 });
+
+module.exports = GoogleAnalytics;

@@ -32,7 +32,7 @@ class SubscribeEmail extends Component {
     }
 }
 
-module.exports = cacheComponent(SubscribeEmail, 'widget.subscribeemail', props => {
+SubscribeEmail.Cacheable = cacheComponent(SubscribeEmail, 'widget.subscribeemail', props => {
     const { helper, widget } = props;
     const { feedburner_id, description } = widget;
 
@@ -43,3 +43,5 @@ module.exports = cacheComponent(SubscribeEmail, 'widget.subscribeemail', props =
         buttonTitle: helper.__('widget.subscribe')
     };
 });
+
+module.exports = SubscribeEmail;

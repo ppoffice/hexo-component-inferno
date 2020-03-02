@@ -28,10 +28,12 @@ class LiveRe extends Component {
     }
 }
 
-module.exports = cacheComponent(LiveRe, 'comment.livere', props => {
+LiveRe.Cacheable = cacheComponent(LiveRe, 'comment.livere', props => {
     const { comment } = props;
 
     return {
         uid: comment.uid
     };
 });
+
+module.exports = LiveRe;

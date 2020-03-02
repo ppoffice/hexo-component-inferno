@@ -36,7 +36,7 @@ class Categories extends Component {
     }
 }
 
-module.exports = cacheComponent(Categories, 'widget.categories', props => {
+Categories.Cacheable = cacheComponent(Categories, 'widget.categories', props => {
     // adapted from hexo/lib/plugins/helper/list_categories.js
     const {
         page,
@@ -106,3 +106,5 @@ module.exports = cacheComponent(Categories, 'widget.categories', props => {
         title: _p('common.category', Infinity)
     };
 });
+
+module.exports = Categories;

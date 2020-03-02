@@ -1,7 +1,7 @@
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
-class ChangeYan extends Component {
+class ChangYan extends Component {
     render() {
         const { appId, conf, path } = this.props;
         if (!appId || !conf) {
@@ -19,7 +19,7 @@ class ChangeYan extends Component {
     }
 }
 
-module.exports = cacheComponent(ChangeYan, 'comment.changyan', props => {
+ChangYan.Cacheable = cacheComponent(ChangYan, 'comment.changyan', props => {
     const { comment, page } = props;
 
     return {
@@ -28,3 +28,5 @@ module.exports = cacheComponent(ChangeYan, 'comment.changyan', props => {
         path: page.path
     };
 });
+
+module.exports = ChangYan;

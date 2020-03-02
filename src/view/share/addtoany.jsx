@@ -17,6 +17,8 @@ class AddToAny extends Component {
     }
 }
 
-module.exports = cacheComponent(AddToAny, 'share.addtoany', props => {
+AddToAny.Cacheable = cacheComponent(AddToAny, 'share.addtoany', props => {
     return {};
 });
+
+module.exports = AddToAny;

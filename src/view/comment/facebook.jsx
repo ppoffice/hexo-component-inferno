@@ -18,7 +18,7 @@ class Facebook extends Component {
     }
 }
 
-module.exports = cacheComponent(Facebook, 'comment.facebook', props => {
+Facebook.Cacheable = cacheComponent(Facebook, 'comment.facebook', props => {
     const { config, page } = props;
 
     return {
@@ -26,3 +26,5 @@ module.exports = cacheComponent(Facebook, 'comment.facebook', props => {
         permalink: page.permalink
     };
 });
+
+module.exports = Facebook;

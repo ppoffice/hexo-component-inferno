@@ -17,10 +17,12 @@ class AddThis extends Component {
     }
 }
 
-module.exports = cacheComponent(AddThis, 'share.addthis', props => {
+AddThis.Cacheable = cacheComponent(AddThis, 'share.addthis', props => {
     const { share } = props;
 
     return {
         installUrl: share.install_url
     };
 });
+
+module.exports = AddThis;

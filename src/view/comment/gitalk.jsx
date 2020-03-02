@@ -54,7 +54,7 @@ class Gitalk extends Component {
     }
 }
 
-module.exports = cacheComponent(Gitalk, 'comment.gitalk', props => {
+Gitalk.Cacheable = cacheComponent(Gitalk, 'comment.gitalk', props => {
     const { helper, comment } = props;
 
     // FIXME: config name change
@@ -77,3 +77,5 @@ module.exports = cacheComponent(Gitalk, 'comment.gitalk', props => {
         jsUrl: helper.cdn('gitalk', '1.4.1', 'dist/gitalk.min.js')
     };
 });
+
+module.exports = Gitalk;

@@ -12,7 +12,7 @@ class ShareJs extends Component {
     }
 }
 
-module.exports = cacheComponent(ShareJs, 'share.sharejs', props => {
+ShareJs.Cacheable = cacheComponent(ShareJs, 'share.sharejs', props => {
     const { helper } = props;
 
     return {
@@ -20,3 +20,5 @@ module.exports = cacheComponent(ShareJs, 'share.sharejs', props => {
         jsUrl: helper.cdn('social-share.js', '1.0.16', 'dist/js/social-share.min.js')
     };
 });
+
+module.exports = ShareJs;

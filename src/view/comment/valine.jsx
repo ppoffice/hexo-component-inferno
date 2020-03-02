@@ -48,7 +48,7 @@ class Valine extends Component {
     }
 }
 
-module.exports = cacheComponent(Valine, 'comment.valine', props => {
+Valine.Cacheable = cacheComponent(Valine, 'comment.valine', props => {
     const { comment, helper } = props;
 
     return {
@@ -67,3 +67,5 @@ module.exports = cacheComponent(Valine, 'comment.valine', props => {
         jsUrl: helper.cdn('valine', '1.3.10', 'dist/Valine.min.js')
     };
 });
+
+module.exports = Valine;

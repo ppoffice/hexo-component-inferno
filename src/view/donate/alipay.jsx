@@ -20,7 +20,7 @@ class Alipay extends Component {
     }
 }
 
-module.exports = cacheComponent(Alipay, 'donate.alipay', props => {
+Alipay.Cacheable = cacheComponent(Alipay, 'donate.alipay', props => {
     const { donate, helper } = props;
 
     return {
@@ -28,3 +28,5 @@ module.exports = cacheComponent(Alipay, 'donate.alipay', props => {
         qrcode: helper.url_for(donate.qrcode)
     };
 });
+
+module.exports = Alipay;

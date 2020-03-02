@@ -29,7 +29,7 @@ class Disqus extends Component {
     }
 }
 
-module.exports = cacheComponent(Disqus, 'comment.disqus', props => {
+Disqus.Cacheable = cacheComponent(Disqus, 'comment.disqus', props => {
     const { comment, page } = props;
 
     return {
@@ -39,3 +39,5 @@ module.exports = cacheComponent(Disqus, 'comment.disqus', props => {
         permalink: page.permalink
     };
 });
+
+module.exports = Disqus;

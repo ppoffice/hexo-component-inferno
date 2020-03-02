@@ -7,9 +7,11 @@ class Busuanzi extends Component {
     }
 }
 
-module.exports = cacheComponent(Busuanzi, 'plugin.busuanzi', props => {
+Busuanzi.Cacheable = cacheComponent(Busuanzi, 'plugin.busuanzi', props => {
     if (!props.head) {
         return null;
     }
     return {};
 });
+
+module.exports = Busuanzi;

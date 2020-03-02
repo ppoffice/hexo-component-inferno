@@ -38,7 +38,7 @@ class Baidu extends Component {
     }
 }
 
-module.exports = cacheComponent(Baidu, 'search.baidu', props => {
+Baidu.Cacheable = cacheComponent(Baidu, 'search.baidu', props => {
     const { config, helper } = props;
 
     return {
@@ -46,3 +46,5 @@ module.exports = cacheComponent(Baidu, 'search.baidu', props => {
         hint: helper.__('search.hint')
     };
 });
+
+module.exports = Baidu;

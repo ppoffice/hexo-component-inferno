@@ -17,7 +17,7 @@ class BaiduAnalytics extends Component {
     }
 }
 
-module.exports = cacheComponent(BaiduAnalytics, 'plugin.baiduanalytics', props => {
+BaiduAnalytics.Cacheable = cacheComponent(BaiduAnalytics, 'plugin.baiduanalytics', props => {
     const { head, plugin } = props;
     if (!head || !plugin.tracking_id) {
         return null;
@@ -26,3 +26,5 @@ module.exports = cacheComponent(BaiduAnalytics, 'plugin.baiduanalytics', props =
         trackingId: plugin.tracking_id
     };
 });
+
+module.exports = BaiduAnalytics;

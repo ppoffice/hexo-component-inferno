@@ -31,7 +31,7 @@ class Gallery extends Component {
     }
 }
 
-module.exports = cacheComponent(Gallery, 'plugin.gallery', props => {
+Gallery.Cacheable = cacheComponent(Gallery, 'plugin.gallery', props => {
     const { head, helper } = props;
     return {
         head,
@@ -45,3 +45,5 @@ module.exports = cacheComponent(Gallery, 'plugin.gallery', props => {
         }
     };
 });
+
+module.exports = Gallery;

@@ -47,7 +47,7 @@ class DisqusJs extends Component {
     }
 }
 
-module.exports = cacheComponent(DisqusJs, 'comment.disqusjs', props => {
+DisqusJs.Cacheable = cacheComponent(DisqusJs, 'comment.disqusjs', props => {
     const { config, page, helper, comment } = props;
 
     return {
@@ -66,3 +66,5 @@ module.exports = cacheComponent(DisqusJs, 'comment.disqusjs', props => {
         cssUrl: helper.cdn('disqusjs', '1.2.5', 'dist/disqusjs.css')
     };
 });
+
+module.exports = DisqusJs;

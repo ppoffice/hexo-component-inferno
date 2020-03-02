@@ -33,7 +33,7 @@ class Links extends Component {
     }
 }
 
-module.exports = cacheComponent(Links, 'widget.links', props => {
+Links.Cacheable = cacheComponent(Links, 'widget.links', props => {
     const { helper, widget } = props;
     if (!Object.keys(widget.links).length) {
         return null;
@@ -43,3 +43,5 @@ module.exports = cacheComponent(Links, 'widget.links', props => {
         links: widget.links
     };
 });
+
+module.exports = Links;

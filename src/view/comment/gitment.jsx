@@ -42,7 +42,7 @@ class Gitment extends Component {
     }
 }
 
-module.exports = cacheComponent(Gitment, 'comment.gitment', props => {
+Gitment.Cacheable = cacheComponent(Gitment, 'comment.gitment', props => {
     const { comment } = props;
 
     const id = crypto.createHash('md5').update(props.page.path).digest('hex');
@@ -56,3 +56,5 @@ module.exports = cacheComponent(Gitment, 'comment.gitment', props => {
         maxCommentHeight: comment.max_comment_height
     };
 });
+
+module.exports = Gitment;

@@ -23,7 +23,7 @@ class BuyMeACoffee extends Component {
     }
 }
 
-module.exports = cacheComponent(BuyMeACoffee, 'donate.buymeacoffee', props => {
+BuyMeACoffee.Cacheable = cacheComponent(BuyMeACoffee, 'donate.buymeacoffee', props => {
     const { donate, helper } = props;
 
     return {
@@ -31,3 +31,5 @@ module.exports = cacheComponent(BuyMeACoffee, 'donate.buymeacoffee', props => {
         title: helper.__('donate.' + donate.type)
     };
 });
+
+module.exports = BuyMeACoffee;

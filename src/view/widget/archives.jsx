@@ -31,7 +31,7 @@ class Archives extends Component {
     }
 }
 
-module.exports = cacheComponent(Archives, 'widget.archives', props => {
+Archives.Cacheable = cacheComponent(Archives, 'widget.archives', props => {
     // adapted from hexo/lib/plugins/helper/list_archives.js
     const {
         site,
@@ -103,3 +103,5 @@ module.exports = cacheComponent(Archives, 'widget.archives', props => {
         showCount: show_count
     };
 });
+
+module.exports = Archives;

@@ -20,7 +20,7 @@ class Wechat extends Component {
     }
 }
 
-module.exports = cacheComponent(Wechat, 'donate.wechat', props => {
+Wechat.Cacheable = cacheComponent(Wechat, 'donate.wechat', props => {
     const { donate, helper } = props;
 
     return {
@@ -28,3 +28,5 @@ module.exports = cacheComponent(Wechat, 'donate.wechat', props => {
         title: helper.__('donate.' + donate.type)
     };
 });
+
+module.exports = Wechat;

@@ -76,7 +76,7 @@ class Google extends Component {
     }
 }
 
-module.exports = cacheComponent(Google, 'search.google', props => {
+Google.Cacheable = cacheComponent(Google, 'search.google', props => {
     const { helper, search } = props;
 
     return {
@@ -84,3 +84,5 @@ module.exports = cacheComponent(Google, 'search.google', props => {
         hint: helper.__('search.hint')
     };
 });
+
+module.exports = Google;

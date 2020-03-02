@@ -27,7 +27,7 @@ class Tags extends Component {
     }
 }
 
-module.exports = cacheComponent(Tags, 'widget.tags', props => {
+Tags.Cacheable = cacheComponent(Tags, 'widget.tags', props => {
     // adapted from hexo/lib/plugins/helper/list_tags.js
     const {
         helper,
@@ -58,3 +58,5 @@ module.exports = cacheComponent(Tags, 'widget.tags', props => {
         }))
     };
 });
+
+module.exports = Tags;
