@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest lib",
     "lint": "eslint src fixture",
-    "docs": "jsdoc src/**/* -d doc",
+    "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
     "clean": "rm -rf lib doc coverage",
     "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag $PACKAGE_VERSION && git push --tags"
@@ -33,8 +33,10 @@
     "eslint-plugin-react": "^7.18.0",
     "hexo": "^4.2.0",
     "hexo-util": "^1.8.1",
+    "inferno-server": "^7.4.1",
     "jest": "^25.1.0",
-    "jsdoc": "^3.6.3"
+    "jsdoc": "^3.6.3",
+    "minami": "^1.2.3"
   },
   "dependencies": {
     "ajv": "^6.10.2",

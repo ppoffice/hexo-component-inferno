@@ -36,13 +36,10 @@ module.exports = {
     cacheComponent(type, prefix, transform) {
         return props => {
             const targetProps = transform(props);
-            if (!targetProps) {
+            if (targetProps === null || typeof targetProps !== 'object') {
                 return null;
             }
             const cacheId = prefix + '-' + computeHash(targetProps);
-            if (!cacheId) {
-                return createElement(type, targetProps);
-            }
             if (!cache[cacheId]) {
                 cache[cacheId] = createElement(type, targetProps);
             }
