@@ -1,3 +1,7 @@
+/**
+ * Custom YAML parse and stringify functions.
+ * @module util/yaml
+ */
 const yaml = require('js-yaml');
 const YamlType = require('js-yaml/lib/js-yaml/type');
 const YamlSchema = require('js-yaml/lib/js-yaml/schema');
@@ -29,10 +33,23 @@ const YAML_SCHEMA = new YamlSchema({
 });
 
 module.exports = {
+
+    /**
+     * Parse a YAML string into a JavaScript value.
+     *
+     * @param {string} str YAML string.
+     * @returns {any} JavaScript object or primitive value.
+     */
     parse(str) {
         return yaml.safeLoad(str);
     },
 
+    /**
+     * Dump the YAML string of a JavaScript value.
+     *
+     * @param {any} object JavaScript object or primitive value.
+     * @returns {string} YAML string.
+     */
     stringify(object) {
         return yaml.safeDump(object, {
             indent: 4,

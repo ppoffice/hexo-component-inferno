@@ -1,6 +1,20 @@
+/**
+ * ChangYan comment JSX component.
+ * @module view/comment/changyan
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * ChangYan comment JSX component.
+ *
+ * @see http://changyan.kuaizhan.com/static/help/
+ * @example
+ * <ChangYan
+ *     appId="******"
+ *     conf="******"
+ *     path="/path/to/page" />
+ */
 class ChangYan extends Component {
     render() {
         const { appId, conf, path } = this.props;
@@ -19,6 +33,18 @@ class ChangYan extends Component {
     }
 }
 
+/**
+ * Cacheable ChangYan comment JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <ChangYan.Cacheable
+ *     comment={{ app_id: '*******', conf='******' }}
+ *     page={{ path: '/path/to/page' }} />
+ */
 ChangYan.Cacheable = cacheComponent(ChangYan, 'comment.changyan', props => {
     const { comment, page } = props;
 

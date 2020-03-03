@@ -1,7 +1,33 @@
+/**
+ * Gitalk comment JSX component.
+ * @module view/comment/gitalk
+ */
 const crypto = require('crypto');
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Gitalk comment JSX component.
+ *
+ * @see https://github.com/gitalk/gitalk
+ * @example
+ * <Gitalk
+ *     id="******",
+ *     repo="******",
+ *     owner="******",
+ *     admin={["******"]},
+ *     clientId="******",
+ *     clientSecret="******",
+ *     createIssueManually={false},
+ *     distractionFreeMode={false},
+ *     pagerDirection="last",
+ *     perPage={10},
+ *     proxy="******",
+ *     flipMoveOptions={...},
+ *     enableHotKey={true},
+ *     jsUrl="/path/to/gitalk.js",
+ *     cssUrl="/path/to/gitalk.css" />
+ */
 class Gitalk extends Component {
     render() {
         const {
@@ -54,6 +80,32 @@ class Gitalk extends Component {
     }
 }
 
+/**
+ * Cacheable Gitalk comment JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Gitalk.Cacheable
+ *     comment={{
+ *         repo: '******',
+ *         owner: '******',
+ *         admin: ['******'],
+ *         client_id: '******',
+ *         client_secret: '******',
+ *         create_issue_manually: false,
+ *         distraction_free_mode: false,
+ *         pager_direction: 'last',
+ *         per_page: 10,
+ *         proxy: '******',
+ *         flip_move_options: {...},
+ *         enable_hotkey: true
+ *     }}
+ *     page={{ path: '/path/to/page' }}
+ *     helper={{ cdn: function() {...} }} />
+ */
 Gitalk.Cacheable = cacheComponent(Gitalk, 'comment.gitalk', props => {
     const { helper, comment } = props;
 

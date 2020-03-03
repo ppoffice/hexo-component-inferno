@@ -4,6 +4,8 @@ const { cacheComponent } = require('../../util/cache');
 
 /**
  * Export a tree of headings of an article
+ * @private
+ * @example
  * {
  *    "1": {
  *        "id": "How-to-enable-table-of-content-for-a-post",

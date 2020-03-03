@@ -1,6 +1,17 @@
+/**
+ * Isso comment JSX component.
+ * @module view/comment/isso
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Isso comment JSX component.
+ *
+ * @see https://posativ.org/isso/docs/quickstart/#integration
+ * @example
+ * <Isso url="/path/to/isso/server" />
+ */
 class Isso extends Component {
     render() {
         const { url } = this.props;
@@ -17,6 +28,16 @@ class Isso extends Component {
     }
 }
 
+/**
+ * Cacheable Isso comment JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Isso.Cacheable comment={{ url: "/path/to/isso/server" }} />
+ */
 Isso.Cacheable = cacheComponent(Isso, 'comment.isso', props => {
     const { comment } = props;
 

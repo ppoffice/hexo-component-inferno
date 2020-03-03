@@ -1,3 +1,7 @@
+/**
+ * A JSX component that renders &lt;meta&gt; tags.
+ * @module view/misc/meta
+ */
 const { Component, Fragment } = require('inferno');
 
 function trim(str) {
@@ -13,6 +17,16 @@ function split(str, sep) {
     return result;
 }
 
+/**
+ * A JSX component that renders &lt;meta&gt; tags.
+ *
+ * @name Meta
+ * @example
+ * <Meta meta={[
+ *     'name="generator";content="Hexo 4.2.0"'
+ *     'property="article:author";content="PPOffice"'
+ * ]} />
+ */
 module.exports = class extends Component {
     render() {
         let { meta = [] } = this.props;

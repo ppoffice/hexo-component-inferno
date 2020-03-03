@@ -1,6 +1,18 @@
+/**
+ * Patreon donation JSX component.
+ * @module view/donate/patreon
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Patreon donation JSX component.
+ *
+ * @example
+ * <Patreon
+ *     title="******"
+ *     url="/path/to/patreon/page" />
+ */
 class Patreon extends Component {
     render() {
         const { title, url } = this.props;
@@ -19,6 +31,18 @@ class Patreon extends Component {
     }
 }
 
+/**
+ * Cacheable Patreon donation JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Patreon.Cacheable
+ *     donate={{ type: 'patreon', url='/path/to/patreon/page' }}
+ *     helper={{ __: function() {...} }} />
+ */
 Patreon.Cacheable = cacheComponent(Patreon, 'donate.petreon', props => {
     const { donate, helper } = props;
 

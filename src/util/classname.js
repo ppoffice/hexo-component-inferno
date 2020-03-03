@@ -1,6 +1,10 @@
 /**
  * A utility function for creating classnames from a string, array, or classname-to-boolean map.
- * @module util/cache
+ * @module util/classname
+ */
+
+/**
+ * A utility function for creating classnames from a string, array, or classname-to-boolean map.
  *
  * @param {string|Array|Object} classname A class name string, an array of class names, or a plain object
  * whose keys are possible class names and values are booleans that indicate whether the class name is

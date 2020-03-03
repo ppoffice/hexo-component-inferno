@@ -1,6 +1,20 @@
+/**
+ * Paypal donation JSX component.
+ * @module view/donate/paypal
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Paypal donation JSX component.
+ *
+ * @see https://www.paypal.com/donate/buttons
+ * @example
+ * <Paypal
+ *     title="******"
+ *     business="******"
+ *     currencyCode="******" />
+ */
 class Paypal extends Component {
     render() {
         const { title, business, currencyCode } = this.props;
@@ -26,6 +40,18 @@ class Paypal extends Component {
     }
 }
 
+/**
+ * Cacheable Paypal donation JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Paypal.Cacheable
+ *     donate={{ type: 'paypal', business: '******' currency_code: '******' }}
+ *     helper={{ __: function() {...} }} />
+ */
 Paypal.Cacheable = cacheComponent(Paypal, 'donate.paypal', props => {
     const { donate, helper } = props;
 

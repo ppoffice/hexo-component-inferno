@@ -1,6 +1,18 @@
+/**
+ * Alipay donation JSX component.
+ * @module view/donate/alipay
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Alipay donation JSX component.
+ *
+ * @example
+ * <Alipay
+ *     title="******"
+ *     qrcode="/path/to/qrcode" />
+ */
 class Alipay extends Component {
     render() {
         const { title, qrcode } = this.props;
@@ -20,6 +32,18 @@ class Alipay extends Component {
     }
 }
 
+/**
+ * Cacheable Alipay donation JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Alipay.Cacheable
+ *     donate={{ type: 'alipay', qrcode='******' }}
+ *     helper={{ __: function() {...} }} />
+ */
 Alipay.Cacheable = cacheComponent(Alipay, 'donate.alipay', props => {
     const { donate, helper } = props;
 

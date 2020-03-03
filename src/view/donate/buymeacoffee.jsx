@@ -1,6 +1,18 @@
+/**
+ * "Buy me a coffee" donation JSX component.
+ * @module view/donate/buymeacoffee
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * "Buy me a coffee" donation JSX component.
+ *
+ * @example
+ * <BuyMeACoffee
+ *     title="******"
+ *     url="/path/to/buymeacoffee/page" />
+ */
 class BuyMeACoffee extends Component {
     render() {
         const { title, url } = this.props;
@@ -23,6 +35,18 @@ class BuyMeACoffee extends Component {
     }
 }
 
+/**
+ * Cacheable "Buy me a coffee" donation JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <BuyMeACoffee.Cacheable
+ *     donate={{ type: 'buymeacoffee', url='/path/to/buymeacoffee/page' }}
+ *     helper={{ __: function() {...} }} />
+ */
 BuyMeACoffee.Cacheable = cacheComponent(BuyMeACoffee, 'donate.buymeacoffee', props => {
     const { donate, helper } = props;
 

@@ -1,6 +1,30 @@
+/**
+ * DisqusJS comment JSX component.
+ * @module view/comment/disqusjs
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * DisqusJS comment JSX component.
+ *
+ * @see https://github.com/SukkaW/DisqusJS
+ * @example
+ * <DisqusJs
+ *     shortname="******"
+ *     apiKey="******"
+ *     api="******"
+ *     admin="******"
+ *     adminLabel={false}
+ *     nesting={4}
+ *     disqusId="******"
+ *     path="/path/to/page"
+ *     permalink="/page/permanent/path"
+ *     pageTitle="******"
+ *     siteTitle="******"
+ *     jsUrl="/path/to/disqus.js"
+ *     cssUrl="/path/to/disqusjs.css" />
+ */
 class DisqusJs extends Component {
     render() {
         const {
@@ -47,6 +71,32 @@ class DisqusJs extends Component {
     }
 }
 
+/**
+ * Cacheable DisqusJS comment JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <DisqusJs.Cacheable
+ *     comment={{
+ *         shortname: '******',
+ *         api_key: '******',
+ *         api: '******',
+ *         admin: '******',
+ *         admin_label: false,
+ *         nesting: 4
+ *     }}
+ *     page={{
+ *         path: '/path/to/page',
+ *         disqusId: '******',
+ *         permalink: '******'
+ *         title: '******'
+ *     }}
+ *     config={{ title: '******' }}
+ *     helper={{ cdn: function() { ... } }} />
+ */
 DisqusJs.Cacheable = cacheComponent(DisqusJs, 'comment.disqusjs', props => {
     const { config, page, helper, comment } = props;
 

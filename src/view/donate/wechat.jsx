@@ -1,6 +1,18 @@
+/**
+ * Wechat donation JSX component.
+ * @module view/donate/alipay
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Wechat donation JSX component.
+ *
+ * @example
+ * <Wechat
+ *     title="******"
+ *     qrcode="/path/to/qrcode" />
+ */
 class Wechat extends Component {
     render() {
         const { title, qrcode } = this.props;
@@ -20,6 +32,18 @@ class Wechat extends Component {
     }
 }
 
+/**
+ * Cacheable Wechat donation JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Wechat.Cacheable
+ *     donate={{ type: 'wechat', qrcode='******' }}
+ *     helper={{ __: function() {...} }} />
+ */
 Wechat.Cacheable = cacheComponent(Wechat, 'donate.wechat', props => {
     const { donate, helper } = props;
 

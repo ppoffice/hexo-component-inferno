@@ -7,6 +7,9 @@
  *     <%- iconcdn() %>
  */
 
+/**
+ * @private
+ */
 const PROVIDERS = {
     LIBRARY: {
         cdnjs: '[cdnjs]https://cdnjs.cloudflare.com/ajax/libs/${ package }/${ version }/${ filename }',
@@ -25,6 +28,7 @@ const PROVIDERS = {
 
 /**
  * Convert npm library path to CDN.js path
+ * @private
  */
 const CDNJS_FIXTURES = {
     'moment': (ver, fname) => [

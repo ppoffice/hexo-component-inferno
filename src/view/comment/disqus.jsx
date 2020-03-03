@@ -1,6 +1,21 @@
+/**
+ * Disqus comment JSX component.
+ * @module view/comment/disqus
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Disqus comment JSX component.
+ *
+ * @see https://disqus.com/admin/install/platforms/universalcode/
+ * @example
+ * <Disqus
+ *     shortname="******"
+ *     disqusId="******"
+ *     permalink="/page/permanent/path"
+ *     path="/path/to/page" />
+ */
 class Disqus extends Component {
     render() {
         const { shortname, disqusId, path, permalink } = this.props;
@@ -29,6 +44,22 @@ class Disqus extends Component {
     }
 }
 
+/**
+ * Cacheable Disqus comment JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Disqus.Cacheable
+ *     comment={{ shortname: '*******' }}
+ *     page={{
+ *         path: '/path/to/page',
+ *         disqusId: '******',
+ *         permalink: '/page/permanent/link'
+ *     }} />
+ */
 Disqus.Cacheable = cacheComponent(Disqus, 'comment.disqus', props => {
     const { comment, page } = props;
 
