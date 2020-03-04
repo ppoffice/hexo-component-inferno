@@ -1,6 +1,17 @@
+/**
+ * Hotjar user feedback plugin JSX component.
+ * @module view/plugin/hotjar
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Hotjar user feedback plugin JSX component.
+ *
+ * @see https://help.hotjar.com/hc/en-us/sections/115002608787-Installation-Guides
+ * @example
+ * <Hotjar siteId="******" />
+ */
 class Hotjar extends Component {
     render() {
         const { siteId } = this.props;
@@ -20,6 +31,18 @@ class Hotjar extends Component {
     }
 }
 
+/**
+ * Cacheable Hotjar user feedback plugin JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Hotjar.Cacheable
+ *     head={true}
+ *     plugin={{ site_id: '*******' }} />
+ */
 Hotjar.Cacheable = cacheComponent(Hotjar, 'plugin.hotjar', props => {
     const { head, plugin } = props;
     if (!head || !plugin.site_id) {

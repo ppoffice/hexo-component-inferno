@@ -1,6 +1,17 @@
+/**
+ * AddToAny share buttons JSX component.
+ * @module view/share/addtoany
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * AddToAny share buttons JSX component.
+ *
+ * @see https://www.addtoany.com/buttons/
+ * @example
+ * <AddToAny />
+ */
 class AddToAny extends Component {
     render() {
         return <Fragment>
@@ -17,6 +28,16 @@ class AddToAny extends Component {
     }
 }
 
+/**
+ * Cacheable AddToAny share buttons JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <AddToAny.Cacheable />
+ */
 AddToAny.Cacheable = cacheComponent(AddToAny, 'share.addtoany', props => {
     return {};
 });

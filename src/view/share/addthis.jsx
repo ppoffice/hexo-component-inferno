@@ -1,6 +1,17 @@
+/**
+ * AddThis share buttons JSX component.
+ * @module view/share/addthis
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * AddThis share buttons JSX component.
+ *
+ * @see https://www.addthis.com/dashboard
+ * @example
+ * <AddThis installUrl="******" />
+ */
 class AddThis extends Component {
     render() {
         const { installUrl } = this.props;
@@ -17,6 +28,16 @@ class AddThis extends Component {
     }
 }
 
+/**
+ * Cacheable AddThis share buttons JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <AddThis.Cacheable share={{ install_url: '******' }} />
+ */
 AddThis.Cacheable = cacheComponent(AddThis, 'share.addthis', props => {
     const { share } = props;
 

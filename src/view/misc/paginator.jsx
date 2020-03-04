@@ -1,5 +1,23 @@
+/**
+ * Paginator JSX component.
+ * @module view/misc/paginator
+ */
 const { Component } = require('inferno');
 
+/**
+ * Paginator JSX component.
+ *
+ * @name Paginator
+ * @example
+ * <Paginator
+ *     current={1}
+ *     total={10}
+ *     baseUrl="/page/base/url"
+ *     path="/config/pagination/dir"
+ *     urlFor={ function () {...} }
+ *     prevTitle="Prev"
+ *     nextTitle="Next" />
+ */
 module.exports = class extends Component {
     render() {
         const { current, total, baseUrl, path, urlFor, prevTitle, nextTitle } = this.props;

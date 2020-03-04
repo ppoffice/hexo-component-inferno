@@ -1,10 +1,35 @@
+/**
+ * Categories widget JSX component.
+ * @module view/widget/categories
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Categories widget JSX component.
+ *
+ * @example
+ * <Categories
+ *     title="Widget title"
+ *     showCount={true}
+ *     categories={[
+ *         {
+ *             url: '/path/to/category/page',
+ *             name: 'Category name',
+ *             count: 1,
+ *             isCurrent: false,
+ *             children: [{
+ *                 url: '/path/to/category/page',
+ *                 name: 'Subcategory name',
+ *                 count: 1,
+ *             }]
+ *         }
+ *     ]} />
+ */
 class Categories extends Component {
     renderList(categories, showCount) {
         return categories.map(category => <li>
-            <a class="level is-mobile is-marginless" href={category.url}>
+            <a class={'level is-mobile is-marginless' + (category.isCurrent ? ' is-active' : '')} href={category.url}>
                 <span class="level-start">
                     <span class="level-item">{category.name}</span>
                 </span>
@@ -36,16 +61,41 @@ class Categories extends Component {
     }
 }
 
+/**
+ * Cacheable categories widget JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @see https://github.com/hexojs/hexo/blob/4.2.0/lib/plugins/helper/list_categories.js
+ * @example
+ * <Categories.Cacheable
+ *     site={{ categories: {...} }}
+ *     page={{
+ *         base: '/path/base/url',
+ *         _id: '******'
+ *     }}
+ *     helper={{
+ *         url_for: function() {...},
+ *         _p: function() {...}
+ *     }}
+ *     categories={{...}}
+ *     orderBy="name"
+ *     order={1}
+ *     showCurrent={false}
+ *     showCount={true}
+ *     depth={3} />
+ */
 Categories.Cacheable = cacheComponent(Categories, 'widget.categories', props => {
-    // adapted from hexo/lib/plugins/helper/list_categories.js
     const {
         page,
         helper,
         categories = props.site.categories,
         orderBy = 'name',
         order = 1,
-        show_current = false,
-        show_count = true
+        showCurrent = false,
+        showCount = true
     } = props;
     const { url_for, _p } = helper;
 
@@ -78,7 +128,7 @@ Categories.Cacheable = cacheComponent(Categories, 'widget.categories', props => 
             }
 
             let isCurrent = false;
-            if (show_current && page) {
+            if (showCurrent && page) {
                 for (let j = 0; j < cat.length; j++) {
                     const post = cat.posts.data[j];
                     if (post && post._id === page._id) {
@@ -101,7 +151,7 @@ Categories.Cacheable = cacheComponent(Categories, 'widget.categories', props => 
     }
 
     return {
-        showCount: show_count,
+        showCount,
         categories: hierarchicalList(0),
         title: _p('common.category', Infinity)
     };

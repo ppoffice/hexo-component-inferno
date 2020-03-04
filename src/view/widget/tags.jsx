@@ -1,6 +1,25 @@
+/**
+ * Tags widget JSX component.
+ * @module view/widget/tags
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Tags widget JSX component.
+ *
+ * @example
+ * <Tags
+ *     title="Widget title"
+ *     showCount={true}
+ *     tags={[
+ *         {
+ *             url: '/path/to/category/page',
+ *             name: 'Category name',
+ *             count: 1
+ *         }
+ *     ]} />
+ */
 class Tags extends Component {
     render() {
         const {
@@ -27,14 +46,34 @@ class Tags extends Component {
     }
 }
 
+/**
+ * Cacheable tags widget JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @see https://github.com/hexojs/hexo/blob/4.2.0/lib/plugins/helper/list_tags.js
+ * @example
+ * <Tags.Cacheable
+ *     site={{ tags: {...} }}
+ *     helper={{
+ *         url_for: function() {...},
+ *         _p: function() {...}
+ *     }}
+ *     tags={{...}}
+ *     orderBy="name"
+ *     order={1}
+ *     amount={100}
+ *     showCount={true} />
+ */
 Tags.Cacheable = cacheComponent(Tags, 'widget.tags', props => {
-    // adapted from hexo/lib/plugins/helper/list_tags.js
     const {
         helper,
         orderBy = 'name',
         order = 1,
         amount,
-        show_count = true
+        showCount = true
     } = props;
     let tags = props.tags || props.site.tags;
     const { url_for, _p } = helper;
@@ -49,7 +88,7 @@ Tags.Cacheable = cacheComponent(Tags, 'widget.tags', props => {
     }
 
     return {
-        showCount: show_count,
+        showCount,
         title: _p('common.tag', Infinity),
         tags: tags.map(tag => ({
             name: tag.name,

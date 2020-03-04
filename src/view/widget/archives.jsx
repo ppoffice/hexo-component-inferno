@@ -1,6 +1,25 @@
+/**
+ * Archives widget JSX component.
+ * @module view/widget/archives
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Archives widget JSX component.
+ *
+ * @example
+ * <Archives
+ *     title="Widget title"
+ *     showCount={true}
+ *     items={[
+ *         {
+ *             url: '/path/to/archive/page',
+ *             name: 'Archive name',
+ *             count: 1
+ *         }
+ *     ]} />
+ */
 class Archives extends Component {
     render() {
         const {
@@ -31,8 +50,36 @@ class Archives extends Component {
     }
 }
 
+/**
+ * Cacheable archives widget JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @see https://github.com/hexojs/hexo/blob/4.2.0/lib/plugins/helper/list_archives.js
+ * @example
+ * <Archives.Cacheable
+ *     site={{ posts: {...} }}
+ *     config={{
+ *         language: 'en_US',
+ *         timezone: 'UTC',
+ *         archive_dir: '/path/to/archive'
+ *     }}
+ *     page={{
+ *         lang: 'en_US',
+ *         language: 'en_US'
+ *     }}
+ *     helper={{
+ *         url_for: function() {...},
+ *         _p: function() {...}
+ *     }}
+ *     type="monthly"
+ *     order={-1}
+ *     showCount={true}
+ *     format="MMMM YYYY" />
+ */
 Archives.Cacheable = cacheComponent(Archives, 'widget.archives', props => {
-    // adapted from hexo/lib/plugins/helper/list_archives.js
     const {
         site,
         config,
@@ -40,7 +87,7 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', props => {
         helper,
         type = 'monthly',
         order = -1,
-        show_count = true,
+        showCount = true,
         format = null
     } = props;
     const { url_for, _p } = helper;
@@ -100,7 +147,7 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', props => {
             url: link(item)
         })),
         title: _p('common.archive', Infinity),
-        showCount: show_count
+        showCount
     };
 });
 

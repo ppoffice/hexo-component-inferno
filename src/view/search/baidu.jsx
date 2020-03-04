@@ -1,6 +1,16 @@
+/**
+ * Baidu search engine JSX component.
+ * @module view/search/baidu
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Baidu search engine JSX component.
+ *
+ * @example
+ * <Baidu url="/site/url" hint="Placeholder text" />
+ */
 class Baidu extends Component {
     render() {
         const { url, hint } = this.props;
@@ -38,6 +48,18 @@ class Baidu extends Component {
     }
 }
 
+/**
+ * Cacheable Baidu search engine JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Baidu.Cacheable
+ *     config={{ url: '/site/url' }}
+ *     helper={{ __: function() {...} }} />
+ */
 Baidu.Cacheable = cacheComponent(Baidu, 'search.baidu', props => {
     const { config, helper } = props;
 

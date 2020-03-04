@@ -1,3 +1,7 @@
+/**
+ * Table of contents widget JSX component.
+ * @module view/widget/toc
+ */
 const { tocObj: getTocObj } = require('hexo-util');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
@@ -6,33 +10,34 @@ const { cacheComponent } = require('../../util/cache');
  * Export a tree of headings of an article
  * @private
  * @example
- * {
- *    "1": {
- *        "id": "How-to-enable-table-of-content-for-a-post",
- *        "text": "How to enable table of content for a post",
- *        "index": "1"
- *    },
- *    "2": {
- *        "1": {
- *            "1": {
- *                "id": "Third-level-title",
- *                "text": "Third level title",
- *                "index": "2.1.1"
- *            },
- *            "id": "Second-level-title",
- *            "text": "Second level title",
- *            "index": "2.1"
- *        },
- *        "2": {
- *            "id": "Another-second-level-title",
- *            "text": "Another second level title",
- *            "index": "2.2"
- *        },
- *        "id": "First-level-title",
- *        "text": "First level title",
- *        "index": "2"
- *    }
- * }
+ * getToc('HTML content...');
+ * // {
+ * //    "1": {
+ * //        "id": "How-to-enable-table-of-content-for-a-post",
+ * //        "text": "How to enable table of content for a post",
+ * //        "index": "1"
+ * //    },
+ * //    "2": {
+ * //        "1": {
+ * //            "1": {
+ * //                "id": "Third-level-title",
+ * //                "text": "Third level title",
+ * //                "index": "2.1.1"
+ * //            },
+ * //            "id": "Second-level-title",
+ * //            "text": "Second level title",
+ * //            "index": "2.1"
+ * //        },
+ * //        "2": {
+ * //            "id": "Another-second-level-title",
+ * //            "text": "Another second level title",
+ * //            "index": "2.2"
+ * //        },
+ * //        "id": "First-level-title",
+ * //        "text": "First level title",
+ * //        "index": "2"
+ * //    }
+ * // }
  */
 function getToc(content) {
     const toc = {};
@@ -70,6 +75,14 @@ function getToc(content) {
     return toc;
 }
 
+/**
+ * Table of contents widget JSX component.
+ *
+ * @example
+ * <Toc
+ *     title="Widget title"
+ *     content="HTML content" />
+ */
 class Toc extends Component {
     renderToc(toc) {
         let result;
@@ -113,6 +126,19 @@ class Toc extends Component {
     }
 }
 
+/**
+ * Cacheable table of contents widget JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Toc.Cacheable
+ *     config={{ toc: true }}
+ *     page={{ layout: 'post', content: 'HTML content' }}
+ *     helper={{ _p: function() {...} }} />
+ */
 Toc.Cacheable = cacheComponent(Toc, 'widget.toc', props => {
     const { config, page, helper } = props;
     const { layout, content } = page;

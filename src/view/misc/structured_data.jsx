@@ -1,8 +1,26 @@
+/**
+ * A JSX component that renders simple Google structured data.
+ * @module view/misc/structured_data
+ */
 const urlFn = require('url');
 const moment = require('moment');
 const { Component } = require('inferno');
 const { stripHTML, escapeHTML } = require('hexo-util');
 
+/**
+ * A JSX component that renders simple Google structured data.
+ *
+ * @name StructuredData
+ * @example
+ * <StructuredData
+ *     title="Page title"
+ *     url="/page/url"
+ *     author="Page author name"
+ *     description="Page description"
+ *     images={[ '/path/to/image' ]}
+ *     date="Page publish date"
+ *     updated="Page update date" />
+ */
 module.exports = class extends Component {
     render() {
         const { title, url, author } = this.props;

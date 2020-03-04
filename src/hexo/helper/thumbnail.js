@@ -1,10 +1,23 @@
 /**
-* Helper functions for post thumbnail.
-*
-* @example
-*     <%- has_thumbnail(post) %>
-*     <%- get_thumbnail(post) %>
-*/
+ * Register the Hexo helper functions for testing and extracting thumbnail image path from
+ * a post/page.
+ * @module hexo/helper/thumbnail
+ */
+
+/**
+ * Register the Hexo helper functions for testing and extracting thumbnail image path from
+ * a post/page.
+ *
+ * @param {Hexo} hexo The Hexo instance.
+ * @example
+ * // Use the function below to test if the given post/page has a thumbnail image.
+ * has_thumbnail(post);
+ *
+ * // Use the function below to get the thumbnail image path of a post/page.
+ * // If the post/page does not have a thumbnail, the default image (/img/thumbnail.svg)
+ * // path will be returned.
+ * get_thumbnail(post);
+ */
 module.exports = function(hexo) {
     hexo.extend.helper.register('has_thumbnail', function(post) {
         const { article } = this.config;

@@ -1,6 +1,21 @@
+/**
+ * Google FeedBurner widget JSX component.
+ * @module view/widget/subscribe_email
+ */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Google FeedBurner widget JSX component.
+ *
+ * @see https://feedburner.google.com/
+ * @example
+ * <SubscribeEmail
+ *     title="Widget title"
+ *     description="Description text"
+ *     feedburnerId="******"
+ *     buttonTitle="Subscribe now" />
+ */
 class SubscribeEmail extends Component {
     render() {
         const { title, description, feedburnerId, buttonTitle } = this.props;
@@ -32,6 +47,21 @@ class SubscribeEmail extends Component {
     }
 }
 
+/**
+ * Cacheable Google FeedBurner widget JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <SubscribeEmail.Cacheable
+ *     widget={{
+ *         description: 'Description text',
+ *         feedburner_id: '******'
+ *     }}
+ *     helper={{ __: function() {...} }} />
+ */
 SubscribeEmail.Cacheable = cacheComponent(SubscribeEmail, 'widget.subscribeemail', props => {
     const { helper, widget } = props;
     const { feedburner_id, description } = widget;

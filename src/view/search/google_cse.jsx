@@ -1,7 +1,18 @@
+/**
+ * Google custom search engine JSX component.
+ * @module view/search/google_cse
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
-class Google extends Component {
+/**
+ * Google custom search engine JSX component.
+ *
+ * @see https://cse.google.com/cse/create/new
+ * @example
+ * <GoogleCSE cx="******" hint="Placeholder text" />
+ */
+class GoogleCSE extends Component {
     render() {
         const { cx, hint } = this.props;
 
@@ -76,7 +87,19 @@ class Google extends Component {
     }
 }
 
-Google.Cacheable = cacheComponent(Google, 'search.google', props => {
+/**
+ * Cacheable Google custom search engine JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Baidu.Cacheable
+ *     search={{ cx: '******' }}
+ *     helper={{ __: function() {...} }} />
+ */
+GoogleCSE.Cacheable = cacheComponent(GoogleCSE, 'search.google', props => {
     const { helper, search } = props;
 
     return {
@@ -85,4 +108,4 @@ Google.Cacheable = cacheComponent(Google, 'search.google', props => {
     };
 });
 
-module.exports = Google;
+module.exports = GoogleCSE;

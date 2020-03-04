@@ -1,6 +1,20 @@
+/**
+ * KaTeX math renderer plugin JSX component.
+ * @module view/plugin/katex
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * KaTeX math renderer plugin JSX component.
+ *
+ * @see https://katex.org/
+ * @example
+ * <KaTeX
+ *     cssUrl="/path/to/katex.css"
+ *     jsUrl="/path/to/katex.js"
+ *     autoRenderUrl="/path/to/auto-render.js" />
+ */
 class KaTeX extends Component {
     render() {
         const { cssUrl, jsUrl, autoRenderUrl } = this.props;
@@ -20,6 +34,18 @@ class KaTeX extends Component {
     }
 }
 
+/**
+ * Cacheable KaTeX math renderer plugin JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <KaTeX.Cacheable
+ *     head={true}
+ *     helper={{ cdn: function() {...} }} />
+ */
 KaTeX.Cacheable = cacheComponent(KaTeX, 'plugin.katex', props => {
     const { head, helper } = props;
     if (head) {

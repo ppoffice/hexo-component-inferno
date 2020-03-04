@@ -1,6 +1,27 @@
+/**
+ * Light Gallery and Justified Gallery plugins JSX component.
+ * @module view/plugin/gallery
+ */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
+/**
+ * Light Gallery and Justified Gallery plugins JSX component.
+ *
+ * @see http://sachinchoolur.github.io/lightGallery/
+ * @see http://miromannino.github.io/Justified-Gallery/
+ * @example
+ * <Gallery
+ *     head={true}
+ *     lightGallery={{
+ *         jsUrl: '/path/to/lightgallery.js',
+ *         cssUrl: '/path/to/lightgallery.css'
+ *     }}
+ *     justifiedGallery={{
+ *         jsUrl: '/path/to/justifiedGallery.js',
+ *         cssUrl: '/path/to/justifiedGallery.css'
+ *     }} />
+ */
 class Gallery extends Component {
     render() {
         const { head, lightGallery, justifiedGallery } = this.props;
@@ -31,6 +52,18 @@ class Gallery extends Component {
     }
 }
 
+/**
+ * Cacheable Light Gallery and Justified Gallery plugins JSX component.
+ * <p>
+ * This class is supposed to be used in combination with the <code>locals</code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * <Gallery.Cacheable
+ *     head={true}
+ *     helper={{ cdn: function() {...} }} />
+ */
 Gallery.Cacheable = cacheComponent(Gallery, 'plugin.gallery', props => {
     const { head, helper } = props;
     return {
