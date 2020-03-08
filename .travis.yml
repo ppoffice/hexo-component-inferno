@@ -24,7 +24,7 @@ before_deploy:
 deploy:
   - provider: pages
     token: $GITHUB_TOKEN
-    keep_history: true
+    keep_history: false
     local_dir: doc
     skip_cleanup: true
     on:

@@ -407,8 +407,9 @@ class Schema {
         if (hasOwnProperty(def, '$ref') && def.$ref) {
             return this.getReferredDefaultValue(def);
         }
-        throw new Error('The schema definition must have at least one of the following fields defined:\n'
-            + 'const, default, examples, type, $ref');
+        throw new Error('The following schema definition must have at least one of the '
+            + '["const", "default", "examples", "type", "$ref"] fields:\n'
+            + JSON.stringify(def, null, 2));
     }
 }
 
