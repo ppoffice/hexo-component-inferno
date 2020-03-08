@@ -1,6 +1,6 @@
 {
   "name": "hexo-component-inferno",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "A collection of Inferno.js layout components and utility scripts for Hexo",
   "main": "lib/index.js",
   "repository": "https://github.com/ppoffice/hexo-component-inferno",
@@ -12,8 +12,7 @@
     "lint": "eslint src fixture",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
-    "clean": "rm -rf lib doc coverage",
-    "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag $PACKAGE_VERSION && git push --tags"
+    "clean": "rm -rf lib doc coverage"
   },
   "directories": {
     "lib": "./lib"
