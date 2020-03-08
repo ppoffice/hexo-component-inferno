@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest lib",
+    "test-cov": "jest lib --coverage",
     "lint": "eslint src fixture",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",

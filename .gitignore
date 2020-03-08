@@ -115,6 +115,9 @@ dist
 *.iws
 *.iml
 
+# NPM lock file
+package-lock.json
+
 # Yarn lock file
 yarn.lock
 

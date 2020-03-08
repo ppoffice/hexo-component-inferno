@@ -1,0 +1,37 @@
+language: node_js
+
+os: linux
+
+cache: false
+
+node_js:
+  - "8"
+  - "10"
+  - "node"
+
+script:
+  - npm run build
+  - npm run lint
+  - npm run test-cov
+
+after_script:
+  - npm install coveralls
+  - cat ./coverage/lcov.info | coveralls
+
+before_deploy:
+  - npm run docs
+
+deploy:
+  - provider: pages
+    token: $GITHUB_TOKEN
+    keep_history: true
+    local_dir: doc
+    skip_cleanup: true
+    on:
+      branch: master
+  - provider: npm
+    email: zrp1994@gmail.com
+    api_token: $NPM_TOKEN
+    skip_cleanup: true
+    on:
+      tags: true
