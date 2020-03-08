@@ -39,7 +39,10 @@ const CDNJS_FIXTURES = {
             ? fname.substr(0, fname.length - 4) + '.min.css' : fname
     ],
     'mathjax': (ver, fname) => [
-        'mathjax', ver, fname.startsWith('unpacked/') ? fname.substr(9) : fname
+        'mathjax', ver, (() => {
+            fname = fname.startsWith('unpacked/') ? fname.substr(9) : fname;
+            return fname.indexOf('.min.') > -1 ? fname.replace(/\.min\./gi, '.') : fname;
+        })()
     ],
     'katex': (ver, fname) => [
         'KaTeX', ver, fname
@@ -52,6 +55,15 @@ const CDNJS_FIXTURES = {
     ],
     // disqusjs is not hosted on CDN.js
     'disqusjs': (ver, fname) => []
+};
+
+const UNPKG_FIXTURES = {
+    'mathjax': (ver, fname) => [
+        'mathjax', ver, fname.indexOf('.min.') > -1 ? fname.replace(/\.min\./gi, '.') : fname
+    ],
+    'disqusjs': (ver, fname) => [
+        'disqusjs', ver, fname.indexOf('.min.') > -1 ? fname.replace(/\.min\./gi, '.') : fname
+    ]
 };
 
 /**
@@ -73,28 +85,45 @@ const CDNJS_FIXTURES = {
  * // -> https://use.fontawesome.com/releases/v5.12.0/css/all.css
  */
 module.exports = function(hexo) {
+    function applyFixture(fixture, _package, version, filename) {
+        if (Object.prototype.hasOwnProperty.call(fixture, _package)) {
+            const result = fixture[_package](version, filename);
+            // package is not hosted on the given CDN
+            if (!result.length) {
+                throw new Error();
+            }
+            return result;
+        }
+        return [_package, version, filename];
+    }
+
     hexo.extend.helper.register('cdn', function(_package, version, filename) {
-        let { cdn = 'jsdelivr' } = typeof this.config.providers === 'object' ? this.config.providers : {};
-        if (cdn in PROVIDERS.LIBRARY) {
-            cdn = PROVIDERS.LIBRARY[cdn];
+        const { cdn = 'jsdelivr' } = typeof this.config.providers === 'object' ? this.config.providers : {};
+        let _cdn = cdn;
+        if (_cdn in PROVIDERS.LIBRARY) {
+            _cdn = PROVIDERS.LIBRARY[_cdn];
         }
         // cdn.js does not follow a GitHub npm style like jsdeliver and unpkg do. Patch it!
-        if (cdn === 'cdnjs' || cdn.startsWith('[cdnjs]')) {
-            if (cdn.startsWith('[cdnjs]')) {
-                cdn = cdn.substr(7);
+        if (_cdn.startsWith('[cdnjs]')) {
+            if (_cdn.startsWith('[cdnjs]')) {
+                _cdn = _cdn.substr(7);
             }
-            if (filename.startsWith('dist/')) {
-                filename = filename.substr(5);
-            }
-            if (Object.prototype.hasOwnProperty.call(CDNJS_FIXTURES, _package)) {
-                [_package, version, filename] = CDNJS_FIXTURES[_package](version, filename);
-                // package is not hosted on CDN.js
-                if (!_package) {
-                    cdn = 'jsdelivr';
+            try {
+                [_package, version, filename] = applyFixture(CDNJS_FIXTURES, _package, version, filename);
+                if (filename.startsWith('dist/')) {
+                    filename = filename.substr(5);
                 }
+            } catch (e) {
+                _cdn = PROVIDERS.LIBRARY.jsdelivr;
+            }
+        } else if (cdn === 'unpkg') {
+            try {
+                [_package, version, filename] = applyFixture(UNPKG_FIXTURES, _package, version, filename);
+            } catch (e) {
+                _cdn = PROVIDERS.LIBRARY.jsdelivr;
             }
         }
-        return cdn.replace(/\${\s*package\s*}/gi, _package)
+        return _cdn.replace(/\${\s*package\s*}/gi, _package)
             .replace(/\${\s*version\s*}/gi, version)
             .replace(/\${\s*filename\s*}/gi, filename);
     });

@@ -1,11 +1,11 @@
 const path = require('path');
 const view = require('./view');
-const ExampleFixtureView = require('../../fixture/layout/example');
-const DisqusFixtureView = require('../../fixture/layout/comment/disqus');
 const DisqusLibraryView = require('../view/comment/disqus');
 const OpenGraphLibraryView = require('../view/misc/open_graph');
 
 const themeDir = path.join(__dirname, '../../fixture');
+const ExampleFixtureView = require(themeDir + '/layout/example');
+const DisqusFixtureView = require(themeDir + '/layout/comment/disqus');
 
 beforeAll(() => {
     view.init({ theme_dir: themeDir });

@@ -27,11 +27,15 @@ module.exports = function(hexo) {
         if (article && article.thumbnail === false) {
             return false;
         }
-        return 'thumbnail' in post && post.thumbnail;
+        if ('thumbnail' in post && post.thumbnail) {
+            return true;
+        }
+        return false;
     });
 
     hexo.extend.helper.register('get_thumbnail', function(post) {
-        const { url_for, has_thumbnail } = this.helper;
+        const url_for = this.extend.helper.get('url_for').bind(this);
+        const has_thumbnail = this.extend.helper.get('has_thumbnail').bind(this);
         return url_for(has_thumbnail.call(this, post) ? post.thumbnail : '/img/thumbnail.svg');
     });
 };

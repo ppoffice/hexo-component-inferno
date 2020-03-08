@@ -1,0 +1,10 @@
+title: page config
+
+int: 3
+float: 0.3
+bool: false
+str: '3'
+empty: null
+arr: [7, 8, 9]
+obj:
+  field: 3

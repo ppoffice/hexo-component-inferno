@@ -1,0 +1,10 @@
+title: theme config
+
+int: 1
+float: 0.1
+bool: true
+str: '1'
+empty: null
+arr: [1, 2, 3]
+obj:
+  field: 1

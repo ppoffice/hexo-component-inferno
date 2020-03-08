@@ -9,5 +9,9 @@
                 "imports": true
             }
         ]
+    ],
+    "test": [
+        "src/**/*.jsx",
+        "fixture/**/*.jsx"
     ]
 }

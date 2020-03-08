@@ -69,7 +69,7 @@ module.exports = hexo => {
 
         const page = locals.page;
         if (page) {
-            if ((page.layout !== 'page' || page.layout !== 'post') && ALTERNATIVE_CONFIG[page.layout]) {
+            if (page.layout in ALTERNATIVE_CONFIG) {
                 // load alternative config if exists
                 locals.config = Object.assign({}, Object.getPrototypeOf(locals).theme || locals.theme, ALTERNATIVE_CONFIG[page.layout]);
             } else {
@@ -78,7 +78,7 @@ module.exports = hexo => {
             }
             // merge page configs
             if (page.__post === true) {
-                Object.assign(locals.config, getExtraConfig(page, RESERVED_KEYS.page));
+                Object.assign(locals.config, getExtraConfig(page, RESERVED_KEYS.post));
             } else if (page.__page === true) {
                 Object.assign(locals.config, getExtraConfig(page, RESERVED_KEYS.page));
             }
