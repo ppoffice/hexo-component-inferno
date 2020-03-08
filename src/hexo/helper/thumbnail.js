@@ -34,8 +34,8 @@ module.exports = function(hexo) {
     });
 
     hexo.extend.helper.register('get_thumbnail', function(post) {
-        const url_for = this.extend.helper.get('url_for').bind(this);
-        const has_thumbnail = this.extend.helper.get('has_thumbnail').bind(this);
+        const url_for = hexo.extend.helper.get('url_for').bind(hexo);
+        const has_thumbnail = hexo.extend.helper.get('has_thumbnail').bind(hexo);
         return url_for(has_thumbnail.call(this, post) ? post.thumbnail : '/img/thumbnail.svg');
     });
 };
