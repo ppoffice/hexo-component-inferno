@@ -32,7 +32,7 @@ class Gallery extends Component {
             </Fragment>;
         }
 
-        const js = `document.addEventListener('DOMContentLoaded', () => {
+        const js = `window.addEventListener("load", () => {
             if (typeof $.fn.lightGallery === 'function') {
                 $('.article').lightGallery({ selector: '.gallery-item' });
             }

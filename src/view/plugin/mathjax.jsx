@@ -16,7 +16,7 @@ class Mathjax extends Component {
     render() {
         const { jsUrl } = this.props;
 
-        const js = `document.addEventListener('DOMContentLoaded', function () {
+        const js = `window.addEventListener("load", function () {
             MathJax.Hub.Config({
                 'HTML-CSS': {
                     matchFontHeight: false

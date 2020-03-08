@@ -19,7 +19,7 @@ class KaTeX extends Component {
     render() {
         const { cssUrl, jsUrl, autoRenderUrl } = this.props;
 
-        const js = `document.addEventListener("DOMContentLoaded", function() {
+        const js = `window.addEventListener("load", function() {
             document.querySelectorAll('[role="article"] > .content').forEach(function(element) {
                 renderMathInElement(element);
             });

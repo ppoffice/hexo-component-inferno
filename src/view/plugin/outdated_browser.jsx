@@ -19,7 +19,7 @@ class OutdatedBrowser extends Component {
     render() {
         const { head, jsUrl, cssUrl } = this.props;
 
-        const js = `document.addEventListener("DOMContentLoaded", function () {
+        const js = `window.addEventListener("load", function () {
             outdatedBrowser({
                 bgColor: '#f25648',
                 color: '#ffffff',
@@ -39,7 +39,7 @@ class OutdatedBrowser extends Component {
                 </p>
                 <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
             </div>
-            <script src={jsUrl} async={true}></script>
+            <script src={jsUrl} defer={true}></script>
             <script dangerouslySetInnerHTML={{ __html: js }}></script>
         </Fragment>;
 
