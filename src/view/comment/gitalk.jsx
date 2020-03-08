@@ -125,8 +125,8 @@ Gitalk.Cacheable = cacheComponent(Gitalk, 'comment.gitalk', props => {
         proxy: comment.proxy,
         flipMoveOptions: comment.flip_move_options,
         enableHotKey: comment.enable_hotkey,
-        cssUrl: helper.cdn('gitalk', '1.4.1', 'dist/gitalk.css'),
-        jsUrl: helper.cdn('gitalk', '1.4.1', 'dist/gitalk.min.js')
+        cssUrl: helper.cdn('gitalk', '1.6.2', 'dist/gitalk.css'),
+        jsUrl: helper.cdn('gitalk', '1.6.2', 'dist/gitalk.min.js')
     };
 });
 
