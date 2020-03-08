@@ -44,7 +44,9 @@ jobs:
 
     - stage: npm release
       node_js: "10"
-      script: echo "Deploying to npm ..."
+      script:
+        - echo "Deploying to npm ..."
+        - yarn build
       deploy:
         provider: npm
         email: zrp1994@gmail.com
