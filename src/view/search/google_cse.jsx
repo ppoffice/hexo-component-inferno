@@ -16,6 +16,8 @@ class GoogleCSE extends Component {
     render() {
         const { cx, hint } = this.props;
 
+        const css = '.searchbox .searchbox-body { background: white; }';
+
         const js1 = `(function() {
             var cx = '${cx}';
             var gcse = document.createElement('script');
@@ -62,22 +64,24 @@ class GoogleCSE extends Component {
         })(document, jQuery);`;
 
         return <Fragment>
-            <div class="searchbox google-cse-search">
+            <style dangerouslySetInnerHTML={{ __html: css }}></style>
+            <div class="searchbox">
                 <div class="searchbox-container">
-                    <div class="searchbox-input-wrapper">
-                        <input type="text" class="searchbox-input" placeholder={hint} />
-                        <span class="searchbox-close searchbox-selectable"><i class="fa fa-times-circle"></i></span>
+                    <div class="searchbox-header">
+                        <div class="searchbox-input-container">
+                            <input type="text" class="searchbox-input" placeholder={hint} />
+                        </div>
+                        <a class="searchbox-close" href="javascript:;">&times;</a>
                     </div>
                     {(() => {
                         if (cx) {
                             const innerHtml = '<gcse:searchresults-only></gcse:searchresults-only>';
-                            return <div class="searchbox-result-wrapper" dangerouslySetInnerHTML={{ __html: innerHtml }}></div>;
+                            return <div class="searchbox-body" dangerouslySetInnerHTML={{ __html: innerHtml }}></div>;
                         }
                         return <div class="notification is-danger">
                             It seems that you forget to set the <code>cx</code> value for the Google CSE.
                             Please set it in <code>_config.yml</code>.
                         </div>;
-
                     })()}
                 </div>
                 {cx ? <script dangerouslySetInnerHTML={{ __html: js1 }}></script> : null}

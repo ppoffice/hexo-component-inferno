@@ -16,7 +16,7 @@ class Baidu extends Component {
         const { url, hint } = this.props;
 
         const js = `(function ($) {
-            $('.search-form').on('submit', function (e) {
+            $('.searchbox-input-container').on('submit', function (e) {
                 var keyword = $('.searchbox-input[name="wd"]').val();
                 window.location = 'https://www.baidu.com/s?wd=site:${url.replace(/http(s)*:\/\//, '')} ' + keyword;
                 return false;
@@ -35,11 +35,11 @@ class Baidu extends Component {
         return <Fragment>
             <div class="searchbox">
                 <div class="searchbox-container">
-                    <div class="searchbox-input-wrapper">
-                        <form class="search-form">
+                    <div class="searchbox-header">
+                        <form class="searchbox-input-container">
                             <input name="wd" type="text" class="searchbox-input" placeholder={hint} />
-                            <span class="searchbox-close searchbox-selectable"><i class="fa fa-times-circle"></i></span>
                         </form>
+                        <a class="searchbox-close" href="javascript:;">&times;</a>
                     </div>
                 </div>
             </div>
