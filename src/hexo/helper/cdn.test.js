@@ -26,6 +26,8 @@ describe('Get JavaScript library URL', () => {
             () => cdn('katex', '0.11.1', 'dist/katex.min.js'),
             () => cdn('clipboard', '2.0.6', 'dist/clipboard.min.js'),
             () => cdn('disqusjs', '1.2.6', 'dist/disqus.min.js'),
+            () => cdn('algoliasearch', '4.0.3', 'dist/algoliasearch-lite.umd.js'),
+            () => cdn('instantsearch.js', '4.3.1', 'dist/instantsearch.production.min.js'),
             () => cdn('example', '1.0.0', 'example.js')
         ];
     });
@@ -41,6 +43,8 @@ describe('Get JavaScript library URL', () => {
             'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js',
             'https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js',
             'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+            'https://cdn.jsdelivr.net/npm/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
+            'https://cdn.jsdelivr.net/npm/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
             'https://cdn.jsdelivr.net/npm/example@1.0.0/example.js'
         ];
         cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -58,6 +62,8 @@ describe('Get JavaScript library URL', () => {
             'https://unpkg.com/katex@0.11.1/dist/katex.min.js',
             'https://unpkg.com/clipboard@2.0.6/dist/clipboard.min.js',
             'https://unpkg.com/disqusjs@1.2.6/dist/disqus.js',
+            'https://unpkg.com/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
+            'https://unpkg.com/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
             'https://unpkg.com/example@1.0.0/example.js'
         ];
         cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -75,6 +81,8 @@ describe('Get JavaScript library URL', () => {
             'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
             'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/example/1.0.0/example.js'
         ];
         cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -92,6 +100,8 @@ describe('Get JavaScript library URL', () => {
             'https://cdnjs.loli.net/ajax/libs/KaTeX/0.11.1/katex.min.js',
             'https://cdnjs.loli.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
             'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+            'https://cdnjs.loli.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+            'https://cdnjs.loli.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
             'https://cdnjs.loli.net/ajax/libs/example/1.0.0/example.js'
         ];
         cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -109,6 +119,8 @@ describe('Get JavaScript library URL', () => {
             'https://my.cdn/katex@0.11.1/dist/katex.min.js',
             'https://my.cdn/clipboard@2.0.6/dist/clipboard.min.js',
             'https://my.cdn/disqusjs@1.2.6/dist/disqus.min.js',
+            'https://my.cdn/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
+            'https://my.cdn/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
             'https://my.cdn/example@1.0.0/example.js'
         ];
         cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -126,6 +138,8 @@ describe('Get JavaScript library URL', () => {
             'https://my.cdn/ajax/libs/KaTeX/0.11.1/katex.min.js',
             'https://my.cdn/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
             'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+            'https://my.cdn/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+            'https://my.cdn/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
             'https://my.cdn/ajax/libs/example/1.0.0/example.js'
         ];
         cases.forEach((func, i) => expect(func()).toBe(expected[i]));
