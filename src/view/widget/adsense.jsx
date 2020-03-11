@@ -34,8 +34,11 @@ class AdSense extends Component {
                     <h3 class="menu-label">{title}</h3>
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                     <ins class="adsbygoogle"
+                        style="display:block"
                         data-ad-client={clientId}
-                        data-ad-slot={slotId}></ins>
+                        data-ad-slot={slotId}
+                        data-ad-format="auto"
+                        data-full-width-responsive="true"></ins>
                     <script dangerouslySetInnerHTML={{ __html: '(adsbygoogle = window.adsbygoogle || []).push({});' }}></script>
                 </div>
             </div>
