@@ -19,6 +19,7 @@ const PROVIDERS = {
         loli: 'https://fonts.loli.net/${ type }?family=${ fontname }'
     },
     ICON: {
+        loli: 'https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0/css/all.min.css',
         fontawesome: 'https://use.fontawesome.com/releases/v5.12.0/css/all.css'
     }
 };
