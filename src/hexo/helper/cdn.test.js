@@ -2,11 +2,12 @@ const path = require('path');
 const Hexo = require('hexo');
 const register = require('./cdn');
 
-const rootDir = path.join(__dirname, '../../fixture/site');
+const rootDir = path.join(__dirname, '../../../fixture/site');
 const hexo = new Hexo(rootDir, { silent: true });
 
 beforeAll(async () => {
     await hexo.init();
+    await hexo.load();
     register(hexo);
 });
 

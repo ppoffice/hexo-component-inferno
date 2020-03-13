@@ -1,6 +1,6 @@
 {
   "name": "hexo-component-inferno",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "A collection of Inferno.js layout components and utility scripts for Hexo",
   "main": "lib/index.js",
   "repository": "https://github.com/ppoffice/hexo-component-inferno",
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest lib",
     "test-cov": "jest lib --coverage",
-    "lint": "eslint src fixture",
+    "lint": "eslint src fixture asset",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
     "clean": "rm -rf lib doc coverage"
@@ -18,7 +18,8 @@
     "lib": "./lib"
   },
   "files": [
-    "lib/"
+    "lib/",
+    "asset/"
   ],
   "devDependencies": {
     "@babel/cli": "^7.8.3",

@@ -10,11 +10,14 @@ const { cacheComponent } = require('../../util/cache');
  *
  * @see https://cse.google.com/cse/create/new
  * @example
- * <GoogleCSE cx="******" hint="Placeholder text" />
+ * <GoogleCSE
+ *     cx="******"
+ *     hint="Placeholder text"
+ *     jsUrl="******" />
  */
 class GoogleCSE extends Component {
     render() {
-        const { cx, hint } = this.props;
+        const { cx, hint, jsUrl } = this.props;
 
         const css = '.searchbox .searchbox-body { background: white; }';
 
@@ -27,41 +30,6 @@ class GoogleCSE extends Component {
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(gcse, s);
         })();`;
-
-        const js2 = `(function (document, $) {
-            function debounce(func, wait, immediate) {
-                var timeout;
-                return function() {
-                    var context = this, args = arguments;
-                    var later = function() {
-                        timeout = null;
-                        if (!immediate) func.apply(context, args);
-                    };
-                    var callNow = immediate && !timeout;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                    if (callNow) func.apply(context, args);
-                };
-            };
-    
-            $(document).on('click', '.navbar-main .search', function () {
-                $('.searchbox').toggleClass('show');
-            }).on('click', '.searchbox .searchbox-mask', function () {
-                $('.searchbox').removeClass('show');
-            }).on('click', '.searchbox-close', function () {
-                $('.searchbox').removeClass('show');
-            }).on('keydown', '.searchbox-input', debounce(function () {
-                var value = $(this).val();
-                try {
-                    var element = google.search.cse.element.getElement('searchresults-only0');
-                    if (value.trim() === '') {
-                        element.clearAllResults();
-                    } else {
-                        element.execute(value);
-                    }
-                } catch (e) {}
-            }, 300));
-        })(document, jQuery);`;
 
         return <Fragment>
             <style dangerouslySetInnerHTML={{ __html: css }}></style>
@@ -86,7 +54,7 @@ class GoogleCSE extends Component {
                 </div>
                 {cx ? <script dangerouslySetInnerHTML={{ __html: js1 }}></script> : null}
             </div>
-            <script dangerouslySetInnerHTML={{ __html: js2 }}></script>
+            <script src={jsUrl}></script>
         </Fragment>;
     }
 }
@@ -99,16 +67,20 @@ class GoogleCSE extends Component {
  *
  * @see module:util/cache.cacheComponent
  * @example
- * <Baidu.Cacheable
+ * <GoogleCSE.Cacheable
  *     search={{ cx: '******' }}
- *     helper={{ __: function() {...} }} />
+ *     helper={{
+ *         __: function() {...},
+ *         url_for: function() {...}
+ *     }} />
  */
 GoogleCSE.Cacheable = cacheComponent(GoogleCSE, 'search.google', props => {
     const { helper, search } = props;
 
     return {
         cx: search.cx,
-        hint: helper.__('search.hint')
+        hint: helper.__('search.hint'),
+        jsUrl: helper.url_for('/js/google_cse.js')
     };
 });
 

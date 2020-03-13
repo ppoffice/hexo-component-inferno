@@ -2,7 +2,7 @@ const path = require('path');
 const Hexo = require('hexo');
 const register = require('./categories');
 
-const rootDir = path.join(__dirname, '../../fixture/site');
+const rootDir = path.join(__dirname, '../../../fixture/site');
 const hexo = new Hexo(rootDir, { silent: true });
 const Page = hexo.model('Page');
 const Post = hexo.model('Post');
@@ -11,6 +11,7 @@ let pages = [];
 
 beforeAll(async () => {
     await hexo.init();
+    await hexo.load();
     register(hexo);
     pages = await Page.insert([
         { source: 'bio/index.md', path: 'bio/', updated: 1e8 - 3 },
