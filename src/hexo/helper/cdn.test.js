@@ -203,6 +203,14 @@ describe('Get icon font URL', () => {
         cases.forEach((func, i) => expect(func()).toBe(expected[i]));
     });
 
+    test('loli', () => {
+        hexo.config.providers = { iconcdn: 'loli' };
+        const expected = [
+            'https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0/css/all.min.css'
+        ];
+        cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+    });
+
     test('Custom web font CDN', () => {
         hexo.config.providers = { iconcdn: 'https://my.cdn/icon' };
         const expected = [
