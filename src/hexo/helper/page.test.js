@@ -6,6 +6,7 @@ const rootDir = path.join(__dirname, '../../fixture/site');
 const hexo = new Hexo(rootDir, { silent: true });
 const Page = hexo.model('Page');
 const Post = hexo.model('Post');
+const htmlContent = '<div>test<p>test</p></div>';
 
 let pages = [];
 
@@ -43,4 +44,9 @@ test('Correctly check if page is /tags page', () => {
     pages.forEach((page, i) => expect(isTags(page)).toBe(expected[i]));
     hexo.page = pages[0];
     expect(isTags()).toBe(expected[0]);
+});
+
+test('remove html tag from include html content', () => {
+    const removeHtmlTag = hexo.extend.helper.get('remove_html_tag').bind(hexo);
+    expect(removeHtmlTag()).toBe(htmlContent);
 });
