@@ -41,7 +41,7 @@ module.exports = function(hexo) {
                 return null;
             }
             return {
-                path: encodeURI('/' + path.relative(assetsDir, file)),
+                path: encodeURI('/' + filepath.replace(/\\/g, '/')),
                 data: fs.readFileSync(file, { encoding: 'utf-8' })
             };
         }).filter(file => file !== null);
