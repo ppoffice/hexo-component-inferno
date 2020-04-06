@@ -51,13 +51,13 @@ class DisqusJs extends Component {
         const js = `new DisqusJS({
             shortname: '${shortname}',
             apikey: ${JSON.stringify(apiKey)},
-            siteName: "${siteTitle}",
+            siteName: ${JSON.stringify(siteTitle)},
             identifier: '${disqusId || path}',
             url: '${permalink || path}',
-            title: '${pageTitle}',
+            title: ${JSON.stringify(pageTitle)},
             api: '${api}',
-            admin: '${admin}',
-            adminLabel: '${adminLabel}',
+            admin: ${JSON.stringify(admin)},
+            adminLabel: ${JSON.stringify(adminLabel)},
             nesting: ${nesting}
         });`;
         return <Fragment>
