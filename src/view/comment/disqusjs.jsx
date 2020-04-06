@@ -50,8 +50,8 @@ class DisqusJs extends Component {
         }
         const js = `new DisqusJS({
             shortname: '${shortname}',
-            apikey: '${JSON.stringify(apiKey)}',
-            siteName: '${siteTitle}',
+            apikey: ${JSON.stringify(apiKey)},
+            siteName: "${siteTitle}",
             identifier: '${disqusId || path}',
             url: '${permalink || path}',
             title: '${pageTitle}',
