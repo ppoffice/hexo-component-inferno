@@ -2,7 +2,7 @@
  * Table of contents widget JSX component.
  * @module view/widget/toc
  */
-const { tocObj: getTocObj } = require('hexo-util');
+const { tocObj: getTocObj, unescapeHTML } = require('hexo-util');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
@@ -101,7 +101,7 @@ class Toc extends Component {
             result = <li>
                 <a class="is-flex" href={'#' + toc.id}>
                     <span class="mr-2">{toc.index}</span>
-                    <span>{toc.text}</span>
+                    <span>{unescapeHTML(toc.text)}</span>
                 </a>
                 {result}
             </li>;
