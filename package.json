@@ -1,6 +1,6 @@
 {
   "name": "hexo-component-inferno",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A collection of Inferno.js layout components and utility scripts for Hexo",
   "main": "lib/index.js",
   "repository": "https://github.com/ppoffice/hexo-component-inferno",
