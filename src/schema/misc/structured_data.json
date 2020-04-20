@@ -29,7 +29,7 @@
                 "string",
                 "array"
             ],
-            "description": "Page images (optional) Default to the Open Graph image or thumbnail of the page\nYou should leave this blank for most of the time",
+            "description": "Page images (optional)\nYou should leave this blank for most of the time",
             "items": {
                 "type": "string"
             },

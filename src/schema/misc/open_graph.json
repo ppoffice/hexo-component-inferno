@@ -25,7 +25,7 @@
                 "string",
                 "array"
             ],
-            "description": "Page cover (og:image) (optional) Default to the Open Graph image or thumbnail of the page\nYou should leave this blank for most of the time",
+            "description": "Page cover (og:image) (optional)\nYou should leave this blank for most of the time",
             "items": {
                 "type": "string"
             },
@@ -58,7 +58,7 @@
         },
         "twitter_site": {
             "type": "string",
-            "description": "Twitter ID (twitter:creator)",
+            "description": "Twitter Site (twitter:site)",
             "nullable": true
         },
         "google_plus": {
