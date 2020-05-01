@@ -16,29 +16,27 @@ class Mathjax extends Component {
     render() {
         const { jsUrl } = this.props;
 
-        const js = `window.addEventListener("load", function () {
-            MathJax.Hub.Config({
-                'HTML-CSS': {
-                    matchFontHeight: false
-                },
-                SVG: {
-                    matchFontHeight: false
-                },
-                CommonHTML: {
-                    matchFontHeight: false
-                },
-                tex2jax: {
-                    inlineMath: [
-                        ['$','$'],
-                        ['\\\\(','\\\\)']
-                    ]
-                }
-            });
+        const js = `MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\\\(','\\\\)']
+                ]
+            }
         });`;
 
         return <Fragment>
+            <script type="text/x-mathjax-config" dangerouslySetInnerHTML={{ __html: js }}></script>
             <script src={jsUrl} defer={true}></script>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
         </Fragment>;
     }
 }
