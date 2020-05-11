@@ -13,11 +13,12 @@ const { cacheComponent } = require('../../util/cache');
  * <KaTeX
  *     cssUrl="/path/to/katex.css"
  *     jsUrl="/path/to/katex.js"
- *     autoRenderUrl="/path/to/auto-render.js" />
+ *     autoRenderUrl="/path/to/auto-render.js"
+ *     mhchemUrl="/path/to/mhchem.js" />
  */
 class KaTeX extends Component {
     render() {
-        const { cssUrl, jsUrl, autoRenderUrl } = this.props;
+        const { cssUrl, jsUrl, autoRenderUrl, mhchemUrl } = this.props;
 
         const js = `window.addEventListener("load", function() {
             document.querySelectorAll('[role="article"] > .content').forEach(function(element) {
@@ -29,6 +30,7 @@ class KaTeX extends Component {
             <link rel="stylesheet" href={cssUrl} />
             <script src={jsUrl} defer={true}></script>
             <script src={autoRenderUrl} defer={true}></script>
+            <script src={mhchemUrl} defer={true}></script>
             <script dangerouslySetInnerHTML={{ __html: js }}></script>
         </Fragment>;
     }
@@ -54,7 +56,8 @@ KaTeX.Cacheable = cacheComponent(KaTeX, 'plugin.katex', props => {
     return {
         jsUrl: helper.cdn('katex', '0.11.1', 'dist/katex.min.js'),
         cssUrl: helper.cdn('katex', '0.11.1', 'dist/katex.min.css'),
-        autoRenderUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/auto-render.min.js')
+        autoRenderUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/auto-render.min.js'),
+        mhchemUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/mhchem.js')
     };
 });
 
