@@ -141,7 +141,7 @@ class Toc extends Component {
  */
 Toc.Cacheable = cacheComponent(Toc, 'widget.toc', props => {
     const { config, page, helper } = props;
-    const { layout, content } = page;
+    const { layout, content, encrypt, origin } = page;
 
     if (config.toc !== true || (layout !== 'page' && layout !== 'post')) {
         return null;
@@ -149,7 +149,7 @@ Toc.Cacheable = cacheComponent(Toc, 'widget.toc', props => {
 
     return {
         title: helper._p('widget.catalogue', Infinity),
-        content
+        content: encrypt ? origin : content
     };
 });
 
