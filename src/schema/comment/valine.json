@@ -21,18 +21,6 @@
             "description": "Comment box placeholders",
             "nullable": true
         },
-        "notify": {
-            "type": "boolean",
-            "description": "Enable email notification when someone comments",
-            "default": false,
-            "nullable": true
-        },
-        "verify": {
-            "type": "boolean",
-            "description": "Enable verification code service",
-            "default": false,
-            "nullable": true
-        },
         "avatar": {
             "type": "string",
             "description": "Gravatar type",
@@ -75,6 +63,12 @@
             "default": 10,
             "nullable": true
         },
+        "lang": {
+            "type": "string",
+            "description": "i18n support",
+            "default": "zh-CN",
+            "nullable": true
+        },
         "visitor": {
             "type": "boolean",
             "description": "Show visitor count",
@@ -91,6 +85,33 @@
             "type": "boolean",
             "description": "Record reviewer IP address",
             "default": false,
+            "nullable": true
+        },
+        "server_urls": {
+            "type": "string",
+            "description": "Root URL of your custom domain",
+            "nullable": true
+        },
+        "emoji_cdn": {
+            "type": "string",
+            "description": "CDN URL of the Emoji provider",
+            "nullable": true
+        },
+        "emoji_maps": {
+            "type": "object",
+            "description": "Mappings between emoji and its CDN file name",
+            "nullable": true
+        },
+        "enable_qq": {
+            "type": "boolean",
+            "description": "Enable QQ nickname and avatar",
+            "default": false,
+            "nullable": true
+        },
+        "required_fields": {
+            "type": "array",
+            "description": "Required commenter information fields",
+            "default": [],
             "nullable": true
         }
     },

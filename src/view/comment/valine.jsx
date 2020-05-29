@@ -13,16 +13,20 @@ const { cacheComponent } = require('../../util/cache');
  * <Valine
  *     appId="******"
  *     appKey="******"
- *     notify={false}
- *     verify={false}
  *     placeholder="******"
  *     avatar="mm"
  *     avatarForce={false}
  *     meta={['nick', 'mail', 'link']}
  *     pageSize={10}
+ *     lang="zh-CN"
  *     visitor={false}
  *     highlight={true}
- *     recordIp={false}
+ *     recordIP={false}
+ *     serverURLs="http[s]://[tab/us].avoscloud.com"
+ *     emojiCDN=""
+ *     emojiMaps={null}
+ *     enableQQ={false}
+ *     requiredFields={[]}
  *     jsUrl="/path/to/Valine.js" />
  */
 class Valine extends Component {
@@ -30,16 +34,20 @@ class Valine extends Component {
         const {
             appId,
             appKey,
-            notify,
-            verify,
             placeholder,
             avatar = 'mm',
             avatarForce = false,
             meta = ['nick', 'mail', 'link'],
             pageSize = 10,
+            lang = 'zh-CN',
             visitor = false,
             highlight = true,
-            recordIp = false,
+            recordIP = false,
+            serverURLs = '',
+            emojiCDN = '',
+            emojiMaps = null,
+            enableQQ = false,
+            requiredFields = [],
             jsUrl
         } = this.props;
         if (!appId || !appKey) {
@@ -50,18 +58,22 @@ class Valine extends Component {
         }
         const js = `new Valine({
             el: '#valine-thread' ,
-            notify: ${notify},
-            verify: ${verify},
-            appId: '${appId}',
-            appKey: '${appKey}',
-            placeholder: '${placeholder}',
-            avatar: '${avatar}',
-            avatarForce: ${avatarForce},
-            meta: ${JSON.stringify(meta)},
-            pageSize: ${pageSize},
-            visitor: ${visitor},
-            highlight: ${highlight},
-            recordIP: ${recordIp}
+            appId: ${JSON.stringify(appId)},
+            appKey: ${JSON.stringify(appKey)},
+            ${placeholder ? `placeholder: ${JSON.stringify(placeholder)},` : ''}
+            ${avatar ? `avatar: ${JSON.stringify(avatar)},` : ''}
+            ${avatarForce ? `avatarForce: ${JSON.stringify(avatarForce)},` : ''}
+            ${meta ? `meta: ${JSON.stringify(meta)},` : ''}
+            ${pageSize ? `pageSize: ${JSON.stringify(pageSize)},` : ''}
+            ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
+            ${visitor ? `visitor: ${JSON.stringify(visitor)},` : ''}
+            ${highlight ? `highlight: ${JSON.stringify(highlight)},` : ''}
+            ${recordIP ? `recordIP: ${JSON.stringify(recordIP)},` : ''}
+            ${serverURLs ? `serverURLs: ${JSON.stringify(serverURLs)},` : ''}
+            ${emojiCDN ? `emojiCDN: ${JSON.stringify(emojiCDN)},` : ''}
+            ${emojiMaps ? `emojiMaps: ${JSON.stringify(emojiMaps)},` : ''}
+            ${enableQQ ? `enableQQ: ${JSON.stringify(enableQQ)},` : ''}
+            ${Array.isArray(requiredFields) ? `requiredFields: ${JSON.stringify(requiredFields)},` : ''}
         });`;
         return <Fragment>
             <div id="valine-thread" class="content"></div>
@@ -84,36 +96,44 @@ class Valine extends Component {
  *     comment={{
  *         app_id="******"
  *         app_key="******"
- *         notify={false}
- *         verify={false}
  *         placeholder="******"
  *         avatar="mm"
  *         avatar_force={false}
  *         meta={['nick', 'mail', 'link']}
  *         page_size={10}
+ *         lang="zh-CN"
  *         visitor={false}
  *         highlight={true}
  *         record_ip={false}
+ *         server_urls="http[s]://[tab/us].avoscloud.com"
+ *         emoji_cdn=""
+ *         emoji_maps={null}
+ *         enable_qq={false}
+ *         required_fields={[]}
  *     }}
  *     helper={{ cdn: function() {...} }} />
  */
 Valine.Cacheable = cacheComponent(Valine, 'comment.valine', props => {
-    const { comment, helper } = props;
+    const { comment, helper, page, config } = props;
 
     return {
         appId: comment.app_id,
         appKey: comment.app_key,
-        notify: comment.notify,
-        verify: comment.verify,
         placeholder: comment.placeholder,
         avatar: comment.avatar,
         avatarForce: comment.avatar_force,
         meta: comment.meta,
         pageSize: comment.page_size,
+        lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
         visitor: comment.visitor,
         highlight: comment.highlight,
-        recordIp: comment.record_ip,
-        jsUrl: helper.cdn('valine', '1.3.10', 'dist/Valine.min.js')
+        recordIP: comment.record_ip,
+        serverURLs: comment.server_urls,
+        emojiCDN: comment.emoji_cdn,
+        emojiMaps: comment.emoji_maps,
+        enableQQ: comment.enable_qq,
+        requiredFields: comment.required_fields,
+        jsUrl: helper.cdn('valine', '1.4.14', 'dist/Valine.min.js')
     };
 });
 
