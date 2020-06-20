@@ -13,8 +13,6 @@ let posts, pages, categories, tags;
 
 beforeAll(async () => {
     await hexo.init();
-    await hexo.load();
-    register(hexo);
     posts = await Post.insert([
         { title: 'post1', source: 'bar', slug: 'bar', updated: 1e8 + 1 },
         { title: 'post2 <input>', source: 'baz', slug: 'baz', updated: 1e8 - 1 }
@@ -33,6 +31,8 @@ beforeAll(async () => {
         { name: 'tag1' },
         { name: 'tag2' }
     ]);
+    await hexo.load();
+    register(hexo);
 });
 
 test('Export assets file from asset folder', async () => {

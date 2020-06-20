@@ -1,6 +1,6 @@
 {
   "name": "hexo-component-inferno",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A collection of Inferno.js layout components and utility scripts for Hexo",
   "main": "lib/index.js",
   "repository": "https://github.com/ppoffice/hexo-component-inferno",
@@ -33,6 +33,7 @@
     "eslint-plugin-json": "^2.0.1",
     "eslint-plugin-react": "^7.18.0",
     "hexo": "^4.2.0",
+    "hexo-pagination": "^1.0.0",
     "hexo-util": "^1.8.1",
     "inferno-server": "^7.4.1",
     "jest": "^25.1.0",
@@ -49,6 +50,7 @@
   },
   "peerDependencies": {
     "hexo": "^4.2.0",
-    "hexo-util": "^1.8.1"
+    "hexo-util": "^1.8.1",
+    "hexo-pagination": "^1.0.0"
   }
 }

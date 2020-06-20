@@ -11,8 +11,6 @@ let pages = [];
 
 beforeAll(async () => {
     await hexo.init();
-    await hexo.load();
-    register(hexo);
     pages = await Page.insert([
         { source: 'bio/index.md', path: 'bio/', updated: 1e8 - 3 },
         { source: 'about/index.md', path: 'about/', updated: 1e8 - 4 }
@@ -21,6 +19,8 @@ beforeAll(async () => {
         { source: 'bar', slug: 'bar', updated: 1e8 + 1 },
         { source: 'baz', slug: 'baz', updated: 1e8 - 1 }
     ]));
+    await hexo.load();
+    register(hexo);
 });
 
 
