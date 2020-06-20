@@ -12,8 +12,8 @@ const pagination = require('hexo-pagination');
  *
  * @param {Hexo} hexo The Hexo instance.
  */
-module.exports = function (hexo) {
-    hexo.extend.generator.register('category', function (locals) {
+module.exports = function(hexo) {
+    hexo.extend.generator.register('category', function(locals) {
         const config = this.config;
         const paginationDir = config.pagination_dir || 'page';
         const perPage = (config.category_generator ? config.category_generator.per_page : null) || 0;
