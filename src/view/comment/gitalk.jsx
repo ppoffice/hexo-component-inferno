@@ -26,7 +26,8 @@ const { cacheComponent } = require('../../util/cache');
  *     flipMoveOptions={...},
  *     enableHotKey={true},
  *     jsUrl="/path/to/gitalk.js",
- *     cssUrl="/path/to/gitalk.css" />
+ *     cssUrl="/path/to/gitalk.css",
+ *     language = "*****" />
  */
 class Gitalk extends Component {
     render() {
@@ -45,7 +46,8 @@ class Gitalk extends Component {
             flipMoveOptions,
             enableHotKey,
             jsUrl,
-            cssUrl
+            cssUrl,
+            language
         } = this.props;
 
         if (!id || !repo || !owner || !admin || !clientId || !clientSecret) {
@@ -69,6 +71,7 @@ class Gitalk extends Component {
             ${proxy ? `proxy: '${proxy}',` : ''}
             ${flipMoveOptions ? `flipMoveOptions: ${JSON.stringify(flipMoveOptions)},` : ''}
             enableHotKey: ${enableHotKey ? !!enableHotKey : true}
+            ${language? `language: ${language},` : ''}
         })
         gitalk.render('comment-container')`;
         return <Fragment>
@@ -101,7 +104,8 @@ class Gitalk extends Component {
  *         per_page: 10,
  *         proxy: '******',
  *         flip_move_options: {...},
- *         enable_hotkey: true
+ *         enable_hotkey: true,
+ *         language = "*****"
  *     }}
  *     page={{ path: '/path/to/page' }}
  *     helper={{ cdn: function() {...} }} />
@@ -126,7 +130,8 @@ Gitalk.Cacheable = cacheComponent(Gitalk, 'comment.gitalk', props => {
         flipMoveOptions: comment.flip_move_options,
         enableHotKey: comment.enable_hotkey,
         cssUrl: helper.cdn('gitalk', '1.6.2', 'dist/gitalk.css'),
-        jsUrl: helper.cdn('gitalk', '1.6.2', 'dist/gitalk.min.js')
+        jsUrl: helper.cdn('gitalk', '1.6.2', 'dist/gitalk.min.js'),
+        language: comment.language
     };
 });
 
