@@ -22,7 +22,7 @@ jobs:
         key: npm-cache
         restore-keys: npm-cache
     - name: Install dependencies
-      run: npm ci
+      run: npm install
     - name: Compile source code
       run: npm run build
     - name: Run tests
@@ -41,7 +41,7 @@ jobs:
         key: npm-cache
         restore-keys: npm-cache
     - name: Install dependencies
-      run: npm ci
+      run: npm install
     - name: Compile source code
       run: npm run build
     - name: Run coverage tests
