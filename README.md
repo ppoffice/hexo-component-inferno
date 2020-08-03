@@ -1,6 +1,6 @@
 # A collection of [Inferno.js](https://infernojs.org/) layout components and utility scripts for Hexo 
 
-[![Build Status](https://travis-ci.org/ppoffice/hexo-component-inferno.svg?branch=master)](https://travis-ci.org/ppoffice/hexo-component-inferno)
+[![Build Status](https://github.com/ppoffice/hexo-component-inferno/workflows/Test/badge.svg?branch=master)](https://github.com/ppoffice/hexo-component-inferno/actions)
 [![NPM version](https://badge.fury.io/js/hexo-component-inferno.svg)](https://www.npmjs.com/package/hexo-component-inferno)
 [![Coverage Status](https://img.shields.io/coveralls/ppoffice/hexo-component-inferno.svg)](https://coveralls.io/r/ppoffice/hexo-component-inferno?branch=master)
 
