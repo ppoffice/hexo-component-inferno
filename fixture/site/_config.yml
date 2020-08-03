@@ -1,1 +1,12 @@
+title: site title
+
 theme: inferno
+
+int: 1
+float: 1.0
+bool: false
+str: '1'
+empty: null
+arr: [1, 2, 3]
+obj:
+  field: 1

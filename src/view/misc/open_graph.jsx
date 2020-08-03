@@ -134,7 +134,7 @@ module.exports = class extends Component {
 
         if (keywords) {
             if (typeof keywords === 'string') {
-                keywords = keywords.split(',');
+                keywords = [keywords];
             }
 
             keywords.map(tag => {

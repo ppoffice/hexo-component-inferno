@@ -1,10 +1,10 @@
-title: post config
+title: site title from layout config under theme dir
 
-int: 2
-float: 0.2
+int: 100
+float: 0.01
 bool: false
-str: '2'
+str: '100'
 empty: null
-arr: [4, 5, 6]
+arr: [100, 200, 300]
 obj:
-  field: 2
+  field: 100

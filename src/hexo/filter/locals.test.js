@@ -9,17 +9,25 @@ const rootDir = path.join(__dirname, '../../../fixture/site');
 const hexo = new Hexo(rootDir, { silent: true });
 const regex = new RegExp(/\[Function: bound (.*)\]/gi);
 
-let siteConfig, themeConfig, pageConfig, postConfig;
+let siteConfig, themeConfig, pageConfigInSiteDir, postConfigInSiteDir, pageConfigInThemeDir, postConfigInThemeDir;
+
 const basePageConfig = {
     title: 'about',
     comments: false,
-    int: 4,
-    float: 0.4,
-    bool: false,
-    str: '4',
+    int: 10000,
+    float: 0.0001,
+    bool: true,
+    str: '10000',
     empty: null,
-    arr: [10, 20, 30],
-    obj: { field: 10 }
+    arr: [10000, 20000, 30000],
+    obj: { field: 10000 },
+    int_ex: 10000,
+    float_ex: 0.0001,
+    bool_ex: true,
+    str_ex: '10000',
+    empty_ex: null,
+    arr_ex: [10000, 20000, 30000],
+    obj_ex: { field: 10000 }
 };
 
 beforeAll(async () => {
@@ -27,8 +35,10 @@ beforeAll(async () => {
     await hexo.load();
     siteConfig = yaml.safeLoad(fs.readFileSync(path.join(hexo.base_dir, '_config.yml')));
     themeConfig = yaml.safeLoad(fs.readFileSync(path.join(hexo.theme_dir, '_config.yml')));
-    pageConfig = yaml.safeLoad(fs.readFileSync(path.join(hexo.theme_dir, '_config.page.yml')));
-    postConfig = yaml.safeLoad(fs.readFileSync(path.join(hexo.theme_dir, '_config.post.yml')));
+    pageConfigInSiteDir = yaml.safeLoad(fs.readFileSync(path.join(hexo.base_dir, '_config.page.yml')));
+    postConfigInSiteDir = yaml.safeLoad(fs.readFileSync(path.join(hexo.base_dir, '_config.post.yml')));
+    pageConfigInThemeDir = yaml.safeLoad(fs.readFileSync(path.join(hexo.theme_dir, '_config.page.yml')));
+    postConfigInThemeDir = yaml.safeLoad(fs.readFileSync(path.join(hexo.theme_dir, '_config.post.yml')));
     register(hexo);
 });
 
@@ -62,7 +72,7 @@ test('Correctly merge theme config with site config', async () => {
     expect(locals.config.theme).toEqual(siteConfig.theme);
 });
 
-test('Correctly merge theme config with page/post config', async () => {
+test('Page/post layout configs override theme and site configs', async () => {
     const Locals = hexo._generateLocals();
     const configs = [
         Object.assign({}, basePageConfig, { layout: 'page' }),
@@ -72,14 +82,19 @@ test('Correctly merge theme config with page/post config', async () => {
         const locals = await hexo.extend.filter.exec('template_locals',
             new Locals('about/index.html', page), { context: hexo });
         expect(locals.config.comments).toBeUndefined();
+        // theme page/post layout configs override ones under site root
         const keys = ['title', 'int', 'float', 'bool', 'str', 'empty', 'arr', 'obj'];
         for (const key of keys) {
-            expect(locals.config[key]).toEqual(page.layout === 'page' ? pageConfig[key] : postConfig[key]);
+            expect(locals.config[key]).toEqual(page.layout === 'page' ? pageConfigInThemeDir[key] : postConfigInThemeDir[key]);
+        }
+        const keysEx = ['title_ex', 'int_ex', 'float_ex', 'bool_ex', 'str_ex', 'empty_ex', 'arr_ex', 'obj_ex'];
+        for (const key of keysEx) {
+            expect(locals.config[key]).toEqual(page.layout === 'page' ? pageConfigInSiteDir[key] : postConfigInSiteDir[key]);
         }
     }
 });
 
-test('Correctly merge theme config with page/post layout config', async () => {
+test('Configs in page/post front-matter override all other config sources', async () => {
     const Locals = hexo._generateLocals();
     const configs = [
         Object.assign({}, basePageConfig, { __page: true, layout: 'page' }),
@@ -88,9 +103,12 @@ test('Correctly merge theme config with page/post layout config', async () => {
     for (const page of configs) {
         const locals = await hexo.extend.filter.exec('template_locals',
             new Locals('about/index.html', page), { context: hexo });
-        expect(locals.config.title).toBe(page.layout === 'page' ? pageConfig.title : postConfig.title);
+        expect(locals.config.title).toBe(page.layout === 'page' ? pageConfigInThemeDir.title : postConfigInThemeDir.title);
         expect(locals.config.comments).toBeUndefined();
-        ['int', 'float', 'bool', 'str', 'empty', 'arr', 'obj'].forEach(key => {
+        [
+            'int', 'float', 'bool', 'str', 'empty', 'arr', 'obj',
+            'int_ex', 'float_ex', 'bool_ex', 'str_ex', 'empty_ex', 'arr_ex', 'obj_ex'
+        ].forEach(key => {
             expect(locals.config[key]).toEqual(page[key]);
         });
     }

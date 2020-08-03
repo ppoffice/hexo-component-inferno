@@ -1,10 +1,10 @@
-title: theme config
+title: site title from theme config
 
-int: 1
+int: 10
 float: 0.1
 bool: true
-str: '1'
+str: '10'
 empty: null
-arr: [1, 2, 3]
+arr: [10, 20, 30]
 obj:
-  field: 1
+  field: 10

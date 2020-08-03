@@ -1,0 +1,19 @@
+title: site title from layout config under site dir
+
+int: 1000
+float: 0.001
+bool: true
+str: '1000'
+empty: null
+arr: [1000, 2000, 3000]
+obj:
+  field: 1000
+
+int_ex: 100
+float_ex: 0.01
+bool_ex: false
+str_ex: '100'
+empty_ex: null
+arr_ex: [100, 200, 300]
+obj_ex:
+  field_ex: 100

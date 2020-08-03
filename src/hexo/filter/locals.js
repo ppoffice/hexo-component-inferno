@@ -11,10 +11,19 @@ const yaml = require('js-yaml');
  * Register the Hexo filter for merging theme and site config, and add all helper functions to a
  * dedicated property (<code>helper</code>) in the locals.
  * <p>
- * This filter will try to merge the post/page config defined in the Markdown file's front-matter,
- * post/page config defined in <code>theme/name/_config.post.yml</code> or <code>theme/name/_config.page.yml</code>,
- * theme config defined in <code>theme/name/_config.yml</code>, and the site config defined in
- * <code>_config.yml</code>, in the above order (the former config will overwrite later ones).
+ * This filter will try to merge
+ * <ul>
+ * <li>the post/page config defined in the Markdown file's front-matter,</li>
+ * <li>post/page config defined in <code>themes/[theme_name]/_config.post.yml</code> or
+ * <code>themes/[theme_name]/_config.page.yml</code>,</li>
+ * <li>post/page layout config defined in <code>[site_root]/_config.post.yml</code> or
+ * <code>[site_root]/_config.page.yml</code>,</li>
+ * <li>theme config defined in <code>themes/[theme_name]/_config.yml</code> or
+ * <code>node_modules/hexo-theme-[theme_name]/_config.yml</code> if it is installed as an NPM package,
+ * </li>
+ * <li>and the site config defined in <code>_config.yml</code>,</li>
+ * </ul>
+ * in the above order (the former config will overwrite later ones).
  * This allow the user to customize the theme for each post/page, as well as for all post or pages.
  * <br>
  * It also adds a new variable named <code>helper</code>, containing all Hexo helper functions, to the page
@@ -31,25 +40,35 @@ module.exports = hexo => {
         page: Object.keys(require('hexo/lib/models/page')(hexo).paths)
     };
 
-    function getThemeConfig(extension) {
-        if (fs.existsSync(path.join(hexo.theme_dir, '_config' + extension + '.yml'))) {
-            return yaml.safeLoad(fs.readFileSync(path.join(hexo.theme_dir, '_config' + extension + '.yml')));
-        }
-        return null;
+    function loadLayoutConfig(layout) {
+        let config = {};
+        const configInSiteDir = path.join(hexo.base_dir, '_config.' + layout + '.yml');
+        const configInThemeDir = path.join(hexo.theme_dir, '_config.' + layout + '.yml');
+        [
+            configInSiteDir,
+            configInThemeDir
+        ].forEach(configPath => {
+            if (fs.existsSync(configPath)) {
+                config = Object.assign(config, yaml.safeLoad(fs.readFileSync(configPath)));
+            }
+        });
+        return config;
     }
 
     const ALTERNATIVE_CONFIG = {
-        post: getThemeConfig('.post'),
-        page: getThemeConfig('.page')
+        post: loadLayoutConfig('post'),
+        page: loadLayoutConfig('page')
     };
 
-    function getExtraConfig(source, reservedKeys) {
+    function stripConfig(source, reservedKeys) {
         const result = {};
-        for (const key in source) {
-            if (!key.startsWith('_') && !reservedKeys.includes(key) && typeof source[key] !== 'function') {
+        Object.keys(source)
+            .filter(key => !key.startsWith('_')
+                && !reservedKeys.includes(key)
+                && typeof source[key] !== 'function')
+            .forEach(key => {
                 result[key] = source[key];
-            }
-        }
+            });
         return result;
     }
 
@@ -69,18 +88,16 @@ module.exports = hexo => {
 
         const page = locals.page;
         if (page) {
+            locals.config = Object.assign({}, locals.config, locals.theme);
             if (page.layout in ALTERNATIVE_CONFIG) {
                 // load alternative config if exists
-                locals.config = Object.assign({}, Object.getPrototypeOf(locals).theme || locals.theme, ALTERNATIVE_CONFIG[page.layout]);
-            } else {
-                // site config already merged into theme config in hexo/lib/hexo/index.js#Hexo.prototype._generateLocals()
-                locals.config = Object.assign({}, Object.getPrototypeOf(locals).theme || locals.theme);
+                locals.config = Object.assign(locals.config, ALTERNATIVE_CONFIG[page.layout]);
             }
             // merge page configs
             if (page.__post === true) {
-                Object.assign(locals.config, getExtraConfig(page, RESERVED_KEYS.post));
+                Object.assign(locals.config, stripConfig(page, RESERVED_KEYS.post));
             } else if (page.__page === true) {
-                Object.assign(locals.config, getExtraConfig(page, RESERVED_KEYS.page));
+                Object.assign(locals.config, stripConfig(page, RESERVED_KEYS.page));
             }
         }
 

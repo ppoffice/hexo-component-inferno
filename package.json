@@ -1,6 +1,6 @@
 {
   "name": "hexo-component-inferno",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A collection of Inferno.js layout components and utility scripts for Hexo",
   "main": "lib/index.js",
   "repository": "https://github.com/ppoffice/hexo-component-inferno",
@@ -25,18 +25,20 @@
     "@babel/cli": "^7.8.3",
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
+    "@types/hexo": "^3.8.5",
+    "@types/hexo-util": "^0.6.2",
     "babel-plugin-inferno": "^6.1.0",
     "deepmerge": "^4.2.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.6.0",
     "eslint-config-hexo": "^4.1.0",
     "eslint-plugin-jest": "^23.8.0",
     "eslint-plugin-json": "^2.0.1",
     "eslint-plugin-react": "^7.18.0",
-    "hexo": "^4.2.0",
+    "hexo": "^5.0.0",
     "hexo-pagination": "^1.0.0",
-    "hexo-util": "^1.8.1",
+    "hexo-util": "^2.2.0",
     "inferno-server": "^7.4.1",
-    "jest": "^25.1.0",
+    "jest": "^26.2.2",
     "jsdoc": "^3.6.3",
     "minami": "^1.2.3"
   },
@@ -49,8 +51,8 @@
     "semver": "^7.1.1"
   },
   "peerDependencies": {
-    "hexo": "^4.2.0",
-    "hexo-util": "^1.8.1",
-    "hexo-pagination": "^1.0.0"
+    "hexo": "^5.0.0",
+    "hexo-pagination": "^1.0.0",
+    "hexo-util": "^2.2.0"
   }
 }
