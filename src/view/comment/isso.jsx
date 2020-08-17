@@ -13,19 +13,23 @@ const { cacheComponent } = require('../../util/cache');
  * <Isso url="/path/to/isso/server" />
  */
 class Isso extends Component {
-    render() {
-        const { url } = this.props;
-        if (!url) {
-            return <div class="notification is-danger">
-                You forgot to set the <code>url</code> for Isso.
-                Please set it in <code>_config.yml</code>.
-            </div>;
-        }
-        return <Fragment>
-            <div id="isso-thread"></div>
-            <script data-isso={'//' + url} src={`//${url}/js/embed.min.js`}></script>
-        </Fragment>;
+  render() {
+    const { url } = this.props;
+    if (!url) {
+      return (
+        <div class="notification is-danger">
+          You forgot to set the <code>url</code> for Isso. Please set it in <code>_config.yml</code>
+          .
+        </div>
+      );
     }
+    return (
+      <Fragment>
+        <div id="isso-thread"></div>
+        <script data-isso={'//' + url} src={`//${url}/js/embed.min.js`}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -38,12 +42,12 @@ class Isso extends Component {
  * @example
  * <Isso.Cacheable comment={{ url: "/path/to/isso/server" }} />
  */
-Isso.Cacheable = cacheComponent(Isso, 'comment.isso', props => {
-    const { comment } = props;
+Isso.Cacheable = cacheComponent(Isso, 'comment.isso', (props) => {
+  const { comment } = props;
 
-    return {
-        url: comment.url
-    };
+  return {
+    url: comment.url,
+  };
 });
 
 module.exports = Isso;

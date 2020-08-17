@@ -13,14 +13,16 @@ const { cacheComponent } = require('../../util/cache');
  * <ShareJs cssUrl="/path/to/share.css" jsUrl="/path/to/social-share.js" />
  */
 class ShareJs extends Component {
-    render() {
-        const { cssUrl, jsUrl } = this.props;
-        return <Fragment>
-            <link rel="stylesheet" href={cssUrl} />
-            <div class="social-share"></div>
-            <script src={jsUrl}></script>
-        </Fragment>;
-    }
+  render() {
+    const { cssUrl, jsUrl } = this.props;
+    return (
+      <Fragment>
+        <link rel="stylesheet" href={cssUrl} />
+        <div class="social-share"></div>
+        <script src={jsUrl}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -33,13 +35,13 @@ class ShareJs extends Component {
  * @example
  * <ShareJs.Cacheable helper={{ cdn: function() {...} }} />
  */
-ShareJs.Cacheable = cacheComponent(ShareJs, 'share.sharejs', props => {
-    const { helper } = props;
+ShareJs.Cacheable = cacheComponent(ShareJs, 'share.sharejs', (props) => {
+  const { helper } = props;
 
-    return {
-        cssUrl: helper.cdn('social-share.js', '1.0.16', 'dist/css/share.min.css'),
-        jsUrl: helper.cdn('social-share.js', '1.0.16', 'dist/js/social-share.min.js')
-    };
+  return {
+    cssUrl: helper.cdn('social-share.js', '1.0.16', 'dist/css/share.min.css'),
+    jsUrl: helper.cdn('social-share.js', '1.0.16', 'dist/js/social-share.min.js'),
+  };
 });
 
 module.exports = ShareJs;

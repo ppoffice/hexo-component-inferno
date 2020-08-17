@@ -12,13 +12,14 @@ const { cacheComponent } = require('../../util/cache');
  * <Baidu url="/site/url" hint="Placeholder text" />
  */
 class Baidu extends Component {
-    render() {
-        const { url, hint } = this.props;
+  render() {
+    const { url, hint } = this.props;
 
-        const js = `(function ($) {
+    const siteUrl = url.replace(/http(s)*:\/\//, '');
+    const js = `(function ($) {
             $('.searchbox-input-container').on('submit', function (e) {
                 var keyword = $('.searchbox-input[name="wd"]').val();
-                window.location = 'https://www.baidu.com/s?wd=site:${url.replace(/http(s)*:\/\//, '')} ' + keyword;
+                window.location = 'https://www.baidu.com/s?wd=site:${siteUrl} ' + keyword;
                 return false;
             });
         })(jQuery);
@@ -32,20 +33,24 @@ class Baidu extends Component {
             });
         })(document, jQuery);`;
 
-        return <Fragment>
-            <div class="searchbox">
-                <div class="searchbox-container">
-                    <div class="searchbox-header">
-                        <form class="searchbox-input-container">
-                            <input name="wd" type="text" class="searchbox-input" placeholder={hint} />
-                        </form>
-                        <a class="searchbox-close" href="javascript:;">&times;</a>
-                    </div>
-                </div>
+    return (
+      <Fragment>
+        <div class="searchbox">
+          <div class="searchbox-container">
+            <div class="searchbox-header">
+              <form class="searchbox-input-container">
+                <input name="wd" type="text" class="searchbox-input" placeholder={hint} />
+              </form>
+              <a class="searchbox-close" href="javascript:;">
+                &times;
+              </a>
             </div>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
-        </Fragment>;
-    }
+          </div>
+        </div>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -60,13 +65,13 @@ class Baidu extends Component {
  *     config={{ url: '/site/url' }}
  *     helper={{ __: function() {...} }} />
  */
-Baidu.Cacheable = cacheComponent(Baidu, 'search.baidu', props => {
-    const { config, helper } = props;
+Baidu.Cacheable = cacheComponent(Baidu, 'search.baidu', (props) => {
+  const { config, helper } = props;
 
-    return {
-        url: config.url,
-        hint: helper.__('search.hint')
-    };
+  return {
+    url: config.url,
+    hint: helper.__('search.hint'),
+  };
 });
 
 module.exports = Baidu;

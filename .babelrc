@@ -1,17 +1,5 @@
 {
-    "presets": [
-        "@babel/preset-env"
-    ],
-    "plugins": [
-        [
-            "babel-plugin-inferno",
-            {
-                "imports": true
-            }
-        ]
-    ],
-    "test": [
-        "src/**/*.jsx",
-        "fixture/**/*.jsx"
-    ]
+  "presets": ["@babel/preset-env"],
+  "plugins": [["babel-plugin-inferno", { "imports": true }]],
+  "test": ["src/**/*.jsx", "fixture/**/*.jsx"]
 }

@@ -1,14 +1,14 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "/parent.json",
-    "description": "Parent schema",
-    "type": ["object", "array"],
-    "oneOf": [
-        {
-            "$ref": "/child1.json"
-        },
-        {
-            "$ref": "/child2.json"
-        }
-    ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/parent.json",
+  "description": "Parent schema",
+  "type": ["object", "array"],
+  "oneOf": [
+    {
+      "$ref": "/child1.json"
+    },
+    {
+      "$ref": "/child2.json"
+    }
+  ]
 }

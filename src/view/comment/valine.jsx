@@ -30,33 +30,35 @@ const { cacheComponent } = require('../../util/cache');
  *     jsUrl="/path/to/Valine.js" />
  */
 class Valine extends Component {
-    render() {
-        const {
-            appId,
-            appKey,
-            placeholder,
-            avatar = 'mm',
-            avatarForce = false,
-            meta = ['nick', 'mail', 'link'],
-            pageSize = 10,
-            lang = 'zh-CN',
-            visitor = false,
-            highlight = true,
-            recordIP = false,
-            serverURLs = '',
-            emojiCDN = '',
-            emojiMaps = null,
-            enableQQ = false,
-            requiredFields = [],
-            jsUrl
-        } = this.props;
-        if (!appId || !appKey) {
-            return <div class="notification is-danger">
-                You forgot to set the <code>app_id</code> or <code>app_key</code> for Valine.
-                Please set it in <code>_config.yml</code>.
-            </div>;
-        }
-        const js = `new Valine({
+  render() {
+    const {
+      appId,
+      appKey,
+      placeholder,
+      avatar = 'mm',
+      avatarForce = false,
+      meta = ['nick', 'mail', 'link'],
+      pageSize = 10,
+      lang = 'zh-CN',
+      visitor = false,
+      highlight = true,
+      recordIP = false,
+      serverURLs = '',
+      emojiCDN = '',
+      emojiMaps = null,
+      enableQQ = false,
+      requiredFields: fields = [],
+      jsUrl,
+    } = this.props;
+    if (!appId || !appKey) {
+      return (
+        <div class="notification is-danger">
+          You forgot to set the <code>app_id</code> or <code>app_key</code> for Valine. Please set
+          it in <code>_config.yml</code>.
+        </div>
+      );
+    }
+    const js = `new Valine({
             el: '#valine-thread' ,
             appId: ${JSON.stringify(appId)},
             appKey: ${JSON.stringify(appKey)},
@@ -73,15 +75,17 @@ class Valine extends Component {
             ${emojiCDN ? `emojiCDN: ${JSON.stringify(emojiCDN)},` : ''}
             ${emojiMaps ? `emojiMaps: ${JSON.stringify(emojiMaps)},` : ''}
             ${enableQQ ? `enableQQ: ${JSON.stringify(enableQQ)},` : ''}
-            ${Array.isArray(requiredFields) ? `requiredFields: ${JSON.stringify(requiredFields)},` : ''}
+            ${Array.isArray(fields) ? `requiredFields: ${JSON.stringify(fields)},` : ''}
         });`;
-        return <Fragment>
-            <div id="valine-thread" class="content"></div>
-            <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-            <script src={jsUrl}></script>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
-        </Fragment>;
-    }
+    return (
+      <Fragment>
+        <div id="valine-thread" class="content"></div>
+        <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+        <script src={jsUrl}></script>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -113,28 +117,28 @@ class Valine extends Component {
  *     }}
  *     helper={{ cdn: function() {...} }} />
  */
-Valine.Cacheable = cacheComponent(Valine, 'comment.valine', props => {
-    const { comment, helper, page, config } = props;
+Valine.Cacheable = cacheComponent(Valine, 'comment.valine', (props) => {
+  const { comment, helper, page, config } = props;
 
-    return {
-        appId: comment.app_id,
-        appKey: comment.app_key,
-        placeholder: comment.placeholder,
-        avatar: comment.avatar,
-        avatarForce: comment.avatar_force,
-        meta: comment.meta,
-        pageSize: comment.page_size,
-        lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
-        visitor: comment.visitor,
-        highlight: comment.highlight,
-        recordIP: comment.record_ip,
-        serverURLs: comment.server_urls,
-        emojiCDN: comment.emoji_cdn,
-        emojiMaps: comment.emoji_maps,
-        enableQQ: comment.enable_qq,
-        requiredFields: comment.required_fields,
-        jsUrl: helper.cdn('valine', '1.4.14', 'dist/Valine.min.js')
-    };
+  return {
+    appId: comment.app_id,
+    appKey: comment.app_key,
+    placeholder: comment.placeholder,
+    avatar: comment.avatar,
+    avatarForce: comment.avatar_force,
+    meta: comment.meta,
+    pageSize: comment.page_size,
+    lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
+    visitor: comment.visitor,
+    highlight: comment.highlight,
+    recordIP: comment.record_ip,
+    serverURLs: comment.server_urls,
+    emojiCDN: comment.emoji_cdn,
+    emojiMaps: comment.emoji_maps,
+    enableQQ: comment.enable_qq,
+    requiredFields: comment.required_fields,
+    jsUrl: helper.cdn('valine', '1.4.14', 'dist/Valine.min.js'),
+  };
 });
 
 module.exports = Valine;

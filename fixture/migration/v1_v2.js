@@ -1,18 +1,18 @@
 const deepmerge = require('deepmerge');
-const {Migration} = require('../../lib/core/migrate');
+const { Migration } = require('../../lib/core/migrate');
 
 module.exports = class extends Migration {
-    constructor() {
-        super('2.0.0', null);
-    }
+  constructor() {
+    super('2.0.0', null);
+  }
 
-    upgrade(config) {
-        const result = deepmerge({}, config);
+  upgrade(config) {
+    const result = deepmerge({}, config);
 
-        result.scalar = 1;
-        result.vector = [1];
-        result.useless = true;
+    result.scalar = 1;
+    result.vector = [1];
+    result.useless = true;
 
-        return result;
-    }
+    return result;
+  }
 };

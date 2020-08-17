@@ -13,15 +13,17 @@ const { cacheComponent } = require('../../util/cache');
  * <LiveRe uid="******" />
  */
 class LiveRe extends Component {
-    render() {
-        const { uid } = this.props;
-        if (!uid) {
-            return <div class="notification is-danger">
-                You forgot to set the <code>uid</code> for LiveRe.
-                Please set it in <code>_config.yml</code>.
-            </div>;
-        }
-        const js = `(function(d, s) {
+  render() {
+    const { uid } = this.props;
+    if (!uid) {
+      return (
+        <div class="notification is-danger">
+          You forgot to set the <code>uid</code> for LiveRe. Please set it in{' '}
+          <code>_config.yml</code>.
+        </div>
+      );
+    }
+    const js = `(function(d, s) {
             var j, e = d.getElementsByTagName(s)[0];
 
             if (typeof LivereTower === 'function') { return; }
@@ -32,11 +34,13 @@ class LiveRe extends Component {
 
             e.parentNode.insertBefore(j, e);
         })(document, 'script');`;
-        return <div id="lv-container" data-id="city" data-uid={uid}>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
-            <noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
-        </div>;
-    }
+    return (
+      <div id="lv-container" data-id="city" data-uid={uid}>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <noscript>Please activate JavaScript for write a comment in LiveRe</noscript>
+      </div>
+    );
+  }
 }
 
 /**
@@ -49,12 +53,12 @@ class LiveRe extends Component {
  * @example
  * <LiveRe.Cacheable comment={{ uid: '******' }} />
  */
-LiveRe.Cacheable = cacheComponent(LiveRe, 'comment.livere', props => {
-    const { comment } = props;
+LiveRe.Cacheable = cacheComponent(LiveRe, 'comment.livere', (props) => {
+  const { comment } = props;
 
-    return {
-        uid: comment.uid
-    };
+  return {
+    uid: comment.uid,
+  };
 });
 
 module.exports = LiveRe;

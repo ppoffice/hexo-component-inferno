@@ -13,10 +13,12 @@ const { cacheComponent } = require('../../util/cache');
  * <Cnzz id="******" webId="******" />
  */
 class Cnzz extends Component {
-    render() {
-        const { id, webId } = this.props;
-        return <script src={`https://s9.cnzz.com/z_stat.php?id=${id}&web_id=${webId}`} async={true}></script>;
-    }
+  render() {
+    const { id, webId } = this.props;
+    return (
+      <script src={`https://s9.cnzz.com/z_stat.php?id=${id}&web_id=${webId}`} async={true}></script>
+    );
+  }
 }
 
 /**
@@ -31,13 +33,13 @@ class Cnzz extends Component {
  *     head={false}
  *     plugin={{ id: '******', web_id: '******' }} />
  */
-module.exports = cacheComponent(Cnzz, 'plugin.cnzz', props => {
-    const { head, plugin } = props;
-    if (head || !plugin.id || !plugin.web_id) {
-        return null;
-    }
-    return {
-        id: plugin.id,
-        webId: plugin.web_id
-    };
+module.exports = cacheComponent(Cnzz, 'plugin.cnzz', (props) => {
+  const { head, plugin } = props;
+  if (head || !plugin.id || !plugin.web_id) {
+    return null;
+  }
+  return {
+    id: plugin.id,
+    webId: plugin.web_id,
+  };
 });

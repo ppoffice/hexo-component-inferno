@@ -16,10 +16,10 @@ const { cacheComponent } = require('../../util/cache');
  *     jsUrl="/path/to/outdatedbrowser.js" />
  */
 class OutdatedBrowser extends Component {
-    render() {
-        const { head, jsUrl, cssUrl } = this.props;
+  render() {
+    const { head, jsUrl, cssUrl } = this.props;
 
-        const js = `window.addEventListener("load", function () {
+    const js = `window.addEventListener("load", function () {
             outdatedBrowser({
                 bgColor: '#f25648',
                 color: '#ffffff',
@@ -27,23 +27,30 @@ class OutdatedBrowser extends Component {
             });
         });`;
 
-        if (head) {
-            return <link rel="stylesheet" href={cssUrl} />;
-        }
-        return <Fragment>
-            <div id="outdated">
-                <h6>Your browser is out-of-date!</h6>
-                <p>
-                    Update your browser to view this website correctly.&npsb;
-                    <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a>
-                </p>
-                <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
-            </div>
-            <script src={jsUrl} defer={true}></script>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
-        </Fragment>;
-
+    if (head) {
+      return <link rel="stylesheet" href={cssUrl} />;
     }
+    return (
+      <Fragment>
+        <div id="outdated">
+          <h6>Your browser is out-of-date!</h6>
+          <p>
+            Update your browser to view this website correctly.&npsb;
+            <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">
+              Update my browser now{' '}
+            </a>
+          </p>
+          <p class="last">
+            <a href="#" id="btnCloseUpdateBrowser" title="Close">
+              &times;
+            </a>
+          </p>
+        </div>
+        <script src={jsUrl} defer={true}></script>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -58,13 +65,13 @@ class OutdatedBrowser extends Component {
  *     head={true}
  *     helper={{ cdn: function() {...} }} />
  */
-OutdatedBrowser.Cacheable = cacheComponent(OutdatedBrowser, 'plugin.outdatedbrowser', props => {
-    const { head, helper } = props;
-    return {
-        head,
-        cssUrl: helper.cdn('outdatedbrowser', '1.1.5', 'outdatedbrowser/outdatedbrowser.min.css'),
-        jsUrl: helper.cdn('outdatedbrowser', '1.1.5', 'outdatedbrowser/outdatedbrowser.min.js')
-    };
+OutdatedBrowser.Cacheable = cacheComponent(OutdatedBrowser, 'plugin.outdatedbrowser', (props) => {
+  const { head, helper } = props;
+  return {
+    head,
+    cssUrl: helper.cdn('outdatedbrowser', '1.1.5', 'outdatedbrowser/outdatedbrowser.min.css'),
+    jsUrl: helper.cdn('outdatedbrowser', '1.1.5', 'outdatedbrowser/outdatedbrowser.min.js'),
+  };
 });
 
 module.exports = OutdatedBrowser;

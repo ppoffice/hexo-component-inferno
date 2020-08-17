@@ -18,24 +18,24 @@
  * // path will be returned.
  * get_thumbnail(post);
  */
-module.exports = function(hexo) {
-    hexo.extend.helper.register('has_thumbnail', function(post) {
-        const { article } = this.config;
-        if (typeof post !== 'object') {
-            return false;
-        }
-        if (article && article.thumbnail === false) {
-            return false;
-        }
-        if ('thumbnail' in post && post.thumbnail) {
-            return true;
-        }
-        return false;
-    });
+module.exports = function (hexo) {
+  hexo.extend.helper.register('has_thumbnail', function (post) {
+    const { article } = this.config;
+    if (typeof post !== 'object') {
+      return false;
+    }
+    if (article && article.thumbnail === false) {
+      return false;
+    }
+    if ('thumbnail' in post && post.thumbnail) {
+      return true;
+    }
+    return false;
+  });
 
-    hexo.extend.helper.register('get_thumbnail', function(post) {
-        const url_for = hexo.extend.helper.get('url_for').bind(hexo);
-        const has_thumbnail = hexo.extend.helper.get('has_thumbnail').bind(hexo);
-        return url_for(has_thumbnail.call(this, post) ? post.thumbnail : '/img/thumbnail.svg');
-    });
+  hexo.extend.helper.register('get_thumbnail', function (post) {
+    const url_for = hexo.extend.helper.get('url_for').bind(hexo);
+    const has_thumbnail = hexo.extend.helper.get('has_thumbnail').bind(hexo);
+    return url_for(has_thumbnail.call(this, post) ? post.thumbnail : '/img/thumbnail.svg');
+  });
 };

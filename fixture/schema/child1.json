@@ -1,20 +1,17 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "/child1.json",
-    "description": "Child schema 1",
-    "type": "object",
-    "properties": {
-        "prop1": {
-            "type": "string",
-            "const": "prop1"
-        },
-        "prop2": {
-            "type": "string",
-            "description": "prop2"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/child1.json",
+  "description": "Child schema 1",
+  "type": "object",
+  "properties": {
+    "prop1": {
+      "type": "string",
+      "const": "prop1"
     },
-    "required": [
-        "prop1",
-        "prop2"
-    ]
+    "prop2": {
+      "type": "string",
+      "description": "prop2"
+    }
+  },
+  "required": ["prop1", "prop2"]
 }

@@ -7,20 +7,20 @@ const fs = require('fs');
 const path = require('path');
 
 function walkSync(dir, filelist) {
-    filelist = filelist || [];
-    fs.readdirSync(dir).forEach(file => {
-        // don't include Unix hidden files
-        if (file.startsWith('.')) {
-            return;
-        }
-        const fullpath = path.join(dir, file);
-        if (fs.statSync(fullpath).isDirectory()) {
-            filelist = walkSync(fullpath, filelist);
-        } else {
-            filelist.push(fullpath);
-        }
-    });
-    return filelist;
+  filelist = filelist || [];
+  fs.readdirSync(dir).forEach((file) => {
+    // don't include Unix hidden files
+    if (file.startsWith('.')) {
+      return;
+    }
+    const fullpath = path.join(dir, file);
+    if (fs.statSync(fullpath).isDirectory()) {
+      filelist = walkSync(fullpath, filelist);
+    } else {
+      filelist.push(fullpath);
+    }
+  });
+  return filelist;
 }
 
 /**
@@ -32,18 +32,20 @@ function walkSync(dir, filelist) {
  *
  * @param {Hexo} hexo The Hexo instance.
  */
-module.exports = function(hexo) {
-    hexo.extend.generator.register('static_assets', locals => {
-        const assetsDir = path.join(__dirname, '../../../asset');
-        return walkSync(assetsDir).map(file => {
-            const filepath = path.relative(assetsDir, file);
-            if (fs.existsSync(path.join(hexo.theme_dir, 'source', filepath))) {
-                return null;
-            }
-            return {
-                path: '/' + filepath.replace(/\\/g, '/'),
-                data: fs.readFileSync(file, { encoding: 'utf-8' })
-            };
-        }).filter(file => file !== null);
-    });
+module.exports = function (hexo) {
+  hexo.extend.generator.register('static_assets', (locals) => {
+    const assetsDir = path.join(__dirname, '../../../asset');
+    return walkSync(assetsDir)
+      .map((file) => {
+        const filepath = path.relative(assetsDir, file);
+        if (fs.existsSync(path.join(hexo.theme_dir, 'source', filepath))) {
+          return null;
+        }
+        return {
+          path: '/' + filepath.replace(/\\/g, '/'),
+          data: fs.readFileSync(file, { encoding: 'utf-8' }),
+        };
+      })
+      .filter((file) => file !== null);
+  });
 };

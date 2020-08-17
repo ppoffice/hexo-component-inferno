@@ -13,19 +13,23 @@ const { cacheComponent } = require('../../util/cache');
  * <ShareThis installUrl="******" />
  */
 class ShareThis extends Component {
-    render() {
-        const { installUrl } = this.props;
-        if (!installUrl) {
-            return <div class="notification is-danger">
-                You need to set <code>install_url</code> to use ShareThis.
-                Please set it in <code>_config.yml</code>.
-            </div>;
-        }
-        return <Fragment>
-            <div class="sharethis-inline-share-buttons"></div>
-            <script src={installUrl} defer={true}></script>
-        </Fragment>;
+  render() {
+    const { installUrl } = this.props;
+    if (!installUrl) {
+      return (
+        <div class="notification is-danger">
+          You need to set <code>install_url</code> to use ShareThis. Please set it in{' '}
+          <code>_config.yml</code>.
+        </div>
+      );
     }
+    return (
+      <Fragment>
+        <div class="sharethis-inline-share-buttons"></div>
+        <script src={installUrl} defer={true}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -38,12 +42,12 @@ class ShareThis extends Component {
  * @example
  * <ShareThis.Cacheable share={{ install_url: '******' }} />
  */
-ShareThis.Cacheable = cacheComponent(ShareThis, 'share.sharethis', props => {
-    const { share } = props;
+ShareThis.Cacheable = cacheComponent(ShareThis, 'share.sharethis', (props) => {
+  const { share } = props;
 
-    return {
-        installUrl: share.install_url
-    };
+  return {
+    installUrl: share.install_url,
+  };
 });
 
 module.exports = ShareThis;

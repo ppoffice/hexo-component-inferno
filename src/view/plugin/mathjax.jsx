@@ -13,10 +13,10 @@ const { cacheComponent } = require('../../util/cache');
  * <Mathjax jsUrl="/path/to/mathjax.js" />
  */
 class Mathjax extends Component {
-    render() {
-        const { jsUrl } = this.props;
+  render() {
+    const { jsUrl } = this.props;
 
-        const js = `MathJax.Hub.Config({
+    const js = `MathJax.Hub.Config({
             'HTML-CSS': {
                 matchFontHeight: false
             },
@@ -34,11 +34,13 @@ class Mathjax extends Component {
             }
         });`;
 
-        return <Fragment>
-            <script type="text/x-mathjax-config" dangerouslySetInnerHTML={{ __html: js }}></script>
-            <script src={jsUrl} defer={true}></script>
-        </Fragment>;
-    }
+    return (
+      <Fragment>
+        <script type="text/x-mathjax-config" dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script src={jsUrl} defer={true}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -53,14 +55,14 @@ class Mathjax extends Component {
  *     head={true}
  *     helper={{ cdn: function() {...} }} />
  */
-Mathjax.Cacheable = cacheComponent(Mathjax, 'plugin.mathjax', props => {
-    const { head, helper } = props;
-    if (head) {
-        return null;
-    }
-    return {
-        jsUrl: helper.cdn('mathjax', '2.7.5', 'unpacked/MathJax.js?config=TeX-MML-AM_CHTML')
-    };
+Mathjax.Cacheable = cacheComponent(Mathjax, 'plugin.mathjax', (props) => {
+  const { head, helper } = props;
+  if (head) {
+    return null;
+  }
+  return {
+    jsUrl: helper.cdn('mathjax', '2.7.5', 'unpacked/MathJax.js?config=TeX-MML-AM_CHTML'),
+  };
 });
 
 module.exports = Mathjax;

@@ -13,19 +13,23 @@ const { cacheComponent } = require('../../util/cache');
  * <AddThis installUrl="******" />
  */
 class AddThis extends Component {
-    render() {
-        const { installUrl } = this.props;
-        if (!installUrl) {
-            return <div class="notification is-danger">
-                You need to set <code>install_url</code> to use AddThis.
-                Please set it in <code>_config.yml</code>.
-            </div>;
-        }
-        return <Fragment>
-            <div class="addthis_inline_share_toolbox"></div>
-            <script src={installUrl} defer={true}></script>
-        </Fragment>;
+  render() {
+    const { installUrl } = this.props;
+    if (!installUrl) {
+      return (
+        <div class="notification is-danger">
+          You need to set <code>install_url</code> to use AddThis. Please set it in{' '}
+          <code>_config.yml</code>.
+        </div>
+      );
     }
+    return (
+      <Fragment>
+        <div class="addthis_inline_share_toolbox"></div>
+        <script src={installUrl} defer={true}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -38,12 +42,12 @@ class AddThis extends Component {
  * @example
  * <AddThis.Cacheable share={{ install_url: '******' }} />
  */
-AddThis.Cacheable = cacheComponent(AddThis, 'share.addthis', props => {
-    const { share } = props;
+AddThis.Cacheable = cacheComponent(AddThis, 'share.addthis', (props) => {
+  const { share } = props;
 
-    return {
-        installUrl: share.install_url
-    };
+  return {
+    installUrl: share.install_url,
+  };
 });
 
 module.exports = AddThis;

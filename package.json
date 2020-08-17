@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest lib",
     "test-cov": "jest lib --coverage",
-    "lint": "eslint src fixture asset",
+    "lint": "eslint {src,asset,fixture}/**/*.{js,jsx}",
+    "format": "prettier --write \"*.{json,babelrc,prettierrc}\" \"{asset,fixture,src}/**/*.{js,jsx,json}\"",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
     "clean": "rm -rf lib doc coverage"
@@ -31,6 +32,7 @@
     "deepmerge": "^4.2.2",
     "eslint": "^7.6.0",
     "eslint-config-hexo": "^4.1.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.8.0",
     "eslint-plugin-json": "^2.0.1",
     "eslint-plugin-react": "^7.18.0",
@@ -40,7 +42,8 @@
     "inferno-server": "^7.4.1",
     "jest": "^26.2.2",
     "jsdoc": "^3.6.3",
-    "minami": "^1.2.3"
+    "minami": "^1.2.3",
+    "prettier": "^2.0.5"
   },
   "dependencies": {
     "ajv": "^6.10.2",

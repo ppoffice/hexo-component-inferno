@@ -16,21 +16,25 @@ const { cacheComponent } = require('../../util/cache');
  *     path="/path/to/page" />
  */
 class ChangYan extends Component {
-    render() {
-        const { appId, conf, path } = this.props;
-        if (!appId || !conf) {
-            return <div class="notification is-danger">
-                You forgot to set the <code>app_id</code> or <code>conf</code> for Changyan.
-                Please set it in <code>_config.yml</code>.
-            </div>;
-        }
-        const js = `window.changyan.api.config({appid: '${appId}',conf: '${conf}'});`;
-        return <Fragment>
-            <div id="SOHUCS" sid={path}></div>
-            <script charset="utf-8" src="https://changyan.sohu.com/upload/changyan.js"></script>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
-        </Fragment>;
+  render() {
+    const { appId, conf, path } = this.props;
+    if (!appId || !conf) {
+      return (
+        <div class="notification is-danger">
+          You forgot to set the <code>app_id</code> or <code>conf</code> for Changyan. Please set it
+          in <code>_config.yml</code>.
+        </div>
+      );
     }
+    const js = `window.changyan.api.config({appid: '${appId}',conf: '${conf}'});`;
+    return (
+      <Fragment>
+        <div id="SOHUCS" sid={path}></div>
+        <script charset="utf-8" src="https://changyan.sohu.com/upload/changyan.js"></script>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -45,14 +49,14 @@ class ChangYan extends Component {
  *     comment={{ app_id: '*******', conf='******' }}
  *     page={{ path: '/path/to/page' }} />
  */
-ChangYan.Cacheable = cacheComponent(ChangYan, 'comment.changyan', props => {
-    const { comment, page } = props;
+ChangYan.Cacheable = cacheComponent(ChangYan, 'comment.changyan', (props) => {
+  const { comment, page } = props;
 
-    return {
-        appId: comment.app_id,
-        conf: comment.conf,
-        path: page.path
-    };
+  return {
+    appId: comment.app_id,
+    conf: comment.conf,
+    path: page.path,
+  };
 });
 
 module.exports = ChangYan;

@@ -16,12 +16,12 @@
  * // Need to be combined with lib/hexo/generator/tags
  * is_tags(page);
  */
-module.exports = function(hexo) {
-    hexo.extend.helper.register('is_categories', function(page = null) {
-        return (page === null ? this.page : page).__categories === true;
-    });
+module.exports = function (hexo) {
+  hexo.extend.helper.register('is_categories', function (page = null) {
+    return (page === null ? this.page : page).__categories === true;
+  });
 
-    hexo.extend.helper.register('is_tags', function(page = null) {
-        return (page === null ? this.page : page).__tags === true;
-    });
+  hexo.extend.helper.register('is_tags', function (page = null) {
+    return (page === null ? this.page : page).__tags === true;
+  });
 };

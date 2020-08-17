@@ -13,10 +13,10 @@ const { cacheComponent } = require('../../util/cache');
  * <Hotjar siteId="******" />
  */
 class Hotjar extends Component {
-    render() {
-        const { siteId } = this.props;
+  render() {
+    const { siteId } = this.props;
 
-        const js = `(function(h,o,t,j,a,r){
+    const js = `(function(h,o,t,j,a,r){
             h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
             h._hjSettings={hjid:${siteId},hjsv:6};
             a=o.getElementsByTagName('head')[0];
@@ -25,10 +25,12 @@ class Hotjar extends Component {
             a.appendChild(r);
         })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`;
 
-        return <Fragment>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
-        </Fragment>;
-    }
+    return (
+      <Fragment>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -43,14 +45,14 @@ class Hotjar extends Component {
  *     head={true}
  *     plugin={{ site_id: '*******' }} />
  */
-Hotjar.Cacheable = cacheComponent(Hotjar, 'plugin.hotjar', props => {
-    const { head, plugin } = props;
-    if (!head || !plugin.site_id) {
-        return null;
-    }
-    return {
-        siteId: plugin.site_id
-    };
+Hotjar.Cacheable = cacheComponent(Hotjar, 'plugin.hotjar', (props) => {
+  const { head, plugin } = props;
+  if (!head || !plugin.site_id) {
+    return null;
+  }
+  return {
+    siteId: plugin.site_id,
+  };
 });
 
 module.exports = Hotjar;

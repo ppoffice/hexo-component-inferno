@@ -17,23 +17,25 @@ const { cacheComponent } = require('../../util/cache');
  *     mhchemUrl="/path/to/mhchem.js" />
  */
 class KaTeX extends Component {
-    render() {
-        const { cssUrl, jsUrl, autoRenderUrl, mhchemUrl } = this.props;
+  render() {
+    const { cssUrl, jsUrl, autoRenderUrl, mhchemUrl } = this.props;
 
-        const js = `window.addEventListener("load", function() {
+    const js = `window.addEventListener("load", function() {
             document.querySelectorAll('[role="article"] > .content').forEach(function(element) {
                 renderMathInElement(element);
             });
         });`;
 
-        return <Fragment>
-            <link rel="stylesheet" href={cssUrl} />
-            <script src={jsUrl} defer={true}></script>
-            <script src={autoRenderUrl} defer={true}></script>
-            <script src={mhchemUrl} defer={true}></script>
-            <script dangerouslySetInnerHTML={{ __html: js }}></script>
-        </Fragment>;
-    }
+    return (
+      <Fragment>
+        <link rel="stylesheet" href={cssUrl} />
+        <script src={jsUrl} defer={true}></script>
+        <script src={autoRenderUrl} defer={true}></script>
+        <script src={mhchemUrl} defer={true}></script>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </Fragment>
+    );
+  }
 }
 
 /**
@@ -48,17 +50,17 @@ class KaTeX extends Component {
  *     head={true}
  *     helper={{ cdn: function() {...} }} />
  */
-KaTeX.Cacheable = cacheComponent(KaTeX, 'plugin.katex', props => {
-    const { head, helper } = props;
-    if (head) {
-        return null;
-    }
-    return {
-        jsUrl: helper.cdn('katex', '0.11.1', 'dist/katex.min.js'),
-        cssUrl: helper.cdn('katex', '0.11.1', 'dist/katex.min.css'),
-        autoRenderUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/auto-render.min.js'),
-        mhchemUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/mhchem.js')
-    };
+KaTeX.Cacheable = cacheComponent(KaTeX, 'plugin.katex', (props) => {
+  const { head, helper } = props;
+  if (head) {
+    return null;
+  }
+  return {
+    jsUrl: helper.cdn('katex', '0.11.1', 'dist/katex.min.js'),
+    cssUrl: helper.cdn('katex', '0.11.1', 'dist/katex.min.css'),
+    autoRenderUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/auto-render.min.js'),
+    mhchemUrl: helper.cdn('katex', '0.11.1', 'dist/contrib/mhchem.js'),
+  };
 });
 
 module.exports = KaTeX;

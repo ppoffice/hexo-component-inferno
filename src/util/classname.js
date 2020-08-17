@@ -12,15 +12,17 @@
  * @returns {string} The class name string.
  * @throws {Error} The input classname is neither a string, an array, or a plain object.
  */
-module.exports = function(classname) {
-    if (typeof classname === 'string') {
-        return classname;
-    }
-    if (Array.isArray(classname)) {
-        return classname.join(' ');
-    }
-    if (typeof classname === 'object') {
-        return Object.keys(classname).filter(key => !!classname[key]).join(' ');
-    }
-    throw new Error('Cannot process class name ' + JSON.stringify(classname));
+module.exports = function (classname) {
+  if (typeof classname === 'string') {
+    return classname;
+  }
+  if (Array.isArray(classname)) {
+    return classname.join(' ');
+  }
+  if (typeof classname === 'object') {
+    return Object.keys(classname)
+      .filter((key) => !!classname[key])
+      .join(' ');
+  }
+  throw new Error('Cannot process class name ' + JSON.stringify(classname));
 };

@@ -1,7 +1,7 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "/plugin/gallery.json",
-    "description": "Enable the lightGallery and Justified Gallery plugins",
-    "type": "boolean",
-    "default": true
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/plugin/gallery.json",
+  "description": "Enable the lightGallery and Justified Gallery plugins",
+  "type": "boolean",
+  "default": true
 }

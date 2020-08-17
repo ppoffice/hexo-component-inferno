@@ -14,22 +14,28 @@ const { cacheComponent } = require('../../util/cache');
  *     qrcode="/path/to/qrcode" />
  */
 class Alipay extends Component {
-    render() {
-        const { title, qrcode } = this.props;
-        if (!qrcode) {
-            return <div class="notification is-danger">
-                You forgot to set the <code>qrcode</code> for Alipay.
-                Please set it in <code>_config.yml</code>.
-            </div>;
-        }
-        return <a class="button is-info donate">
-            <span class="icon is-small">
-                <i class="fab fa-alipay"></i>
-            </span>
-            <span>{title}</span>
-            <span class="qrcode"><img src={qrcode} alt={title} /></span>
-        </a>;
+  render() {
+    const { title, qrcode } = this.props;
+    if (!qrcode) {
+      return (
+        <div class="notification is-danger">
+          You forgot to set the <code>qrcode</code> for Alipay. Please set it in{' '}
+          <code>_config.yml</code>.
+        </div>
+      );
     }
+    return (
+      <a class="button is-info donate">
+        <span class="icon is-small">
+          <i class="fab fa-alipay"></i>
+        </span>
+        <span>{title}</span>
+        <span class="qrcode">
+          <img src={qrcode} alt={title} />
+        </span>
+      </a>
+    );
+  }
 }
 
 /**
@@ -44,13 +50,13 @@ class Alipay extends Component {
  *     donate={{ type: 'alipay', qrcode='******' }}
  *     helper={{ __: function() {...} }} />
  */
-Alipay.Cacheable = cacheComponent(Alipay, 'donate.alipay', props => {
-    const { donate, helper } = props;
+Alipay.Cacheable = cacheComponent(Alipay, 'donate.alipay', (props) => {
+  const { donate, helper } = props;
 
-    return {
-        title: helper.__('donate.' + donate.type),
-        qrcode: helper.url_for(donate.qrcode)
-    };
+  return {
+    title: helper.__('donate.' + donate.type),
+    qrcode: helper.url_for(donate.qrcode),
+  };
 });
 
 module.exports = Alipay;

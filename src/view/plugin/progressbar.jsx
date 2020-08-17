@@ -13,11 +13,11 @@ const { cacheComponent } = require('../../util/cache');
  * <ProgressBar jsUrl="/path/to/pace-js.js" />
  */
 class ProgressBar extends Component {
-    render() {
-        const { jsUrl } = this.props;
+  render() {
+    const { jsUrl } = this.props;
 
-        return <script src={jsUrl}></script>;
-    }
+    return <script src={jsUrl}></script>;
+  }
 }
 
 /**
@@ -32,14 +32,14 @@ class ProgressBar extends Component {
  *     head={true}
  *     helper={{ cdn: function() {...} }} />
  */
-ProgressBar.Cacheable = cacheComponent(ProgressBar, 'plugin.progressbar', props => {
-    const { head, helper } = props;
-    if (!head) {
-        return null;
-    }
-    return {
-        jsUrl: helper.cdn('pace-js', '1.0.2', 'pace.min.js')
-    };
+ProgressBar.Cacheable = cacheComponent(ProgressBar, 'plugin.progressbar', (props) => {
+  const { head, helper } = props;
+  if (!head) {
+    return null;
+  }
+  return {
+    jsUrl: helper.cdn('pace-js', '1.0.2', 'pace.min.js'),
+  };
 });
 
 module.exports = ProgressBar;

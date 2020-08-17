@@ -1,14 +1,12 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "/root.json",
-    "description": "Root schema",
-    "type": "object",
-    "properties": {
-        "parent": {
-            "$ref": "/parent.json"
-        }
-    },
-    "required": [
-        "parent"
-    ]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/root.json",
+  "description": "Root schema",
+  "type": "object",
+  "properties": {
+    "parent": {
+      "$ref": "/parent.json"
+    }
+  },
+  "required": ["parent"]
 }
