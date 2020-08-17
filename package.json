@@ -10,7 +10,9 @@
     "test": "jest lib",
     "test-cov": "jest lib --coverage",
     "lint": "eslint {src,asset,fixture}/**/*.{js,jsx}",
-    "format": "prettier --write \"*.{json,babelrc,prettierrc}\" \"{asset,fixture,src}/**/*.{js,jsx,json}\"",
+    "_format": "prettier \"*.{json,babelrc,prettierrc}\" \"{asset,fixture,src}/**/*.{js,jsx,json}\"",
+    "format": "npm run _format -- --write",
+    "format-check": "npm run _format -- --check",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
     "clean": "rm -rf lib doc coverage"
