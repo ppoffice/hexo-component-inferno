@@ -81,7 +81,8 @@ function getToc(content) {
  * @example
  * <Toc
  *     title="Widget title"
- *     content="HTML content" />
+ *     content="HTML content"
+ *     jsUrl="******" />
  */
 class Toc extends Component {
   renderToc(toc) {
@@ -115,6 +116,10 @@ class Toc extends Component {
       return null;
     }
 
+    const css =
+      '.menu-list > li > a.is-active + .menu-list { display: block; }' +
+      '.menu-list > li > a + .menu-list { display: none; }';
+
     return (
       <div class="card widget" id="toc">
         <div class="card-content">
@@ -123,6 +128,8 @@ class Toc extends Component {
             {this.renderToc(toc)}
           </div>
         </div>
+        <style dangerouslySetInnerHTML={{ __html: css }}></style>
+        <script src={this.props.jsUrl} defer={true}></script>
       </div>
     );
   }
@@ -152,6 +159,7 @@ Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
   return {
     title: helper._p('widget.catalogue', Infinity),
     content: encrypt ? origin : content,
+    jsUrl: helper.url_for('/js/toc.js'),
   };
 });
 
