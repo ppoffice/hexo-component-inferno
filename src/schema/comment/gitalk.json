@@ -70,6 +70,11 @@
       "description": "Enable hot key (cmd|ctrl + enter) submit comment",
       "default": true,
       "nullable": true
+    },
+    "language": {
+      "type": "string",
+      "description": "Name of the supported language",
+      "nullable": true
     }
   },
   "required": ["type", "client_id", "client_secret", "repo", "owner", "admin"]
