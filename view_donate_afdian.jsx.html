@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>view/comment/valine - Documentation</title>
+    <title>view/donate/afdian.jsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,135 +29,87 @@
 
 <div id="main">
     
-    <h1 class="page-title">view/comment/valine</h1>
+    <h1 class="page-title">view/donate/afdian.jsx</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-            
-        
-    
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Afdian.net donation JSX component.
+ * @module view/donate/afdian
+ */
+const { Component } = require('inferno');
+const { cacheComponent } = require('../../util/cache');
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Valine comment JSX component.</div>
-        
+/**
+ * Afdian donation JSX component.
+ *
+ * @example
+ * &lt;Afdian
+ *     title="******"
+ *     url="/path/to/url" />
+ */
+class Afdian extends Component {
+  render() {
+    const { title, url } = this.props;
+    if (!url) {
+      return (
+        &lt;div class="notification is-danger">
+          You forgot to set the &lt;code>url&lt;/code> for Afdian. Please set it in{' '}
+          &lt;code>_config.yml&lt;/code>.
+        &lt;/div>
+      );
+    }
+    return (
+      &lt;a
+        class="button donate"
+        href={url}
+        style={{
+          'background-color': '#885fd9',
+          'border-color': 'transparent',
+          color: 'white',
+        }}
+        target="_blank"
+        rel="noopener">
+        &lt;span class="icon is-small">
+          &lt;i class="fas fa-charging-station">&lt;/i>
+        &lt;/span>
+        &lt;span>{title}&lt;/span>
+      &lt;/a>
+    );
+  }
+}
 
-        
-            
-<div class="section-method">
+/**
+ * Cacheable Afdian donation JSX component.
+ * &lt;p>
+ * This class is supposed to be used in combination with the &lt;code>locals&lt;/code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * &lt;Afdian.Cacheable
+ *     donate={{ type: 'afdian', url='******' }}
+ *     helper={{ __: function() {...} }} />
+ */
+Afdian.Cacheable = cacheComponent(Afdian, 'donate.afdian', (props) => {
+  const { donate, helper } = props;
 
+  return {
+    title: helper.__('donate.' + donate.type),
+    url: helper.url_for(donate.url),
+  };
+});
 
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_comment_valine.jsx.html">view/comment/valine.jsx</a>, <a href="view_comment_valine.jsx.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-view_comment_valine-Valine.html">Valine</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+module.exports = Afdian;
+</code></pre>
+        </article>
+    </section>
 
 
 
