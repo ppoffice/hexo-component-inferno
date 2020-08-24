@@ -60,8 +60,6 @@ class RecentPosts extends Component {
  * <RecentPosts.Cacheable
  *     site={{ posts: {...} }}
  *     helper={{
- *         has_thumbnail: function() {...},
- *         get_thumbnail: function() {...},
  *         url_for: function() {...},
  *         __: function() {...},
  *         date_xml: function() {...},
@@ -71,7 +69,7 @@ class RecentPosts extends Component {
  */
 RecentPosts.Cacheable = cacheComponent(RecentPosts, 'widget.recentposts', (props) => {
   const { site, helper, limit = 5 } = props;
-  const { has_thumbnail, get_thumbnail, url_for, __, date_xml, date } = helper;
+  const { url_for, __, date_xml, date } = helper;
   if (!site.posts.length) {
     return null;
   }
@@ -83,7 +81,7 @@ RecentPosts.Cacheable = cacheComponent(RecentPosts, 'widget.recentposts', (props
       title: post.title,
       date: date(post.date),
       dateXml: date_xml(post.date),
-      thumbnail: has_thumbnail(post) ? get_thumbnail(post) : null,
+      thumbnail: post.thumbnail ? url_for(post.thumbnail) : null,
       categories: post.categories.map((category) => ({
         name: category.name,
         url: url_for(category.path),
