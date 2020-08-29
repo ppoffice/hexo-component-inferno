@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>view/search/algolia - Documentation</title>
+    <title>view/misc/article_licensing.jsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,135 +29,165 @@
 
 <div id="main">
     
-    <h1 class="page-title">view/search/algolia</h1>
+    <h1 class="page-title">view/misc/article_licensing.jsx</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-            
-        
-    
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * A JSX component that renders article licensing block.
+ * @module view/misc/article_licensing
+ */
+const { Component } = require('inferno');
+const { cacheComponent } = require('../../util/cache');
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Algolia search engine JSX component.</div>
-        
+/**
+ * A JSX component that renders article licensing block.
+ *
+ * @example
+ * &lt;ArticleLicensing
+ *     title="article title"
+ *     link="full article URL"
+ *     author="author name"
+ *     authorTitle="Author"
+ *     createdAt={date}
+ *     createdTitle="Posted on"
+ *     updatedAt={date}
+ *     updatedTitle="Updated on"
+ *     licenses={{
+ *         'Creative Commons': {
+ *             icon: 'fab fa-creative-commons',
+ *             url: 'https://creativecommons.org/'
+ *         },
+ *         'Attribution 4.0 International': {
+ *             icon: 'fab fa-creative-commons-by',
+ *             url: 'https://creativecommons.org/licenses/by/4.0/'
+ *         },
+ *     }}
+ *     licensedTitle="Licensed under" />
+ */
+class ArticleLicensing extends Component {
+  render() {
+    const {
+      title,
+      link,
+      author,
+      authorTitle,
+      createdAt,
+      createdTitle,
+      updatedAt,
+      updatedTitle,
+      licenses,
+      licensedTitle,
+    } = this.props;
+    return (
+      &lt;div class="article-licensing box">
+        &lt;div class="licensing-title">
+          {title &amp;&amp; &lt;p>{title}&lt;/p>}
+          &lt;p>
+            &lt;a href={link}>{link}&lt;/a>
+          &lt;/p>
+        &lt;/div>
+        &lt;div class="licensing-meta level is-mobile">
+          &lt;div class="level-left">
+            {author &amp;&amp; (
+              &lt;div class="level-item is-narrow">
+                &lt;div>
+                  &lt;h6>{authorTitle}&lt;/h6>
+                  &lt;p>{author}&lt;/p>
+                &lt;/div>
+              &lt;/div>
+            )}
+            {createdAt &amp;&amp; (
+              &lt;div class="level-item is-narrow">
+                &lt;div>
+                  &lt;h6>{createdTitle}&lt;/h6>
+                  &lt;p>{createdAt}&lt;/p>
+                &lt;/div>
+              &lt;/div>
+            )}
+            {updatedAt &amp;&amp; (
+              &lt;div class="level-item is-narrow">
+                &lt;div>
+                  &lt;h6>{updatedTitle}&lt;/h6>
+                  &lt;p>{updatedAt}&lt;/p>
+                &lt;/div>
+              &lt;/div>
+            )}
+            {licenses &amp;&amp; Object.keys(licenses).length &amp;&amp; (
+              &lt;div class="level-item is-narrow">
+                &lt;div>
+                  &lt;h6>{licensedTitle}&lt;/h6>
+                  &lt;p>
+                    {Object.keys(licenses).map((license) => (
+                      &lt;a class="icon" title={license} href={licenses[license].url}>
+                        &lt;i class={licenses[license].icon}>&lt;/i>
+                      &lt;/a>
+                    ))}
+                  &lt;/p>
+                &lt;/div>
+              &lt;/div>
+            )}
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+}
 
-        
-            
-<div class="section-method">
+/**
+ * A JSX component that renders article licensing block.
+ * &lt;p>
+ * This class is supposed to be used in combination with the &lt;code>locals&lt;/code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * &lt;ArticleLicensing.Cacheable
+ *     config={{
+ *         article: {
+ *             licenses: {
+ *                 'Creative Commons': {
+ *                     icon: 'fab fa-creative-commons',
+ *                     url: 'https://creativecommons.org/'
+ *                 },
+ *                 'Attribution 4.0 International': {
+ *                     icon: 'fab fa-creative-commons-by',
+ *                     url: 'https://creativecommons.org/licenses/by/4.0/'
+ *                 },
+ *             }
+ *         }
+ *     }}
+ *     page={page}
+ *     helper={{ __: function() {...} }} />
+ */
+ArticleLicensing.Cacheable = cacheComponent(ArticleLicensing, 'misc.articlelicensing', (props) => {
+  const { config, page, helper } = props;
+  const { licenses } = config.article || {};
 
+  return {
+    title: page.title,
+    link: page.permalink,
+    author: page.author || config.author,
+    authorTitle: helper.__('article.licensing.author'),
+    createdAt: page.date ? helper.date(page.date) : null,
+    createdTitle: helper.__('article.licensing.created_at'),
+    updatedAt: page.updated ? helper.date(page.updated) : null,
+    updatedTitle: helper.__('article.licensing.updated_at'),
+    licenses,
+    licensedTitle: helper.__('article.licensing.licensed_under'),
+  };
+});
 
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_search_algolia.jsx.html">view/search/algolia.jsx</a>, <a href="view_search_algolia.jsx.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-view_search_algolia-Algolia.html">Algolia</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+module.exports = ArticleLicensing;
+</code></pre>
+        </article>
+    </section>
 
 
 
