@@ -20,7 +20,6 @@ const { cacheComponent } = require('../../util/cache');
  *     updatedTitle="Updated on"
  *     licenses={{
  *         'Creative Commons': {
- *             icon: 'fab fa-creative-commons',
  *             url: 'https://creativecommons.org/'
  *         },
  *         'Attribution 4.0 International': {
@@ -83,9 +82,12 @@ class ArticleLicensing extends Component {
                 <div>
                   <h6>{licensedTitle}</h6>
                   <p>
-                    {Object.keys(licenses).map((license) => (
-                      <a class="icon" title={license} href={licenses[license].url}>
-                        <i class={licenses[license].icon}></i>
+                    {Object.keys(licenses).map((name) => (
+                      <a
+                        class={licenses[name].icon ? 'icon' : ''}
+                        title={name}
+                        href={licenses[name].url}>
+                        {licenses[name].icon ? <i class={licenses[name].icon}></i> : name}
                       </a>
                     ))}
                   </p>
@@ -111,10 +113,7 @@ class ArticleLicensing extends Component {
  *     config={{
  *         article: {
  *             licenses: {
- *                 'Creative Commons': {
- *                     icon: 'fab fa-creative-commons',
- *                     url: 'https://creativecommons.org/'
- *                 },
+ *                 'Creative Commons': 'https://creativecommons.org/',
  *                 'Attribution 4.0 International': {
  *                     icon: 'fab fa-creative-commons-by',
  *                     url: 'https://creativecommons.org/licenses/by/4.0/'
@@ -129,6 +128,17 @@ ArticleLicensing.Cacheable = cacheComponent(ArticleLicensing, 'misc.articlelicen
   const { config, page, helper } = props;
   const { licenses } = config.article || {};
 
+  const links = {};
+  if (licenses) {
+    Object.keys(licenses).forEach((name) => {
+      const license = licenses[name];
+      links[name] = {
+        url: helper.url_for(typeof license === 'string' ? license : license.url),
+        icon: license.icon,
+      };
+    });
+  }
+
   return {
     title: page.title,
     link: page.permalink,
@@ -138,7 +148,7 @@ ArticleLicensing.Cacheable = cacheComponent(ArticleLicensing, 'misc.articlelicen
     createdTitle: helper.__('article.licensing.created_at'),
     updatedAt: page.updated ? helper.date(page.updated) : null,
     updatedTitle: helper.__('article.licensing.updated_at'),
-    licenses,
+    licenses: links,
     licensedTitle: helper.__('article.licensing.licensed_under'),
   };
 });
