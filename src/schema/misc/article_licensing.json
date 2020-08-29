@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/misc/article_licensing.json",
+  "description": "Article licensing block",
+  "type": "object",
+  "patternProperties": {
+    ".+": {
+      "type": "object",
+      "description": "A license item",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "URL or path of the link"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon element class name"
+        }
+      },
+      "required": ["url", "icon"]
+    }
+  },
+  "examples": [
+    {
+      "Creative Commons": {
+        "icon": "fab fa-creative-commons",
+        "url": "https://creativecommons.org/"
+      },
+      "Attribution": {
+        "icon": "fab fa-creative-commons-by",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "Noncommercial": {
+        "icon": "fab fa-creative-commons-nc",
+        "url": "https://creativecommons.org/licenses/by-nc/4.0/"
+      }
+    }
+  ],
+  "nullable": true
+}
