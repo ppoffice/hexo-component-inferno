@@ -1,10 +1,10 @@
 {
   "name": "hexo-component-inferno",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A collection of Inferno.js layout components and utility scripts for Hexo",
   "main": "lib/index.js",
   "repository": "https://github.com/ppoffice/hexo-component-inferno",
-  "author": "ppoffice <zrp1994@gmail.com>",
+  "author": "ppoffice <ppoffice@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
     "test": "jest lib",
