@@ -84,8 +84,10 @@ class ArticleLicensing extends Component {
                   <p>
                     {Object.keys(licenses).map((name) => (
                       <a
-                        class={licenses[name].icon ? 'icon' : ''}
+                        rel="noopener"
+                        target="_blank"
                         title={name}
+                        class={licenses[name].icon ? 'icon' : ''}
                         href={licenses[name].url}>
                         {licenses[name].icon ? <i class={licenses[name].icon}></i> : name}
                       </a>
