@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/misc/manifest.json",
+  "description": "Web application manifests configuration\nhttps://developer.mozilla.org/en-US/docs/Web/Manifest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the web application (default to the site title)",
+      "nullable": true
+    },
+    "short_name": {
+      "type": "string",
+      "description": "The displayed name of the web application\nwhen there is not enough space to display full name",
+      "nullable": true
+    },
+    "start_url": {
+      "type": "string",
+      "description": "The start URL of the web application",
+      "nullable": true
+    },
+    "theme_color": {
+      "type": "string",
+      "description": "The default theme color for the application",
+      "nullable": true
+    },
+    "background_color": {
+      "type": "string",
+      "description": "A placeholder background color for the application page to display\nbefore its stylesheet is loaded",
+      "nullable": true
+    },
+    "display": {
+      "type": "string",
+      "description": "The preferred display mode for the website",
+      "nullable": true,
+      "default": "standalone"
+    },
+    "icons": {
+      "type": "array",
+      "description": "Image files that can serve as application icons for different contexts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "The path to the image file",
+            "nullable": false
+          },
+          "sizes": {
+            "type": "string",
+            "description": "A string containing space-separated image dimensions",
+            "nullable": false
+          },
+          "type": {
+            "type": "string",
+            "description": "A hint as to the media type of the image",
+            "nullable": true
+          }
+        },
+        "required": ["src", "sizes"]
+      },
+      "nullable": true
+    }
+  },
+  "nullable": true
+}
