@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/plugin/bing_webmaster.json",
+  "description": "Bing Webmaster Tools plugin settings\nhttps://www.bing.com/toolbox/webmaster/",
+  "type": "object",
+  "properties": {
+    "tracking_id": {
+      "type": "string",
+      "description": "Bing Webmaster Tools tracking ID in the <meta> tag",
+      "nullable": true
+    }
+  },
+  "required": ["tracking_id"]
+}
