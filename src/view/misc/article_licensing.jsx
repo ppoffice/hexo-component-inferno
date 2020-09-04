@@ -124,7 +124,10 @@ class ArticleLicensing extends Component {
  *         }
  *     }}
  *     page={page}
- *     helper={{ __: function() {...} }} />
+ *     helper={{
+ *         __: function() {...},
+ *         url_for: function() {...}
+ *     }} />
  */
 ArticleLicensing.Cacheable = cacheComponent(ArticleLicensing, 'misc.articlelicensing', (props) => {
   const { config, page, helper } = props;

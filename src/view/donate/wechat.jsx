@@ -48,7 +48,10 @@ class Wechat extends Component {
  * @example
  * <Wechat.Cacheable
  *     donate={{ type: 'wechat', qrcode='******' }}
- *     helper={{ __: function() {...} }} />
+ *     helper={{
+ *         __: function() {...},
+ *         url_for: function() {...}
+ *     }} />
  */
 Wechat.Cacheable = cacheComponent(Wechat, 'donate.wechat', (props) => {
   const { donate, helper } = props;

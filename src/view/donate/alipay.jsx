@@ -48,7 +48,10 @@ class Alipay extends Component {
  * @example
  * <Alipay.Cacheable
  *     donate={{ type: 'alipay', qrcode='******' }}
- *     helper={{ __: function() {...} }} />
+ *     helper={{
+ *         __: function() {...},
+ *         url_for: function() {...}
+ *     }} />
  */
 Alipay.Cacheable = cacheComponent(Alipay, 'donate.alipay', (props) => {
   const { donate, helper } = props;

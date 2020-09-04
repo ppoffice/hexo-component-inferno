@@ -146,7 +146,10 @@ class Toc extends Component {
  * <Toc.Cacheable
  *     config={{ toc: true }}
  *     page={{ layout: 'post', content: 'HTML content' }}
- *     helper={{ _p: function() {...} }} />
+ *     helper={{
+ *         _p: function() {...},
+ *         url_for: function() {...}
+ *     }} /> />
  */
 Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
   const { config, page, helper } = props;

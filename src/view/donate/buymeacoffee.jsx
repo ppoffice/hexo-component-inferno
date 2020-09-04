@@ -54,7 +54,10 @@ class BuyMeACoffee extends Component {
  * @example
  * <BuyMeACoffee.Cacheable
  *     donate={{ type: 'buymeacoffee', url='/path/to/buymeacoffee/page' }}
- *     helper={{ __: function() {...} }} />
+ *     helper={{
+ *         __: function() {...},
+ *         url_for: function() {...}
+ *     }} />
  */
 BuyMeACoffee.Cacheable = cacheComponent(BuyMeACoffee, 'donate.buymeacoffee', (props) => {
   const { donate, helper } = props;

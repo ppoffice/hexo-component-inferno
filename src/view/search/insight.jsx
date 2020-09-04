@@ -62,7 +62,8 @@ class Insight extends Component {
  * <Insight.Cacheable
  *     helper={{
  *         __: function() {...},
- *         cdn: function() {...}
+ *         cdn: function() {...},
+ *         url_for: function() {...}
  *     }} />
  */
 Insight.Cacheable = cacheComponent(Insight, 'search.insight', (props) => {

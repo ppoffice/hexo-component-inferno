@@ -45,7 +45,10 @@ class Patreon extends Component {
  * @example
  * <Patreon.Cacheable
  *     donate={{ type: 'patreon', url='/path/to/patreon/page' }}
- *     helper={{ __: function() {...} }} />
+ *     helper={{
+ *         __: function() {...},
+ *         url_for: function() {...}
+ *     }} />
  */
 Patreon.Cacheable = cacheComponent(Patreon, 'donate.petreon', (props) => {
   const { donate, helper } = props;

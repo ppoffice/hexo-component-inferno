@@ -54,7 +54,10 @@ class Afdian extends Component {
  * @example
  * <Afdian.Cacheable
  *     donate={{ type: 'afdian', url='******' }}
- *     helper={{ __: function() {...} }} />
+ *     helper={{
+ *         __: function() {...},
+ *         url_for: function() {...}
+ *     }} />
  */
 Afdian.Cacheable = cacheComponent(Afdian, 'donate.afdian', (props) => {
   const { donate, helper } = props;

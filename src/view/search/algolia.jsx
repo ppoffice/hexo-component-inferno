@@ -95,7 +95,8 @@ class Algolia extends Component {
  *     }}
  *     helper={{
  *         __: function() {...},
- *         cdn: function() {...}
+ *         cdn: function() {...},
+ *         url_for: function() {...}
  *     }} />
  */
 Algolia.Cacheable = cacheComponent(Algolia, 'search.algolia', (props) => {
