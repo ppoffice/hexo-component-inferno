@@ -1,4 +1,4 @@
-# A collection of [Inferno.js](https://infernojs.org/) layout components and utility scripts for Hexo 
+# A collection of [Inferno.js](https://infernojs.org/) layout components and utility scripts for Hexo
 
 [![Build Status](https://github.com/ppoffice/hexo-component-inferno/workflows/Test/badge.svg?branch=master)](https://github.com/ppoffice/hexo-component-inferno/actions)
 [![NPM version](https://badge.fury.io/js/hexo-component-inferno.svg)](https://www.npmjs.com/package/hexo-component-inferno)

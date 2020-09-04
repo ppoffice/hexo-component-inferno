@@ -10,34 +10,34 @@ jobs:
         node-version: [10, 12, 14]
       fail-fast: false
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: npm-cache
-        restore-keys: npm-cache
-    - run: npm install
-    - run: npm run build
-    - run: npm run test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-cache
+          restore-keys: npm-cache
+      - run: npm install
+      - run: npm run build
+      - run: npm run test
 
   coverage:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: npm-cache
-        restore-keys: npm-cache
-    - run: npm install
-    - run: npm run build
-    - run: npm run test-cov
-    - uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-cache
+          restore-keys: npm-cache
+      - run: npm install
+      - run: npm run build
+      - run: npm run test-cov
+      - uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
