@@ -1,7 +1,7 @@
 /**
  * Web app manifest.json generator.
  *
- * @module hexo/generator/insight
+ * @module hexo/generator/manifest
  */
 
 /**
