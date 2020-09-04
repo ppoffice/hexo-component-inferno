@@ -1,6 +1,6 @@
 /**
  * Web app manifest.json generator.
- * 
+ *
  * @module hexo/generator/insight
  */
 
@@ -9,16 +9,16 @@
  * <br>
  * Manifest configurations should be placed in the `head.manifest` property of
  * the theme configurations.
- * 
+ *
  * @param {Hexo} hexo The Hexo instance.
  * @example
  * head:
  *     manifest:
- *         name: 
- *         short_name: 
- *         start_url: 
- *         theme_color: 
- *         background_color: 
+ *         name:
+ *         short_name:
+ *         start_url:
+ *         theme_color:
+ *         background_color:
  *         display: standalone
  *         icons:
  *             - src: /path/to/image.png
