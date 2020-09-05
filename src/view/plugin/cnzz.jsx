@@ -33,7 +33,7 @@ class Cnzz extends Component {
  *     head={false}
  *     plugin={{ id: '******', web_id: '******' }} />
  */
-module.exports = cacheComponent(Cnzz, 'plugin.cnzz', (props) => {
+Cnzz.Cacheable = cacheComponent(Cnzz, 'plugin.cnzz', (props) => {
   const { head, plugin } = props;
   if (head || !plugin.id || !plugin.web_id) {
     return null;
@@ -43,3 +43,5 @@ module.exports = cacheComponent(Cnzz, 'plugin.cnzz', (props) => {
     webId: plugin.web_id,
   };
 });
+
+module.exports = Cnzz.Cacheable;

@@ -52,7 +52,7 @@ class Statcounter extends Component {
  *     head={false}
  *     plugin={{ project: '******', security: '******' }} />
  */
-module.exports = cacheComponent(Statcounter, 'plugin.statcounter', (props) => {
+Statcounter.Cacheable = cacheComponent(Statcounter, 'plugin.statcounter', (props) => {
   const { head, plugin } = props;
   const { project, security } = plugin;
   if (head || !project || !security) {
@@ -63,3 +63,5 @@ module.exports = cacheComponent(Statcounter, 'plugin.statcounter', (props) => {
     security,
   };
 });
+
+module.exports = Statcounter.Cacheable;
