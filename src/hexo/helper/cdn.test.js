@@ -28,6 +28,7 @@ describe('Get JavaScript library URL', () => {
       () => cdn('disqusjs', '1.2.6', 'dist/disqus.min.js'),
       () => cdn('algoliasearch', '4.0.3', 'dist/algoliasearch-lite.umd.js'),
       () => cdn('instantsearch.js', '4.3.1', 'dist/instantsearch.production.min.js'),
+      () => cdn('cookieconsent', '3.1.1', 'build/cookieconsent.min.js'),
       () => cdn('example', '1.0.0', 'example.js'),
     ];
   });
@@ -45,6 +46,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
       'https://cdn.jsdelivr.net/npm/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://cdn.jsdelivr.net/npm/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
+      'https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js',
       'https://cdn.jsdelivr.net/npm/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -64,6 +66,7 @@ describe('Get JavaScript library URL', () => {
       'https://unpkg.com/disqusjs@1.2.6/dist/disqus.js',
       'https://unpkg.com/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://unpkg.com/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
+      'https://unpkg.com/cookieconsent@3.1.1/build/cookieconsent.min.js',
       'https://unpkg.com/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -83,6 +86,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdnjs.cloudflare.com/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -102,6 +106,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
       'https://cdnjs.loli.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdnjs.loli.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://cdnjs.loli.net/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://cdnjs.loli.net/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -121,6 +126,7 @@ describe('Get JavaScript library URL', () => {
       'https://my.cdn/disqusjs@1.2.6/dist/disqus.min.js',
       'https://my.cdn/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://my.cdn/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
+      'https://my.cdn/cookieconsent@3.1.1/build/cookieconsent.min.js',
       'https://my.cdn/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -142,6 +148,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
       'https://my.cdn/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://my.cdn/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://my.cdn/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://my.cdn/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));

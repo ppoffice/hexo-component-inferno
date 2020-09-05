@@ -55,6 +55,11 @@ const CDNJS_FIXTURES = {
   clipboard: (ver, fname) => ['clipboard.js', ver, fname],
   // disqusjs is not hosted on CDN.js
   disqusjs: (ver, fname) => [],
+  cookieconsent: (ver, fname) => [
+    'cookieconsent',
+    ver,
+    fname.startsWith('build/') ? fname.substr(6) : fname,
+  ],
 };
 
 const UNPKG_FIXTURES = {

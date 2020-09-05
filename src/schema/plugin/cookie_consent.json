@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/plugin/cookie_consent.json",
+  "description": "Alerting users about the use of cookies\nhttps://www.osano.com/cookieconsent/",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "The compliance type. Can be \"info\", \"opt-in\", or \"opt-out\"",
+      "default": "info",
+      "nullable": true
+    },
+    "theme": {
+      "type": "string",
+      "description": "Theme of the popup. Can be \"block\", \"edgeless\", or \"classic\"",
+      "default": "edgeless",
+      "nullable": true
+    },
+    "static": {
+      "type": "boolean",
+      "description": "Whether the popup should stay static regardless of the page scrolls",
+      "default": false,
+      "nullable": true
+    },
+    "position": {
+      "type": "string",
+      "description": "Where on the screen the consent popup should display",
+      "default": "bottom-left",
+      "nullable": true
+    },
+    "policyLink": {
+      "type": "string",
+      "description": "URL to your site's cookie policy",
+      "default": "https://www.cookiesandyou.com/",
+      "nullable": true
+    }
+  }
+}
