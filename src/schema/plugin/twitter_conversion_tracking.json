@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/plugin/twitter_conversion_tracking.json",
+  "description": "Twitter conversion tracking plugin settings\nhttps://business.twitter.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html",
+  "type": "object",
+  "properties": {
+    "pixel_id": {
+      "type": "string",
+      "description": "Twitter Pixel ID",
+      "nullable": true
+    }
+  },
+  "required": ["pixel_id"]
+}
