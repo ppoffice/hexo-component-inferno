@@ -25,16 +25,7 @@ class Afdian extends Component {
       );
     }
     return (
-      <a
-        class="button donate"
-        href={url}
-        style={{
-          'background-color': '#885fd9',
-          'border-color': 'transparent',
-          color: 'white',
-        }}
-        target="_blank"
-        rel="noopener">
+      <a class="button donate" href={url} target="_blank" rel="noopener" data-type="afdian">
         <span class="icon is-small">
           <i class="fas fa-charging-station"></i>
         </span>

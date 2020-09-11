@@ -29,7 +29,8 @@ class Paypal extends Component {
     return (
       <>
         <a
-          class="button is-warning donate"
+          class="button donate"
+          data-type="paypal"
           onclick="document.getElementById('paypal-donate-form').submit()">
           <span class="icon is-small">
             <i class="fab fa-paypal"></i>

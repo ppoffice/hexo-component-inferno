@@ -25,16 +25,7 @@ class BuyMeACoffee extends Component {
       );
     }
     return (
-      <a
-        class="button donate"
-        href={url}
-        style={{
-          'background-color': 'rgba(255,128,62,.87)',
-          'border-color': 'transparent',
-          color: 'white',
-        }}
-        target="_blank"
-        rel="noopener">
+      <a class="button donate" href={url} target="_blank" rel="noopener" data-type="buymeacoffee">
         <span class="icon is-small">
           <i class="fas fa-coffee"></i>
         </span>

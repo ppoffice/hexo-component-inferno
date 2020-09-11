@@ -25,7 +25,7 @@ class Patreon extends Component {
       );
     }
     return (
-      <a class="button is-danger donate" href={url} target="_blank" rel="noopener">
+      <a class="button donate" href={url} target="_blank" rel="noopener" data-type="patreon">
         <span class="icon is-small">
           <i class="fab fa-patreon"></i>
         </span>

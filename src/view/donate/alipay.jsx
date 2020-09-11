@@ -25,7 +25,7 @@ class Alipay extends Component {
       );
     }
     return (
-      <a class="button is-info donate">
+      <a class="button donate" data-type="alipay">
         <span class="icon is-small">
           <i class="fab fa-alipay"></i>
         </span>

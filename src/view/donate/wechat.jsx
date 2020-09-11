@@ -25,7 +25,7 @@ class Wechat extends Component {
       );
     }
     return (
-      <a class="button is-success donate">
+      <a class="button donate" data-type="wechat">
         <span class="icon is-small">
           <i class="fab fa-weixin"></i>
         </span>
