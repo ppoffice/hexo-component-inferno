@@ -7,6 +7,12 @@
     "type": {
       "type": "string",
       "const": "toc"
+    },
+    "index": {
+      "type": "boolean",
+      "description": "Whether to show the index of each heading",
+      "default": true,
+      "nullable": true
     }
   },
   "required": ["type"]

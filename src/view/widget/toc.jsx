@@ -85,7 +85,7 @@ function getToc(content) {
  *     jsUrl="******" />
  */
 class Toc extends Component {
-  renderToc(toc) {
+  renderToc(toc, showIndex = true) {
     let result;
 
     const keys = Object.keys(toc)
@@ -94,14 +94,14 @@ class Toc extends Component {
       .sort((a, b) => a - b);
 
     if (keys.length > 0) {
-      result = <ul class="menu-list">{keys.map((i) => this.renderToc(toc[i]))}</ul>;
+      result = <ul class="menu-list">{keys.map((i) => this.renderToc(toc[i], showIndex))}</ul>;
     }
     if ('id' in toc && 'index' in toc && 'text' in toc) {
       result = (
         <li>
           <a class="level is-mobile" href={'#' + toc.id}>
             <span class="level-left">
-              <span class="level-item">{toc.index}</span>
+              {showIndex && <span class="level-item">{toc.index}</span>}
               <span class="level-item">{unescapeHTML(toc.text)}</span>
             </span>
           </a>
@@ -113,6 +113,7 @@ class Toc extends Component {
   }
 
   render() {
+    const { showIndex } = this.props;
     const toc = getToc(this.props.content);
     if (!Object.keys(toc).length) {
       return null;
@@ -127,7 +128,7 @@ class Toc extends Component {
         <div class="card-content">
           <div class="menu">
             <h3 class="menu-label">{this.props.title}</h3>
-            {this.renderToc(toc)}
+            {this.renderToc(toc, showIndex)}
           </div>
         </div>
         <style dangerouslySetInnerHTML={{ __html: css }}></style>
@@ -154,8 +155,9 @@ class Toc extends Component {
  *     }} /> />
  */
 Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
-  const { config, page, helper } = props;
+  const { config, page, widget, helper } = props;
   const { layout, content, encrypt, origin } = page;
+  const { index } = widget;
 
   if (config.toc !== true || (layout !== 'page' && layout !== 'post')) {
     return null;
@@ -163,6 +165,7 @@ Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
 
   return {
     title: helper._p('widget.catalogue', Infinity),
+    showIndex: index !== false,
     content: encrypt ? origin : content,
     jsUrl: helper.url_for('/js/toc.js'),
   };
