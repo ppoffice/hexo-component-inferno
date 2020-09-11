@@ -2,7 +2,7 @@
  * Light Gallery and Justified Gallery plugins JSX component.
  * @module view/plugin/gallery
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -27,10 +27,10 @@ class Gallery extends Component {
     const { head, lightGallery, justifiedGallery } = this.props;
     if (head) {
       return (
-        <Fragment>
+        <>
           <link rel="stylesheet" href={lightGallery.cssUrl} />
           <link rel="stylesheet" href={justifiedGallery.cssUrl} />
-        </Fragment>
+        </>
       );
     }
 
@@ -47,11 +47,11 @@ class Gallery extends Component {
         });`;
 
     return (
-      <Fragment>
+      <>
         <script src={lightGallery.jsUrl} defer={true}></script>
         <script src={justifiedGallery.jsUrl} defer={true}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

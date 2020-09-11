@@ -2,7 +2,7 @@
  * AddThis share buttons JSX component.
  * @module view/share/addthis
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -24,10 +24,10 @@ class AddThis extends Component {
       );
     }
     return (
-      <Fragment>
+      <>
         <div class="addthis_inline_share_toolbox"></div>
         <script src={installUrl} defer={true}></script>
-      </Fragment>
+      </>
     );
   }
 }

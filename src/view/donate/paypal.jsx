@@ -2,7 +2,7 @@
  * Paypal donation JSX component.
  * @module view/donate/paypal
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -27,7 +27,7 @@ class Paypal extends Component {
       );
     }
     return (
-      <Fragment>
+      <>
         <a
           class="button is-warning donate"
           onclick="document.getElementById('paypal-donate-form').submit()">
@@ -46,7 +46,7 @@ class Paypal extends Component {
           <input type="hidden" name="business" value={business} />
           <input type="hidden" name="currency_code" value={currencyCode} />
         </form>
-      </Fragment>
+      </>
     );
   }
 }

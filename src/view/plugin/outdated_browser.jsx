@@ -2,7 +2,7 @@
  * Outdated browser detection plugin JSX component.
  * @module view/plugin/outdated_browser
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -31,7 +31,7 @@ class OutdatedBrowser extends Component {
       return <link rel="stylesheet" href={cssUrl} />;
     }
     return (
-      <Fragment>
+      <>
         <div id="outdated">
           <h6>Your browser is out-of-date!</h6>
           <p>
@@ -48,7 +48,7 @@ class OutdatedBrowser extends Component {
         </div>
         <script src={jsUrl} defer={true}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

@@ -2,7 +2,7 @@
  * A JSX component that renders &lt;meta&gt; tags.
  * @module view/misc/meta
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 
 function trim(str) {
   return str
@@ -56,6 +56,6 @@ module.exports = class extends Component {
         return <meta {...props} />;
       });
 
-    return <Fragment>{tags}</Fragment>;
+    return <>{tags}</>;
   }
 };

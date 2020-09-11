@@ -7,7 +7,7 @@
  */
 const urlFn = require('url');
 const moment = require('moment');
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { encodeURL, stripHTML, escapeHTML } = require('hexo-util');
 const localeMap = {
   en: 'en_US',
@@ -175,6 +175,6 @@ module.exports = class extends Component {
       htmlTags.push(<meta property="fb:app_id" content={facebookAppId} />);
     }
 
-    return <Fragment>{htmlTags}</Fragment>;
+    return <>{htmlTags}</>;
   }
 };

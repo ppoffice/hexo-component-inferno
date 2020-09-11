@@ -2,7 +2,7 @@
  * ChangYan comment JSX component.
  * @module view/comment/changyan
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -28,11 +28,11 @@ class ChangYan extends Component {
     }
     const js = `window.changyan.api.config({appid: '${appId}',conf: '${conf}'});`;
     return (
-      <Fragment>
+      <>
         <div id="SOHUCS" sid={path}></div>
         <script charset="utf-8" src="https://changyan.sohu.com/upload/changyan.js"></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

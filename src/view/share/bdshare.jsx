@@ -2,7 +2,7 @@
  * Baidu share buttons JSX component.
  * @module view/share/bdshare
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -17,7 +17,7 @@ class BdShare extends Component {
     const js =
       'window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "2", "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName(\'head\')[0] || body).appendChild(createElement(\'script\')).src = \'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=\' + ~(-new Date() / 36e5)];';
     return (
-      <Fragment>
+      <>
         <div class="bdsharebuttonbox">
           <a href="#" class="bds_more" data-cmd="more"></a>
           <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
@@ -27,7 +27,7 @@ class BdShare extends Component {
           <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
         </div>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

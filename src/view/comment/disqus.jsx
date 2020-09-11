@@ -2,7 +2,7 @@
  * Disqus comment JSX component.
  * @module view/comment/disqus
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -38,7 +38,7 @@ class Disqus extends Component {
             (d.head || d.body).appendChild(s);
         })();`;
     return (
-      <Fragment>
+      <>
         <div id="disqus_thread">
           <noscript>
             Please enable JavaScript to view the{' '}
@@ -46,7 +46,7 @@ class Disqus extends Component {
           </noscript>
         </div>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

@@ -2,7 +2,7 @@
  * MathJax math renderer plugin JSX component.
  * @module view/plugin/katex
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -35,10 +35,10 @@ class Mathjax extends Component {
         });`;
 
     return (
-      <Fragment>
+      <>
         <script type="text/x-mathjax-config" dangerouslySetInnerHTML={{ __html: js }}></script>
         <script src={jsUrl} defer={true}></script>
-      </Fragment>
+      </>
     );
   }
 }

@@ -2,7 +2,7 @@
  * Valine comment JSX component.
  * @module view/comment/valine
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -78,12 +78,12 @@ class Valine extends Component {
             ${Array.isArray(fields) ? `requiredFields: ${JSON.stringify(fields)},` : ''}
         });`;
     return (
-      <Fragment>
+      <>
         <div id="valine-thread" class="content"></div>
         <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
         <script src={jsUrl}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

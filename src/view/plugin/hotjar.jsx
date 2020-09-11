@@ -2,7 +2,7 @@
  * Hotjar user feedback plugin JSX component.
  * @module view/plugin/hotjar
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -26,9 +26,9 @@ class Hotjar extends Component {
         })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`;
 
     return (
-      <Fragment>
+      <>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

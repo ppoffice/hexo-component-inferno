@@ -2,7 +2,7 @@
  * Insight search plugin JSX component.
  * @module view/search/insight
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -30,7 +30,7 @@ class Insight extends Component {
         });`;
 
     return (
-      <Fragment>
+      <>
         <div class="searchbox">
           <div class="searchbox-container">
             <div class="searchbox-header">
@@ -46,7 +46,7 @@ class Insight extends Component {
         </div>
         <script src={jsUrl} defer={true}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

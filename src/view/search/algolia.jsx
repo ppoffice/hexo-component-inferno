@@ -2,7 +2,7 @@
  * Algolia search engine JSX component.
  * @module view/search/algolia
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -51,7 +51,7 @@ class Algolia extends Component {
         });`;
 
     return (
-      <Fragment>
+      <>
         <div class="searchbox">
           <div class="searchbox-container">
             <div class="searchbox-header">
@@ -72,7 +72,7 @@ class Algolia extends Component {
         <script src={instantSearchUrl} crossorigin="anonymous" defer={true}></script>
         <script src={jsUrl} defer={true}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

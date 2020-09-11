@@ -2,7 +2,7 @@
  * KaTeX math renderer plugin JSX component.
  * @module view/plugin/katex
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -27,13 +27,13 @@ class KaTeX extends Component {
         });`;
 
     return (
-      <Fragment>
+      <>
         <link rel="stylesheet" href={cssUrl} />
         <script src={jsUrl} defer={true}></script>
         <script src={autoRenderUrl} defer={true}></script>
         <script src={mhchemUrl} defer={true}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

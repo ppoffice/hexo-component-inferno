@@ -2,7 +2,7 @@
  * Isso comment JSX component.
  * @module view/comment/isso
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -24,10 +24,10 @@ class Isso extends Component {
       );
     }
     return (
-      <Fragment>
+      <>
         <div id="isso-thread"></div>
         <script data-isso={'//' + url} src={`//${url}/js/embed.min.js`}></script>
-      </Fragment>
+      </>
     );
   }
 }

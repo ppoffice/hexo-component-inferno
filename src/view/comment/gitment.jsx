@@ -4,7 +4,7 @@
  * @deprecated
  */
 const crypto = require('crypto');
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -55,12 +55,12 @@ class Gitment extends Component {
         })
         gitment.render('comment-container')`;
     return (
-      <Fragment>
+      <>
         <div id="comment-container"></div>
         <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css" />
         <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

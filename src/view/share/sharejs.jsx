@@ -2,7 +2,7 @@
  * Share.js share buttons JSX component.
  * @module view/share/sharejs
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -16,11 +16,11 @@ class ShareJs extends Component {
   render() {
     const { cssUrl, jsUrl } = this.props;
     return (
-      <Fragment>
+      <>
         <link rel="stylesheet" href={cssUrl} />
         <div class="social-share"></div>
         <script src={jsUrl}></script>
-      </Fragment>
+      </>
     );
   }
 }

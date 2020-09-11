@@ -2,7 +2,7 @@
  * DisqusJS comment JSX component.
  * @module view/comment/disqusjs
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -63,7 +63,7 @@ class DisqusJs extends Component {
             nesting: ${nesting}
         });`;
     return (
-      <Fragment>
+      <>
         <link rel="stylesheet" href={cssUrl} />
         <div id="disqus_thread">
           <noscript>
@@ -73,7 +73,7 @@ class DisqusJs extends Component {
         </div>
         <script src={jsUrl}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

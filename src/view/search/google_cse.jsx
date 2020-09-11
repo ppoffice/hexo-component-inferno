@@ -2,7 +2,7 @@
  * Google custom search engine JSX component.
  * @module view/search/google_cse
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -32,7 +32,7 @@ class GoogleCSE extends Component {
         })();`;
 
     return (
-      <Fragment>
+      <>
         <style dangerouslySetInnerHTML={{ __html: css }}></style>
         <div class="searchbox">
           <div class="searchbox-container">
@@ -62,7 +62,7 @@ class GoogleCSE extends Component {
           {cx ? <script dangerouslySetInnerHTML={{ __html: js1 }}></script> : null}
         </div>
         <script src={jsUrl}></script>
-      </Fragment>
+      </>
     );
   }
 }

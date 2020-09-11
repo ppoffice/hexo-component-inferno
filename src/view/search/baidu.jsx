@@ -2,7 +2,7 @@
  * Baidu search engine JSX component.
  * @module view/search/baidu
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -34,7 +34,7 @@ class Baidu extends Component {
         })(document, jQuery);`;
 
     return (
-      <Fragment>
+      <>
         <div class="searchbox">
           <div class="searchbox-container">
             <div class="searchbox-header">
@@ -48,7 +48,7 @@ class Baidu extends Component {
           </div>
         </div>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

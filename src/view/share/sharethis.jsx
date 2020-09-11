@@ -2,7 +2,7 @@
  * ShareThis share buttons JSX component.
  * @module view/share/sharethis
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -24,10 +24,10 @@ class ShareThis extends Component {
       );
     }
     return (
-      <Fragment>
+      <>
         <div class="sharethis-inline-share-buttons"></div>
         <script src={installUrl} defer={true}></script>
-      </Fragment>
+      </>
     );
   }
 }

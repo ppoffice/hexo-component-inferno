@@ -3,7 +3,7 @@
  * @module view/comment/gitalk
  */
 const crypto = require('crypto');
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -77,12 +77,12 @@ class Gitalk extends Component {
         })
         gitalk.render('comment-container')`;
     return (
-      <Fragment>
+      <>
         <div id="comment-container"></div>
         <link rel="stylesheet" href={cssUrl} />
         <script src={jsUrl}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </Fragment>
+      </>
     );
   }
 }

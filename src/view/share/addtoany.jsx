@@ -2,7 +2,7 @@
  * AddToAny share buttons JSX component.
  * @module view/share/addtoany
  */
-const { Component, Fragment } = require('inferno');
+const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -15,7 +15,7 @@ const { cacheComponent } = require('../../util/cache');
 class AddToAny extends Component {
   render() {
     return (
-      <Fragment>
+      <>
         <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
           <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
           <a class="a2a_button_facebook"></a>
@@ -25,7 +25,7 @@ class AddToAny extends Component {
           <a class="a2a_button_reddit"></a>
         </div>
         <script src="https://static.addtoany.com/menu/page.js" defer={true}></script>
-      </Fragment>
+      </>
     );
   }
 }
