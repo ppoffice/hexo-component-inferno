@@ -28,7 +28,7 @@ class RecentPosts extends Component {
     const { title, posts } = this.props;
 
     return (
-      <div class="card widget">
+      <div class="card widget" data-type="recent-posts">
         <div class="card-content">
           <h3 class="menu-label">{title}</h3>
           {posts.map((post) => {

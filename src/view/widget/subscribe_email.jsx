@@ -21,7 +21,7 @@ class SubscribeEmail extends Component {
     const { title, description, feedburnerId, buttonTitle } = this.props;
 
     return (
-      <div class="card widget">
+      <div class="card widget" data-type="subscribe-email">
         <div class="card-content">
           <div class="menu">
             <h3 class="menu-label">{title}</h3>
