@@ -25,11 +25,7 @@ module.exports = class extends Component {
 
     const categoryTags = [];
     categories.forEach((category, i) => {
-      categoryTags.push(
-        <a class="link-muted" href={category.url}>
-          {category.name}
-        </a>,
-      );
+      categoryTags.push(<a href={category.url}>{category.name}</a>);
       if (i < categories.length - 1) {
         categoryTags.push(' / ');
       }
@@ -37,23 +33,21 @@ module.exports = class extends Component {
 
     return (
       <article class="media">
-        {thumbnail ? (
-          <a href={url} class="media-left">
-            <p class="image is-64x64">
-              <img class="fill" src={thumbnail} alt={title} />
-            </p>
-          </a>
-        ) : null}
-        <div class="media-content size-small">
-          <p>
+        {thumbnail && (
+          <figure class="media-left">
+            <a class="image" href={url}>
+              <img src={thumbnail} alt={title} />
+            </a>
+          </figure>
+        )}
+        <div class="media-content">
+          <p class="date">
             <time dateTime={dateXml}>{date}</time>
           </p>
-          <p class="title is-6">
-            <a href={url} class="link-muted">
-              {title}
-            </a>
+          <p class="title">
+            <a href={url}>{title}</a>
           </p>
-          <p class="is-uppercase">{categoryTags.length ? categoryTags : null}</p>
+          {categoryTags.length && <p class="categories">{categoryTags}</p>}
         </div>
       </article>
     );

@@ -40,7 +40,7 @@ class SubscribeEmail extends Component {
                   </span>
                 </div>
                 <div class="control">
-                  <input class="button is-primary" type="submit" value={buttonTitle} />
+                  <input class="button" type="submit" value={buttonTitle} />
                 </div>
               </div>
               {description ? <p class="help">{description}</p> : null}

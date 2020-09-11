@@ -30,9 +30,7 @@ class Categories extends Component {
   renderList(categories, showCount) {
     return categories.map((category) => (
       <li>
-        <a
-          class={'level is-mobile is-marginless' + (category.isCurrent ? ' is-active' : '')}
-          href={category.url}>
+        <a class={'level is-mobile' + (category.isCurrent ? ' is-active' : '')} href={category.url}>
           <span class="level-start">
             <span class="level-item">{category.name}</span>
           </span>
@@ -42,9 +40,7 @@ class Categories extends Component {
             </span>
           ) : null}
         </a>
-        {category.children.length ? (
-          <ul class="mr-0">{this.renderList(category.children, showCount)}</ul>
-        ) : null}
+        {category.children.length ? <ul>{this.renderList(category.children, showCount)}</ul> : null}
       </li>
     ));
   }

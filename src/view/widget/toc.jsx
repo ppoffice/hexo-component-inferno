@@ -99,9 +99,11 @@ class Toc extends Component {
     if ('id' in toc && 'index' in toc && 'text' in toc) {
       result = (
         <li>
-          <a class="is-flex" href={'#' + toc.id}>
-            <span class="mr-2">{toc.index}</span>
-            <span>{unescapeHTML(toc.text)}</span>
+          <a class="level is-mobile" href={'#' + toc.id}>
+            <span class="level-left">
+              <span class="level-item">{toc.index}</span>
+              <span class="level-item">{unescapeHTML(toc.text)}</span>
+            </span>
           </a>
           {result}
         </li>

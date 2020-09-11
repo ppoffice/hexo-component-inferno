@@ -33,11 +33,7 @@ class Links extends Component {
                 } catch (e) {}
                 return (
                   <li>
-                    <a
-                      class="level is-mobile is-mobile"
-                      href={links[i]}
-                      target="_blank"
-                      rel="noopener">
+                    <a class="level is-mobile" href={links[i]} target="_blank" rel="noopener">
                       <span class="level-left">
                         <span class="level-item">{i}</span>
                       </span>
