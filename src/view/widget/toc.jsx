@@ -101,7 +101,7 @@ class Toc extends Component {
         <li>
           <a class="level is-mobile" href={'#' + toc.id}>
             <span class="level-left">
-              {showIndex && <span class="level-item">{toc.index}</span>}
+              {showIndex ? <span class="level-item">{toc.index}</span> : null}
               <span class="level-item">{unescapeHTML(toc.text)}</span>
             </span>
           </a>

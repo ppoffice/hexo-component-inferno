@@ -39,11 +39,11 @@ class WebApp extends Component {
     return (
       <>
         <link rel="manifest" href={manifest} />
-        {themeColor && <meta name="theme-color" content={themeColor} />}
+        {themeColor ? <meta name="theme-color" content={themeColor} /> : null}
         {/* Windows Pinned Site */}
         <meta name="application-name" content={name} />
-        {tileIcon && <meta name="msapplication-TileImage" content={tileIcon} />}
-        {themeColor && <meta name="msapplication-TileColor" content={themeColor} />}
+        {tileIcon ? <meta name="msapplication-TileImage" content={tileIcon} /> : null}
+        {themeColor ? <meta name="msapplication-TileColor" content={themeColor} /> : null}
         {/* iOS home screen launcher */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content={name} />

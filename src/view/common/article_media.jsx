@@ -33,13 +33,13 @@ module.exports = class extends Component {
 
     return (
       <article class="media">
-        {thumbnail && (
+        {thumbnail ? (
           <figure class="media-left">
             <a class="image" href={url}>
               <img src={thumbnail} alt={title} />
             </a>
           </figure>
-        )}
+        ) : null}
         <div class="media-content">
           <p class="date">
             <time dateTime={dateXml}>{date}</time>
@@ -47,7 +47,7 @@ module.exports = class extends Component {
           <p class="title">
             <a href={url}>{title}</a>
           </p>
-          {categoryTags.length && <p class="categories">{categoryTags}</p>}
+          {categoryTags.length ? <p class="categories">{categoryTags}</p> : null}
         </div>
       </article>
     );

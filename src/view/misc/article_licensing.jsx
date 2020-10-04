@@ -46,38 +46,38 @@ class ArticleLicensing extends Component {
     return (
       <div class="article-licensing box">
         <div class="licensing-title">
-          {title && <p>{title}</p>}
+          {title ? <p>{title}</p> : null}
           <p>
             <a href={link}>{link}</a>
           </p>
         </div>
         <div class="licensing-meta level is-mobile">
           <div class="level-left">
-            {author && (
+            {author ? (
               <div class="level-item is-narrow">
                 <div>
                   <h6>{authorTitle}</h6>
                   <p>{author}</p>
                 </div>
               </div>
-            )}
-            {createdAt && (
+            ) : null}
+            {createdAt ? (
               <div class="level-item is-narrow">
                 <div>
                   <h6>{createdTitle}</h6>
                   <p>{createdAt}</p>
                 </div>
               </div>
-            )}
-            {updatedAt && (
+            ) : null}
+            {updatedAt ? (
               <div class="level-item is-narrow">
                 <div>
                   <h6>{updatedTitle}</h6>
                   <p>{updatedAt}</p>
                 </div>
               </div>
-            )}
-            {licenses && Object.keys(licenses).length && (
+            ) : null}
+            {licenses && Object.keys(licenses).length ? (
               <div class="level-item is-narrow">
                 <div>
                   <h6>{licensedTitle}</h6>
@@ -95,7 +95,7 @@ class ArticleLicensing extends Component {
                   </p>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
