@@ -60,6 +60,12 @@
           if (typeof $heading.scrollIntoView === 'function') {
             $heading.scrollIntoView({ behavior: 'smooth' });
           }
+          const anchor = $menu.getAttribute('data-href');
+          if (history.pushState) {
+            history.pushState(null, null, anchor);
+          } else {
+            location.hash = anchor;
+          }
         });
         $heading.style.scrollMargin = '1em';
       }

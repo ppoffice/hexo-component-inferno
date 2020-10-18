@@ -43,10 +43,17 @@ function getToc(content) {
   const toc = {};
   const levels = [0, 0, 0];
   const tocObj = getTocObj(content, { min_depth: 1, max_depth: 6 });
-  const minLevel = Math.min(...tocObj.map((item) => item.level));
+  const minLevels = Array.from(new Set(tocObj.map((item) => item.level)))
+    .sort((a, b) => a - b)
+    .slice(0, 3);
+
   tocObj.forEach((item) => {
+    if (!minLevels.includes(item.level)) {
+      return;
+    }
+
     const { text, id } = item;
-    const level = item.level - minLevel;
+    const level = item.level - minLevels[0];
 
     for (let i = 0; i < levels.length; i++) {
       if (i > level) {
