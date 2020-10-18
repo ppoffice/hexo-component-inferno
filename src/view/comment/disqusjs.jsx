@@ -32,8 +32,8 @@ class DisqusJs extends Component {
       apiKey,
       api,
       admin,
-      adminLabel = false,
-      nesting = 4,
+      adminLabel,
+      nesting,
       disqusId,
       path,
       permalink,
@@ -50,17 +50,19 @@ class DisqusJs extends Component {
         </div>
       );
     }
+    const url = permalink || path;
+    const identifier = disqusId || path;
     const js = `new DisqusJS({
             shortname: '${shortname}',
             apikey: ${JSON.stringify(apiKey)},
-            siteName: ${JSON.stringify(siteTitle)},
-            identifier: '${disqusId || path}',
-            url: '${permalink || path}',
-            title: ${JSON.stringify(pageTitle)},
-            api: '${api}',
-            admin: ${JSON.stringify(admin)},
-            adminLabel: ${JSON.stringify(adminLabel)},
-            nesting: ${nesting}
+            ${siteTitle ? `siteName: ${JSON.stringify(siteTitle)},` : ''}
+            ${identifier ? `identifier: ${JSON.stringify(identifier)},` : ''}
+            ${url ? `url: ${JSON.stringify(url)},` : ''}
+            ${pageTitle ? `title: ${JSON.stringify(pageTitle)},` : ''}
+            ${api ? `api: ${JSON.stringify(api)},` : ''}
+            ${admin ? `admin: ${JSON.stringify(admin)},` : ''}
+            ${adminLabel ? `adminLabel: ${JSON.stringify(adminLabel)},` : ''}
+            ${nesting ? `nesting: ${JSON.stringify(nesting)},` : ''}
         });`;
     return (
       <>
