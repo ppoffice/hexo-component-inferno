@@ -13,6 +13,18 @@
       "description": "Whether to show the index of each heading",
       "default": true,
       "nullable": true
+    },
+    "collapsed": {
+      "type": "boolean",
+      "description": "Whether to collapse sub-headings when they are out-of-view",
+      "default": true,
+      "nullable": true
+    },
+    "depth": {
+      "type": "integer",
+      "description": "Maximum level of headings to show (1-6)",
+      "default": 3,
+      "nullable": true
     }
   },
   "required": ["type"]

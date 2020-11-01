@@ -39,13 +39,13 @@ const { cacheComponent } = require('../../util/cache');
  * //    }
  * // }
  */
-function getToc(content) {
+function getToc(content, maxDepth) {
   const toc = {};
-  const levels = [0, 0, 0];
   const tocObj = getTocObj(content, { min_depth: 1, max_depth: 6 });
   const minLevels = Array.from(new Set(tocObj.map((item) => item.level)))
     .sort((a, b) => a - b)
-    .slice(0, 3);
+    .slice(0, maxDepth);
+  const levels = new Array(minLevels.length).fill(0);
 
   tocObj.forEach((item) => {
     if (!minLevels.includes(item.level)) {
@@ -89,6 +89,9 @@ function getToc(content) {
  * <Toc
  *     title="Widget title"
  *     content="HTML content"
+ *     showIndex={true}
+ *     collapsed={true}
+ *     maxDepth={3}
  *     jsUrl="******" />
  */
 class Toc extends Component {
@@ -120,15 +123,15 @@ class Toc extends Component {
   }
 
   render() {
-    const { showIndex } = this.props;
-    const toc = getToc(this.props.content);
+    const { showIndex, maxDepth = 3, collapsed = true } = this.props;
+    const toc = getToc(this.props.content, maxDepth);
     if (!Object.keys(toc).length) {
       return null;
     }
 
     const css =
-      '.menu-list > li > a.is-active + .menu-list { display: block; }' +
-      '.menu-list > li > a + .menu-list { display: none; }';
+      '#toc .menu-list > li > a.is-active + .menu-list { display: block; }' +
+      '#toc .menu-list > li > a + .menu-list { display: none; }';
 
     return (
       <div class="card widget" id="toc" data-type="toc">
@@ -138,7 +141,7 @@ class Toc extends Component {
             {this.renderToc(toc, showIndex)}
           </div>
         </div>
-        <style dangerouslySetInnerHTML={{ __html: css }}></style>
+        {collapsed ? <style dangerouslySetInnerHTML={{ __html: css }}></style> : null}
         <script src={this.props.jsUrl} defer={true}></script>
       </div>
     );
@@ -156,6 +159,7 @@ class Toc extends Component {
  * <Toc.Cacheable
  *     config={{ toc: true }}
  *     page={{ layout: 'post', content: 'HTML content' }}
+ *     widget={{ index: true, collapsed: true, depth: 3 }}
  *     helper={{
  *         _p: function() {...},
  *         url_for: function() {...}
@@ -164,7 +168,7 @@ class Toc extends Component {
 Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
   const { config, page, widget, helper } = props;
   const { layout, content, encrypt, origin } = page;
-  const { index } = widget;
+  const { index, collapsed = true, depth = 3 } = widget;
 
   if (config.toc !== true || (layout !== 'page' && layout !== 'post')) {
     return null;
@@ -172,6 +176,8 @@ Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
 
   return {
     title: helper._p('widget.catalogue', Infinity),
+    collapsed: collapsed !== false,
+    maxDepth: depth | 0,
     showIndex: index !== false,
     content: encrypt ? origin : content,
     jsUrl: helper.url_for('/js/toc.js'),
