@@ -75,7 +75,7 @@ module.exports = class extends Component {
 
     if (description) {
       description = escapeHTML(stripHTML(description).substring(0, 200).trim()).replace(/\n/g, ' ');
-      htmlTags.push(<meta description={description} />);
+      htmlTags.push(<meta name="description" content={description} />);
     }
 
     htmlTags.push(<meta property="og:type" content={type || 'website'} />);
