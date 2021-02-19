@@ -16,6 +16,7 @@ const { stripHTML, escapeHTML } = require('hexo-util');
  *     title="Page title"
  *     url="/page/url"
  *     author="Page author name"
+ *     publisher="Page publisher name"
  *     description="Page description"
  *     images={[ '/path/to/image' ]}
  *     date="Page publish date"
@@ -68,6 +69,10 @@ module.exports = class extends Component {
       datePublished: date,
       dateModified: updated,
       author: {
+        '@type': 'Person',
+        name: author,
+      },
+      publisher: {
         '@type': 'Person',
         name: author,
       },
