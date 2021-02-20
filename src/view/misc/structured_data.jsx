@@ -43,7 +43,13 @@ module.exports = class extends Component {
         }
         return path;
       })
-      .filter((url) => url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.gif') || url.endsWith('.webp'));
+      .filter(
+        (url) =>
+          url.endsWith('.jpg') ||
+          url.endsWith('.png') ||
+          url.endsWith('.gif') ||
+          url.endsWith('.webp'),
+      );
 
     if (!urlFn.parse(publisher_logo).host) {
       publisher_logo = urlFn.resolve(url, publisher_logo);
