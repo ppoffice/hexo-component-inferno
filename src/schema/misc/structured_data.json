@@ -37,7 +37,6 @@
       "description": "Page publisher (article:author) (optional)\nYou should leave this blank for most of the time",
       "nullable": true
     }
-
   },
   "nullable": true
 }

@@ -81,8 +81,8 @@ module.exports = class extends Component {
         name: publisher,
         logo: {
           '@type': 'ImageObject',
-          url: publisher_logo
-        }
+          url: publisher_logo,
+        },
       },
       description: description,
     };
