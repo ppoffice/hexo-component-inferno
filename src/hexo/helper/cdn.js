@@ -91,7 +91,7 @@ const UNPKG_FIXTURES = {
  *
  * // Use the function below to insert FontAwesome icon font CSS URL.
  * iconcdn();
- * // -> https://use.fontawesome.com/releases/v5.12.0/css/all.css
+ * // -> https://use.fontawesome.com/releases/v5.15.2/css/all.css
  */
 module.exports = function (hexo) {
   function applyFixture(fixture, _package, version, filename) {

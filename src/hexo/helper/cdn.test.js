@@ -210,7 +210,7 @@ describe('Get icon font URL', () => {
 
   test('loli', () => {
     hexo.config.providers = { iconcdn: 'loli' };
-    const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0/css/all.min.css'];
+    const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
