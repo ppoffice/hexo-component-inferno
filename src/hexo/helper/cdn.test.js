@@ -204,13 +204,13 @@ describe('Get icon font URL', () => {
 
   test('fontawesome', () => {
     hexo.config.providers = { iconcdn: 'fontawesome' };
-    const expected = ['https://use.fontawesome.com/releases/v5.12.0/css/all.css'];
+    const expected = ['https://use.fontawesome.com/releases/v5.15.2/css/all.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
   test('loli', () => {
     hexo.config.providers = { iconcdn: 'loli' };
-    const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0/css/all.min.css'];
+    const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 

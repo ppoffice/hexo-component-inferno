@@ -19,8 +19,8 @@ const PROVIDERS = {
     loli: 'https://fonts.loli.net/${ type }?family=${ fontname }',
   },
   ICON: {
-    loli: 'https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0/css/all.min.css',
-    fontawesome: 'https://use.fontawesome.com/releases/v5.12.0/css/all.css',
+    loli: 'https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css',
+    fontawesome: 'https://use.fontawesome.com/releases/v5.15.2/css/all.css',
   },
 };
 
@@ -91,7 +91,7 @@ const UNPKG_FIXTURES = {
  *
  * // Use the function below to insert FontAwesome icon font CSS URL.
  * iconcdn();
- * // -> https://use.fontawesome.com/releases/v5.12.0/css/all.css
+ * // -> https://use.fontawesome.com/releases/v5.15.2/css/all.css
  */
 module.exports = function (hexo) {
   function applyFixture(fixture, _package, version, filename) {
