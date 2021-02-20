@@ -24,17 +24,17 @@
       "description": "Page author (article:author) (optional)\nYou should leave this blank for most of the time",
       "nullable": true
     },
+    "publisher": {
+      "type": "string",
+      "description": "Page publisher (optional)\nYou should leave this blank for most of the time",
+      "nullable": true
+    },
     "image": {
       "type": ["string", "array"],
       "description": "Page images (optional)\nYou should leave this blank for most of the time",
       "items": {
         "type": "string"
       },
-      "nullable": true
-    },
-    "publisher": {
-      "type": "string",
-      "description": "Page publisher (article:author) (optional)\nYou should leave this blank for most of the time",
       "nullable": true
     }
   },

@@ -25,7 +25,7 @@ const { stripHTML, escapeHTML } = require('hexo-util');
 module.exports = class extends Component {
   render() {
     const { title, url, author, publisher } = this.props;
-    let { description, images, date, updated, publisher_logo } = this.props;
+    let { description, images, date, updated, publisherLogo } = this.props;
 
     if (description) {
       description = escapeHTML(stripHTML(description).substring(0, 200).trim()).replace(/\n/g, ' ');
@@ -51,8 +51,8 @@ module.exports = class extends Component {
           url.endsWith('.webp'),
       );
 
-    if (!urlFn.parse(publisher_logo).host) {
-      publisher_logo = urlFn.resolve(url, publisher_logo);
+    if (!urlFn.parse(publisherLogo).host) {
+      publisherLogo = urlFn.resolve(url, publisherLogo);
     }
 
     if (date && (moment.isMoment(date) || moment.isDate(date)) && !isNaN(date.valueOf())) {
@@ -87,7 +87,7 @@ module.exports = class extends Component {
         name: publisher,
         logo: {
           '@type': 'ImageObject',
-          url: publisher_logo,
+          url: publisherLogo,
         },
       },
       description: description,
