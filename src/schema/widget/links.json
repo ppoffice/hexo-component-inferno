@@ -13,8 +13,25 @@
       "description": "Names and URLs of the sites",
       "patternProperties": {
         ".+": {
-          "type": "string",
-          "description": "URL of the site"
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "URL of the site"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "link": {
+                  "type": "string",
+                  "description": "URL of the site"
+                },
+                "hide_hostname": {
+                  "type": "boolean",
+                  "description": "Whether remove righthand hostname tag from the menu"
+                }
+              }
+            }
+          ]
         }
       },
       "examples": [

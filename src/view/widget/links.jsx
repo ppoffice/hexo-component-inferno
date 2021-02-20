@@ -14,7 +14,10 @@ const { cacheComponent } = require('../../util/cache');
  *     title="Widget title"
  *     links={{
  *         'Link Name 1': '/path/to/external/site',
- *         'Link Name 2': '/path/to/external/site'
+ *         'Link Name 2': {
+ *              'link': '/path/to/external/site',
+ *              'hide_hostname': true,
+ *        }
  *     }} />
  */
 class Links extends Component {
@@ -28,18 +31,22 @@ class Links extends Component {
             <ul class="menu-list">
               {Object.keys(links).map((i) => {
                 let hostname = links[i];
-                try {
-                  hostname = new URL(hostname).hostname;
-                } catch (e) {}
+                if (typeof hostname === 'object') hostname = !hostname.hide_hostname;
+                else
+                  try {
+                    hostname = new URL(hostname).hostname;
+                  } catch (e) {}
                 return (
                   <li>
                     <a class="level is-mobile" href={links[i]} target="_blank" rel="noopener">
                       <span class="level-left">
                         <span class="level-item">{i}</span>
                       </span>
-                      <span class="level-right">
-                        <span class="level-item tag">{hostname}</span>
-                      </span>
+                      {hostname ? (
+                        <span class="level-right">
+                          <span class="level-item tag">{hostname}</span>
+                        </span>
+                      ) : null}
                     </a>
                   </li>
                 );
