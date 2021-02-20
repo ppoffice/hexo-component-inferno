@@ -16,6 +16,7 @@ const { stripHTML, escapeHTML } = require('hexo-util');
  *     title="Page title"
  *     url="/page/url"
  *     author="Page author name"
+ *     publisher="Page publisher name"
  *     description="Page description"
  *     images={[ '/path/to/image' ]}
  *     date="Page publish date"
@@ -23,8 +24,8 @@ const { stripHTML, escapeHTML } = require('hexo-util');
  */
 module.exports = class extends Component {
   render() {
-    const { title, url, author } = this.props;
-    let { description, images, date, updated } = this.props;
+    const { title, url, author, publisher } = this.props;
+    let { description, images, date, updated, publisherLogo } = this.props;
 
     if (description) {
       description = escapeHTML(stripHTML(description).substring(0, 200).trim()).replace(/\n/g, ' ');
@@ -42,7 +43,17 @@ module.exports = class extends Component {
         }
         return path;
       })
-      .filter((url) => url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.gif'));
+      .filter(
+        (url) =>
+          url.endsWith('.jpg') ||
+          url.endsWith('.png') ||
+          url.endsWith('.gif') ||
+          url.endsWith('.webp'),
+      );
+
+    if (!urlFn.parse(publisherLogo).host) {
+      publisherLogo = urlFn.resolve(url, publisherLogo);
+    }
 
     if (date && (moment.isMoment(date) || moment.isDate(date)) && !isNaN(date.valueOf())) {
       date = date.toISOString();
@@ -70,6 +81,14 @@ module.exports = class extends Component {
       author: {
         '@type': 'Person',
         name: author,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: publisher,
+        logo: {
+          '@type': 'ImageObject',
+          url: publisherLogo,
+        },
       },
       description: description,
     };
