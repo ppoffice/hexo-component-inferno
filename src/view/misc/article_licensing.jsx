@@ -23,8 +23,8 @@ const { cacheComponent } = require('../../util/cache');
  *             url: 'https://creativecommons.org/'
  *         },
  *         'Attribution 4.0 International': {
- *             icon: 'fab fa-creative-commons-by',
- *             url: 'https://creativecommons.org/licenses/by/4.0/'
+ *             icon: ['fab fa-creative-commons-by', 'fab fa-creative-commons-nc'],
+ *             url: 'https://creativecommons.org/licenses/by-nc/4.0/'
  *         },
  *     }}
  *     licensedTitle="Licensed under" />
@@ -87,9 +87,17 @@ class ArticleLicensing extends Component {
                         rel="noopener"
                         target="_blank"
                         title={name}
-                        class={licenses[name].icon ? 'icon' : ''}
+                        class={licenses[name].icon ? 'icons' : ''}
                         href={licenses[name].url}>
-                        {licenses[name].icon ? <i class={licenses[name].icon}></i> : name}
+                        {licenses[name].icon ? ( // eslint-disable-line no-nested-ternary
+                          Array.isArray(licenses[name].icon) ? (
+                            licenses[name].icon.map((icon) => <i class={`icon ${icon}`}></i>)
+                          ) : (
+                            <i class={`icon ${licenses[name].icon}`}></i>
+                          )
+                        ) : (
+                          name
+                        )}
                       </a>
                     ))}
                   </p>

@@ -13,7 +13,7 @@
           "description": "URL or path of the link"
         },
         "icon": {
-          "type": "string",
+          "type": ["string", "array"],
           "description": "Icon element class name"
         }
       },
