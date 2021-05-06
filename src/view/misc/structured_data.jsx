@@ -17,6 +17,7 @@ const { stripHTML, escapeHTML } = require('hexo-util');
  *     url="/page/url"
  *     author="Page author name"
  *     publisher="Page publisher name"
+ *     publisherLogo="/path/to/logo"
  *     description="Page description"
  *     images={[ '/path/to/image' ]}
  *     date="Page publish date"
@@ -51,7 +52,7 @@ module.exports = class extends Component {
           url.endsWith('.webp'),
       );
 
-    if (!urlFn.parse(publisherLogo).host) {
+    if (typeof publisherLogo === 'string' && !urlFn.parse(publisherLogo).host) {
       publisherLogo = urlFn.resolve(url, publisherLogo);
     }
 
