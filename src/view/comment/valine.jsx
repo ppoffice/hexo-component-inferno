@@ -64,17 +64,17 @@ class Valine extends Component {
             appKey: ${JSON.stringify(appKey)},
             ${placeholder ? `placeholder: ${JSON.stringify(placeholder)},` : ''}
             ${avatar ? `avatar: ${JSON.stringify(avatar)},` : ''}
-            ${avatarForce ? `avatarForce: ${JSON.stringify(avatarForce)},` : ''}
+            ${`avatarForce: ${JSON.stringify(avatarForce)},`}
             ${meta ? `meta: ${JSON.stringify(meta)},` : ''}
             ${pageSize ? `pageSize: ${JSON.stringify(pageSize)},` : ''}
             ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
-            ${visitor ? `visitor: ${JSON.stringify(visitor)},` : ''}
-            ${highlight ? `highlight: ${JSON.stringify(highlight)},` : ''}
-            ${recordIP ? `recordIP: ${JSON.stringify(recordIP)},` : ''}
+            ${`visitor: ${JSON.stringify(visitor)},`}
+            ${`highlight: ${JSON.stringify(highlight)},`}
+            ${`recordIP: ${JSON.stringify(recordIP)},`}
             ${serverURLs ? `serverURLs: ${JSON.stringify(serverURLs)},` : ''}
             ${emojiCDN ? `emojiCDN: ${JSON.stringify(emojiCDN)},` : ''}
             ${emojiMaps ? `emojiMaps: ${JSON.stringify(emojiMaps)},` : ''}
-            ${enableQQ ? `enableQQ: ${JSON.stringify(enableQQ)},` : ''}
+            ${`enableQQ: ${JSON.stringify(enableQQ)},`}
             ${Array.isArray(fields) ? `requiredFields: ${JSON.stringify(fields)},` : ''}
         });`;
     return (
