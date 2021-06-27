@@ -60,6 +60,8 @@ const CDNJS_FIXTURES = {
     ver,
     fname.startsWith('build/') ? fname.substr(6) : fname,
   ],
+  // waline is not hosted on CDN.js
+  '@waline/client': (ver, fname) => [],
 };
 
 const UNPKG_FIXTURES = {

@@ -8,27 +8,9 @@
       "type": "string",
       "const": "waline"
     },
-    "el": {
-      "type": "string",
-      "description": "The DOM element to be mounted on initialization. It must be a valid CSS selector string or HTMLElement Object.",
-      "default": "#waline-thread",
-      "nullable": true
-    },
     "server_url": {
       "type": "string",
-      "description": "Waline server address url.",
-      "nullable": false
-    },
-    "placeholder": {
-      "type": "string",
-      "description": "Comment box placeholder",
-      "nullable": true
-    },
-    "path": {
-      "type": "string",
-      "description": "Article path id. Used to distinguish different article pages to ensure loading the correct comment list under the article page.",
-      "default": "window.location.pathname",
-      "nullable": true
+      "description": "Waline server address url."
     },
     "lang": {
       "type": "string",
@@ -45,17 +27,54 @@
     },
     "emoji": {
       "type": "array",
-      "description": "Emoji settings",
       "items": {
-        "type": "string"
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "description": "Emoji set configuration",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Emoji name on the tab"
+              },
+              "folder": {
+                "type": "string",
+                "description": "Image folder link"
+              },
+              "prefix": {
+                "type": "string",
+                "description": "The general prefix of images' filename"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the picture, which will be used as file extension"
+              },
+              "icon": {
+                "type": "string",
+                "description": "Filename of the icon image used in tab (requirement is the same as items)"
+              },
+              "items": {
+                "type": "array",
+                "description": "Each item is the picture filename without common prefix (do not include file extension)",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["name", "folder"]
+          }
+        ]
       },
+      "description": "Emoji settings",
       "default": ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
       "nullable": true
     },
     "dark": {
       "type": "string",
       "description": "Darkmode support",
-      "enum": ["", "auto"],
       "nullable": true
     },
     "meta": {
@@ -75,7 +94,7 @@
     },
     "login": {
       "type": "string",
-      "description": "Root URL of your custom domain",
+      "description": "Login mode status",
       "enum": ["enable", "disable", "force"],
       "default": "enable",
       "nullable": true
@@ -88,7 +107,21 @@
       "nullable": true
     },
     "word_limit": {
-      "type": "number",
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "minimum": 0,
+          "items": {
+            "type": "number"
+          }
+        }
+      ],
       "description": "Comment word s limit. When a single number is filled in, it 's the maximum number of comment words. No limit when set to 0.",
       "default": 0,
       "nullable": true
@@ -127,6 +160,11 @@
       "type": "boolean",
       "description": "Whether show copyright and version in footer.",
       "default": true,
+      "nullable": true
+    },
+    "locale": {
+      "type": "object",
+      "description": "I18n configurations",
       "nullable": true
     }
   },
