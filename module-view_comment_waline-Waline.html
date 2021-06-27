@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>view/misc/article_licensing - Documentation</title>
+    <title>Waline - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">view/misc/article_licensing</h1>
+    <h1 class="page-title">Waline</h1>
     
 
     
@@ -41,8 +41,13 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="module-view_comment_waline.html">view/comment/waline</a>~</span>
         
-            
+        Waline
+        </h2>
+        
+            <div class="class-description">Waline comment JSX component.</div>
         
     
 </header>
@@ -51,12 +56,15 @@
     <div class="container-overview">
     
         
-            <div class="description">A JSX component that renders article licensing block.</div>
-        
-
-        
-            
 <div class="section-method">
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="Waline"><span class="type-signature"></span>new Waline<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
 
 
 
@@ -93,12 +101,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_misc_article_licensing.jsx.html">view/misc/article_licensing.jsx</a>, <a href="view_misc_article_licensing.jsx.html#line1">line 1</a>
+        <a href="view_comment_waline.jsx.html">view/comment/waline.jsx</a>, <a href="view_comment_waline.jsx.html#line33">line 33</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://waline.js.org/guide/get-started.html">https://waline.js.org/guide/get-started.html</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -126,8 +141,32 @@
 
 
 
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>&lt;Waline
+    serverURL="https://path/to/waline/server"
+    lang="zh-CN"
+    visitor={false}
+    emoji={['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo']}
+    dark=""
+    meta={['nick', 'mail', 'link']}
+    requiredMeta={[]}
+    login="enable"
+    avatar="mp"
+    wordLimit={0},
+    pageSize={10}
+    avatarCDN = "https://sdn.geekzu.org/avatar/"
+    avatarForce={false}
+    highlight={true}
+    mathTagSupport={false}
+    copyright={true}
+    locale={{placeholder: '', ...}}
+    jsUrl="/path/to/Waline.js" /></code></pre>
+
 </div>
-        
+
+</div>
     
     </div>
 
@@ -136,18 +175,114 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-view_misc_article_licensing-ArticleLicensing.html">ArticleLicensing</a></dt>
-            <dd></dd>
-        </dl>
-    
 
      
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id=".Cacheable"><span class="type-signature">(static) </span>Cacheable<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Cacheable Waline comment JSX component.
+<p>
+This class is supposed to be used in combination with the <code>locals</code> hexo filter
+(<a href="module-hexo_filter_locals.html">module:hexo/filter/locals</a>).
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="view_comment_waline.jsx.html">view/comment/waline.jsx</a>, <a href="view_comment_waline.jsx.html#line123">line 123</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-util_cache.html#.cacheComponent">module:util/cache.cacheComponent</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>&lt;Waline.Cacheable
+    comment={{
+        server_url: "https://path/to/waline/server"
+        lang: "zh-CN"
+        visitor: false
+        emoji: "https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"
+        dark: ""
+        meta: ['nick', 'mail', 'link']
+        required_meta: []
+        login: false
+        avatar: "mp"
+        word_limit: 0
+        page_size: 10
+        avatar_cdn: "https://sdn.geekzu.org/avatar/"
+        avatar_force: false
+        highlight: true
+        math_tag_support: false
+        copyright: true
+        locale: {placeholder: '', ...}
+    }}
+    helper={{ cdn: function() {...} }} /></code></pre>
+
+
+</div>
+
+        
     
 
     
