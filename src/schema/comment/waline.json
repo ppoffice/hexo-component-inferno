@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/comment/waline.json",
+  "description": "Waline comment plugin configurations",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "waline"
+    },
+    "server_url": {
+      "type": "string",
+      "description": "Waline server address url."
+    },
+    "lang": {
+      "type": "string",
+      "description": "Display language.",
+      "enum": ["zh", "zh-CN", "zh-TW", "en", "en-US", "jp", "jp-JP"],
+      "default": "zh-CN",
+      "nullable": true
+    },
+    "visitor": {
+      "type": "boolean",
+      "description": "Show visitor count",
+      "default": false,
+      "nullable": true
+    },
+    "emoji": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "description": "Emoji set configuration",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Emoji name on the tab"
+              },
+              "folder": {
+                "type": "string",
+                "description": "Image folder link"
+              },
+              "prefix": {
+                "type": "string",
+                "description": "The general prefix of images' filename"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the picture, which will be used as file extension"
+              },
+              "icon": {
+                "type": "string",
+                "description": "Filename of the icon image used in tab (requirement is the same as items)"
+              },
+              "items": {
+                "type": "array",
+                "description": "Each item is the picture filename without common prefix (do not include file extension)",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["name", "folder"]
+          }
+        ]
+      },
+      "description": "Emoji settings",
+      "default": ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
+      "nullable": true
+    },
+    "dark": {
+      "type": "string",
+      "description": "Darkmode support",
+      "nullable": true
+    },
+    "meta": {
+      "type": "array",
+      "description": "Reviewer attributes",
+      "items": {
+        "type": "string"
+      },
+      "default": ["nick", "mail", "link"],
+      "nullable": true
+    },
+    "required_meta": {
+      "type": "array",
+      "description": "Required commenter information fields",
+      "default": [],
+      "nullable": true
+    },
+    "login": {
+      "type": "string",
+      "description": "Login mode status",
+      "enum": ["enable", "disable", "force"],
+      "default": "enable",
+      "nullable": true
+    },
+    "avatar": {
+      "type": "string",
+      "description": "Gravatar type",
+      "enum": ["", "mp", "identicon", "monsterid", "wavatar", "robohash", "retro", "hide", "mm"],
+      "default": "mp",
+      "nullable": true
+    },
+    "word_limit": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "minimum": 0,
+          "items": {
+            "type": "number"
+          }
+        }
+      ],
+      "description": "Comment word s limit. When a single number is filled in, it 's the maximum number of comment words. No limit when set to 0.",
+      "default": 0,
+      "nullable": true
+    },
+    "page_size": {
+      "type": "number",
+      "description": "number of comments per page.",
+      "default": 10,
+      "nullable": true
+    },
+    "avatar_cdn": {
+      "type": "string",
+      "description": "Gravatar CDN baseURL.",
+      "default": "https://sdn.geekzu.org/avatar/",
+      "nullable": true
+    },
+    "avatar_force": {
+      "type": "boolean",
+      "description": "Whether force pulling the latest avatar each time.",
+      "default": false,
+      "nullable": true
+    },
+    "highlight": {
+      "type": "boolean",
+      "description": "Code highlighting, it's enabled by default, please close it selectively.",
+      "default": true,
+      "nullable": true
+    },
+    "math_tag_support": {
+      "type": "boolean",
+      "description": "Whether inject extra styles to display <math> block",
+      "default": false,
+      "nullable": true
+    },
+    "copyright": {
+      "type": "boolean",
+      "description": "Whether show copyright and version in footer.",
+      "default": true,
+      "nullable": true
+    },
+    "locale": {
+      "type": "object",
+      "description": "I18n configurations",
+      "nullable": true
+    }
+  },
+  "required": ["type", "server_url"]
+}

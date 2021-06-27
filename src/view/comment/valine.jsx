@@ -59,7 +59,7 @@ class Valine extends Component {
       );
     }
     const js = `new Valine({
-            el: '#valine-thread' ,
+            el: '#valine-thread',
             appId: ${JSON.stringify(appId)},
             appKey: ${JSON.stringify(appKey)},
             ${placeholder ? `placeholder: ${JSON.stringify(placeholder)},` : ''}
@@ -98,22 +98,22 @@ class Valine extends Component {
  * @example
  * <Valine.Cacheable
  *     comment={{
- *         app_id="******"
- *         app_key="******"
- *         placeholder="******"
- *         avatar="mm"
- *         avatar_force={false}
- *         meta={['nick', 'mail', 'link']}
- *         page_size={10}
- *         lang="zh-CN"
- *         visitor={false}
- *         highlight={true}
- *         record_ip={false}
- *         server_urls="http[s]://[tab/us].avoscloud.com"
- *         emoji_cdn=""
- *         emoji_maps={null}
- *         enable_qq={false}
- *         required_fields={[]}
+ *         app_id: "******"
+ *         app_key: "******"
+ *         placeholder: "******"
+ *         avatar: "mm"
+ *         avatar_force: false
+ *         meta: ['nick', 'mail', 'link']
+ *         page_size: 10
+ *         lang: "zh-CN"
+ *         visitor: false
+ *         highlight: true
+ *         record_ip: false
+ *         server_urls: "http[s]://[tab/us].avoscloud.com"
+ *         emoji_cdn: ""
+ *         emoji_maps: null
+ *         enable_qq: false
+ *         required_fields: []
  *     }}
  *     helper={{ cdn: function() {...} }} />
  */
