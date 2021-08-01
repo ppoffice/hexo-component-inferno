@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/widget/followit.json",
+  "description": "Follow.it email subscription widget configurations",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "followit"
+    },
+    "description": {
+      "type": "string",
+      "description": "Hint text under the email input",
+      "nullable": true
+    },
+    "action_url": {
+      "type": "string",
+      "description": "Subscription form action URL"
+    },
+    "verification_code": {
+      "type": "string",
+      "description": "Feed claiming verification code"
+    }
+  },
+  "required": ["type", "action_url", "verification_code"]
+}
