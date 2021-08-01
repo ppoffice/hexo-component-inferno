@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gallery - Documentation</title>
+    <title>FollowIt - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Gallery</h1>
+    <h1 class="page-title">FollowIt</h1>
     
 
     
@@ -42,12 +42,12 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-view_plugin_gallery.html">view/plugin/gallery</a>~</span>
+            <span class="ancestors"><a href="module-view_widget_followit.html">view/widget/followit</a>~</span>
         
-        Gallery
+        FollowIt
         </h2>
         
-            <div class="class-description">Light Gallery and Justified Gallery plugins JSX component.</div>
+            <div class="class-description">follow.it widget JSX component.</div>
         
     
 </header>
@@ -62,7 +62,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Gallery"><span class="type-signature"></span>new Gallery<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="FollowIt"><span class="type-signature"></span>new FollowIt<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -101,7 +101,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_plugin_gallery.jsx.html">view/plugin/gallery.jsx</a>, <a href="view_plugin_gallery.jsx.html#line25">line 25</a>
+        <a href="view_widget_followit.jsx.html">view/widget/followit.jsx</a>, <a href="view_widget_followit.jsx.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -111,9 +111,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="http://sachinchoolur.github.io/lightGallery/">http://sachinchoolur.github.io/lightGallery/</a></li>
-        
-            <li><a href="http://miromannino.github.io/Justified-Gallery/">http://miromannino.github.io/Justified-Gallery/</a></li>
+            <li><a href="https://follow.it/">https://follow.it/</a></li>
         </ul>
     </dd>
     
@@ -146,16 +144,11 @@
 <div class="section-examples">
 <h5>Example</h5>
 
-    <pre class="prettyprint"><code>&lt;Gallery
-    head={true}
-    lightGallery={{
-        jsUrl: '/path/to/lightgallery.js',
-        cssUrl: '/path/to/lightgallery.css'
-    }}
-    justifiedGallery={{
-        jsUrl: '/path/to/justifiedGallery.js',
-        cssUrl: '/path/to/justifiedGallery.css'
-    }} /></code></pre>
+    <pre class="prettyprint"><code>&lt;FollowIt
+    title="Widget title"
+    description="Description text"
+    buttonTitle="Subscribe now"
+    actionUrl="https://api.follow.it/subscription-form/******" /></code></pre>
 
 </div>
 
@@ -185,7 +178,7 @@
 
 
 <div class="description">
-    Cacheable Light Gallery and Justified Gallery plugins JSX component.
+    Cacheable follow.it widget JSX component.
 <p>
 This class is supposed to be used in combination with the <code>locals</code> hexo filter
 (<a href="module-hexo_filter_locals.html">module:hexo/filter/locals</a>).
@@ -224,7 +217,7 @@ This class is supposed to be used in combination with the <code>locals</code> he
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_plugin_gallery.jsx.html">view/plugin/gallery.jsx</a>, <a href="view_plugin_gallery.jsx.html#line71">line 71</a>
+        <a href="view_widget_followit.jsx.html">view/widget/followit.jsx</a>, <a href="view_widget_followit.jsx.html#line64">line 64</a>
     </li></ul></dd>
     
 
@@ -250,9 +243,12 @@ This class is supposed to be used in combination with the <code>locals</code> he
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>&lt;Gallery.Cacheable
-    head={true}
-    helper={{ cdn: function() {...} }} /></code></pre>
+    <pre class="prettyprint"><code>&lt;FollowIt.Cacheable
+    widget={{
+        description: 'Description text',
+        action_url: '******'
+    }}
+    helper={{ __: function() {...} }} /></code></pre>
 
 
 </div>

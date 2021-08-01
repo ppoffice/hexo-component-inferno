@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Gallery - Documentation</title>
+    <title>view/widget/followit.jsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,245 +29,95 @@
 
 <div id="main">
     
-    <h1 class="page-title">Gallery</h1>
+    <h1 class="page-title">view/widget/followit.jsx</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-            <span class="ancestors"><a href="module-view_plugin_gallery.html">view/plugin/gallery</a>~</span>
-        
-        Gallery
-        </h2>
-        
-            <div class="class-description">Light Gallery and Justified Gallery plugins JSX component.</div>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-<div class="section-method">
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Gallery"><span class="type-signature"></span>new Gallery<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_plugin_gallery.jsx.html">view/plugin/gallery.jsx</a>, <a href="view_plugin_gallery.jsx.html#line25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="http://sachinchoolur.github.io/lightGallery/">http://sachinchoolur.github.io/lightGallery/</a></li>
-        
-            <li><a href="http://miromannino.github.io/Justified-Gallery/">http://miromannino.github.io/Justified-Gallery/</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-examples">
-<h5>Example</h5>
-
-    <pre class="prettyprint"><code>&lt;Gallery
-    head={true}
-    lightGallery={{
-        jsUrl: '/path/to/lightgallery.js',
-        cssUrl: '/path/to/lightgallery.css'
-    }}
-    justifiedGallery={{
-        jsUrl: '/path/to/justifiedGallery.js',
-        cssUrl: '/path/to/justifiedGallery.css'
-    }} /></code></pre>
-
-</div>
-
-</div>
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<div class="section-members">
-<h4 class="name" id=".Cacheable"><span class="type-signature">(static) </span>Cacheable<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Cacheable Light Gallery and Justified Gallery plugins JSX component.
-<p>
-This class is supposed to be used in combination with the <code>locals</code> hexo filter
-(<a href="module-hexo_filter_locals.html">module:hexo/filter/locals</a>).
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_plugin_gallery.jsx.html">view/plugin/gallery.jsx</a>, <a href="view_plugin_gallery.jsx.html#line71">line 71</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="module-util_cache.html#.cacheComponent">module:util/cache.cacheComponent</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;Gallery.Cacheable
-    head={true}
-    helper={{ cdn: function() {...} }} /></code></pre>
-
-
-</div>
-
-        
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * follow.it widget JSX component.
+ * @module view/widget/followit
+ */
+const { Component } = require('inferno');
+const { cacheComponent } = require('../../util/cache');
+
+/**
+ * follow.it widget JSX component.
+ *
+ * @see https://follow.it/
+ * @example
+ * &lt;FollowIt
+ *     title="Widget title"
+ *     description="Description text"
+ *     buttonTitle="Subscribe now"
+ *     actionUrl="https://api.follow.it/subscription-form/******" />
+ */
+class FollowIt extends Component {
+  render() {
+    const { title, description, actionUrl, buttonTitle } = this.props;
+
+    return (
+      &lt;div class="card widget" data-type="subscribe-email">
+        &lt;div class="card-content">
+          &lt;div class="menu">
+            &lt;h3 class="menu-label">{title}&lt;/h3>
+            &lt;form action={actionUrl} method="post" target="_blank">
+              &lt;div class="field has-addons">
+                &lt;div class="control has-icons-left is-expanded">
+                  &lt;input class="input" name="email" type="email" placeholder="Email" />
+                  &lt;span class="icon is-small is-left">
+                    &lt;i class="fas fa-envelope">&lt;/i>
+                  &lt;/span>
+                &lt;/div>
+                &lt;div class="control">
+                  &lt;input class="button" type="submit" value={buttonTitle} />
+                &lt;/div>
+              &lt;/div>
+              {description ? &lt;p class="help">{description}&lt;/p> : null}
+            &lt;/form>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+}
+
+/**
+ * Cacheable follow.it widget JSX component.
+ * &lt;p>
+ * This class is supposed to be used in combination with the &lt;code>locals&lt;/code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * &lt;FollowIt.Cacheable
+ *     widget={{
+ *         description: 'Description text',
+ *         action_url: '******'
+ *     }}
+ *     helper={{ __: function() {...} }} />
+ */
+FollowIt.Cacheable = cacheComponent(FollowIt, 'widget.followit', (props) => {
+  const { helper, widget } = props;
+  const { action_url, description } = widget;
+
+  return {
+    description,
+    actionUrl: action_url,
+    title: helper.__('widget.followit'),
+    buttonTitle: helper.__('widget.subscribe'),
+  };
+});
+
+module.exports = FollowIt;
+</code></pre>
+        </article>
+    </section>
 
 
 
@@ -277,7 +127,7 @@ This class is supposed to be used in combination with the <code>locals</code> he
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Aug 01 2021 04:27:58 GMT+0000 (Coordinated Universal Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Aug 01 2021 04:27:57 GMT+0000 (Coordinated Universal Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
