@@ -3,7 +3,7 @@
  * @module view/comment/disqusjs
  */
 const { Component } = require('inferno');
-const { cacheComponent } = require('hexo-component-inferno/lib/util/cache');
+const { cacheComponent } = require('../../util/cache');
 
 /**
  * DisqusJS comment JSX component.
