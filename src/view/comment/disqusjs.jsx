@@ -3,7 +3,7 @@
  * @module view/comment/disqusjs
  */
 const { Component } = require('inferno');
-const { cacheComponent } = require('../../util/cache');
+const { cacheComponent } = require('hexo-component-inferno/lib/util/cache');
 
 /**
  * DisqusJS comment JSX component.
@@ -26,58 +26,76 @@ const { cacheComponent } = require('../../util/cache');
  *     cssUrl="/path/to/disqusjs.css" />
  */
 class DisqusJs extends Component {
-  render() {
-    const {
-      shortname,
-      apiKey,
-      api,
-      admin,
-      adminLabel,
-      nesting,
-      disqusId,
-      path,
-      permalink,
-      pageTitle,
-      siteTitle,
-      jsUrl,
-      cssUrl,
-    } = this.props;
-    if (!shortname) {
-      return (
-        <div class="notification is-danger">
-          You forgot to set the <code>shortname</code> or <code>api_key</code> for Disqus. Please
-          set it in <code>_config.yml</code>.
-        </div>
-      );
+    render() {
+        const {
+            shortname,
+            apiKey,
+            api,
+            admin,
+            adminLabel,
+            nesting,
+            disqusId,
+            path,
+            permalink,
+            pageTitle,
+            siteTitle,
+            jsUrl,
+            cssUrl,
+        } = this.props;
+        if (!shortname) {
+            return (
+                <div class="notification is-danger">
+                    You forgot to set the <code>shortname</code> or <code>api_key</code> for Disqus. Please
+                    set it in <code>_config.yml</code>.
+                </div>
+            );
+        }
+        const url = permalink || path;
+        const identifier = disqusId || path;
+        const js = `function loadDisqus() {
+            new DisqusJS({
+                shortname: '${shortname}',
+                apikey: ${JSON.stringify(apiKey)},
+                ${siteTitle ? `siteName: ${JSON.stringify(siteTitle)},` : ''}
+                ${identifier ? `identifier: ${JSON.stringify(identifier)},` : ''}
+                ${url ? `url: ${JSON.stringify(url)},` : ''}
+                ${pageTitle ? `title: ${JSON.stringify(pageTitle)},` : ''}
+                ${api ? `api: ${JSON.stringify(api)},` : ''}
+                ${admin ? `admin: ${JSON.stringify(admin)},` : ''}
+                ${adminLabel ? `adminLabel: ${JSON.stringify(adminLabel)},` : ''}
+                ${nesting ? `nesting: ${JSON.stringify(nesting)},` : ''}
+            });
+        }
+        var runningOnBrowser = typeof window !== "undefined";
+        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
+        setTimeout(function () {
+          if (!isBot && supportsIntersectionObserver) {
+            var disqus_observer = new IntersectionObserver(function(entries) {
+              if (entries[0].isIntersecting) {
+                loadDisqus();
+                disqus_observer.disconnect();
+              }
+            }, { threshold: [0] });
+            disqus_observer.observe(document.getElementById('disqus_thread'));
+          } else {
+            loadDisqus();
+          }
+        }, 1);`;
+        return (
+            <>
+                <link rel="stylesheet" href={cssUrl} />
+                <div id="disqus_thread">
+                    <noscript>
+                        Please enable JavaScript to view the{' '}
+                        <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+                    </noscript>
+                </div>
+                <script src={jsUrl}></script>
+                <script dangerouslySetInnerHTML={{ __html: js }}></script>
+            </>
+        );
     }
-    const url = permalink || path;
-    const identifier = disqusId || path;
-    const js = `new DisqusJS({
-            shortname: '${shortname}',
-            apikey: ${JSON.stringify(apiKey)},
-            ${siteTitle ? `siteName: ${JSON.stringify(siteTitle)},` : ''}
-            ${identifier ? `identifier: ${JSON.stringify(identifier)},` : ''}
-            ${url ? `url: ${JSON.stringify(url)},` : ''}
-            ${pageTitle ? `title: ${JSON.stringify(pageTitle)},` : ''}
-            ${api ? `api: ${JSON.stringify(api)},` : ''}
-            ${admin ? `admin: ${JSON.stringify(admin)},` : ''}
-            ${adminLabel ? `adminLabel: ${JSON.stringify(adminLabel)},` : ''}
-            ${nesting ? `nesting: ${JSON.stringify(nesting)},` : ''}
-        });`;
-    return (
-      <>
-        <link rel="stylesheet" href={cssUrl} />
-        <div id="disqus_thread">
-          <noscript>
-            Please enable JavaScript to view the{' '}
-            <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
-          </noscript>
-        </div>
-        <script src={jsUrl}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
-      </>
-    );
-  }
 }
 
 /**
@@ -107,23 +125,23 @@ class DisqusJs extends Component {
  *     helper={{ cdn: function() { ... } }} />
  */
 DisqusJs.Cacheable = cacheComponent(DisqusJs, 'comment.disqusjs', (props) => {
-  const { config, page, helper, comment } = props;
+    const { config, page, helper, comment } = props;
 
-  return {
-    path: page.path,
-    shortname: comment.shortname,
-    apiKey: comment.api_key,
-    api: comment.api,
-    admin: comment.admin,
-    adminLabel: comment.admin_label,
-    nesting: comment.nesting,
-    disqusId: page.disqusId,
-    permalink: page.permalink,
-    pageTitle: page.title,
-    siteTitle: config.title,
-    jsUrl: helper.cdn('disqusjs', '1.2.5', 'dist/disqus.js'),
-    cssUrl: helper.cdn('disqusjs', '1.2.5', 'dist/disqusjs.css'),
-  };
+    return {
+        path: page.path,
+        shortname: comment.shortname,
+        apiKey: comment.api_key,
+        api: comment.api,
+        admin: comment.admin,
+        adminLabel: comment.admin_label,
+        nesting: comment.nesting,
+        disqusId: page.disqusId,
+        permalink: page.permalink,
+        pageTitle: page.title,
+        siteTitle: config.title,
+        jsUrl: helper.cdn('disqusjs', '1.2.5', 'dist/disqus.js'),
+        cssUrl: helper.cdn('disqusjs', '1.2.5', 'dist/disqusjs.css'),
+    };
 });
 
 module.exports = DisqusJs;
