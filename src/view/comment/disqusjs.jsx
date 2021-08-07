@@ -2,8 +2,8 @@
  * DisqusJS comment JSX component.
  * @module view/comment/disqusjs
  */
-const { Component } = require('inferno');
-const { cacheComponent } = require('../../util/cache');
+const {Component} = require('inferno');
+const {cacheComponent} = require('../../util/cache');
 
 /**
  * DisqusJS comment JSX component.
@@ -84,7 +84,7 @@ class DisqusJs extends Component {
         }, 1);`;
         return (
             <>
-                <link rel="stylesheet" href={cssUrl} />
+                <link rel="stylesheet" href={cssUrl}/>
                 <div id="disqus_thread">
                     <noscript>
                         Please enable JavaScript to view the{' '}
@@ -92,7 +92,7 @@ class DisqusJs extends Component {
                     </noscript>
                 </div>
                 <script src={jsUrl}></script>
-                <script dangerouslySetInnerHTML={{ __html: js }}></script>
+                <script dangerouslySetInnerHTML={{__html: js}}></script>
             </>
         );
     }
@@ -125,7 +125,7 @@ class DisqusJs extends Component {
  *     helper={{ cdn: function() { ... } }} />
  */
 DisqusJs.Cacheable = cacheComponent(DisqusJs, 'comment.disqusjs', (props) => {
-    const { config, page, helper, comment } = props;
+    const {config, page, helper, comment} = props;
 
     return {
         path: page.path,
