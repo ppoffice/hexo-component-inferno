@@ -8,15 +8,20 @@ const { cacheComponent } = require('../../util/cache');
 /**
  * A JSX component for showing progress bar at top of the page.
  *
- * @see https://github.hubspot.com/pace/docs/welcome/
+ * @see https://codebyzach.github.io/pace/docs/
  * @example
  * <ProgressBar jsUrl="/path/to/pace-js.js" />
  */
 class ProgressBar extends Component {
   render() {
-    const { jsUrl } = this.props;
+    const { cssUrl, jsUrl } = this.props;
 
-    return <script src={jsUrl}></script>;
+    return (
+      <>
+        <link rel="stylesheet" href={cssUrl} />
+        <script src={jsUrl}></script>
+      </>
+    );
   }
 }
 
@@ -38,7 +43,8 @@ ProgressBar.Cacheable = cacheComponent(ProgressBar, 'plugin.progressbar', (props
     return null;
   }
   return {
-    jsUrl: helper.cdn('pace-js', '1.0.2', 'pace.min.js'),
+    jsUrl: helper.cdn('pace-js', '1.2.4', 'pace.min.js'),
+    cssUrl: helper.cdn('pace-js', '1.2.4', 'pace-theme-default.min.css'),
   };
 });
 
