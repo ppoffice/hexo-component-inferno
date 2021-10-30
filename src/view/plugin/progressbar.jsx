@@ -14,11 +14,12 @@ const { cacheComponent } = require('../../util/cache');
  */
 class ProgressBar extends Component {
   render() {
-    const { cssUrl, jsUrl } = this.props;
+    const { jsUrl } = this.props;
+    const css = `.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}`;
 
     return (
       <>
-        <link rel="stylesheet" href={cssUrl} />
+        <style>{css}</style>
         <script src={jsUrl}></script>
       </>
     );
@@ -44,7 +45,6 @@ ProgressBar.Cacheable = cacheComponent(ProgressBar, 'plugin.progressbar', (props
   }
   return {
     jsUrl: helper.cdn('pace-js', '1.2.4', 'pace.min.js'),
-    cssUrl: helper.cdn('pace-js', '1.2.4', 'pace-theme-default.min.css'),
   };
 });
 
