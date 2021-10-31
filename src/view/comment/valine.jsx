@@ -80,7 +80,7 @@ class Valine extends Component {
     return (
       <>
         <div id="valine-thread" class="content"></div>
-        <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3/dist/av-min.js"></script>
         <script src={jsUrl}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
@@ -137,7 +137,7 @@ Valine.Cacheable = cacheComponent(Valine, 'comment.valine', (props) => {
     emojiMaps: comment.emoji_maps,
     enableQQ: comment.enable_qq,
     requiredFields: comment.required_fields,
-    jsUrl: helper.cdn('valine', '1.4.14', 'dist/Valine.min.js'),
+    jsUrl: helper.cdn('valine', '1.4.16', 'dist/Valine.min.js'),
   };
 });
 

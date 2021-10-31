@@ -121,8 +121,8 @@ DisqusJs.Cacheable = cacheComponent(DisqusJs, 'comment.disqusjs', (props) => {
     permalink: page.permalink,
     pageTitle: page.title,
     siteTitle: config.title,
-    jsUrl: helper.cdn('disqusjs', '1.2.5', 'dist/disqus.js'),
-    cssUrl: helper.cdn('disqusjs', '1.2.5', 'dist/disqusjs.css'),
+    jsUrl: helper.cdn('disqusjs', '1.3.0', 'dist/disqus.js'),
+    cssUrl: helper.cdn('disqusjs', '1.3.0', 'dist/disqusjs.css'),
   };
 });
 
