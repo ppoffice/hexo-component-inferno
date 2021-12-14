@@ -13,6 +13,7 @@ const PROVIDERS = {
     loli: '[cdnjs]https://cdnjs.loli.net/ajax/libs/${ package }/${ version }/${ filename }',
     jsdelivr: 'https://cdn.jsdelivr.net/npm/${ package }@${ version }/${ filename }',
     unpkg: 'https://unpkg.com/${ package }@${ version }/${ filename }',
+    bootcdn: '[cdnjs]https://cdn.bootcdn.net/ajax/libs/${ package }/${ version }/${ filename }',
   },
   FONT: {
     google: 'https://fonts.googleapis.com/${ type }?family=${ fontname }',
@@ -21,6 +22,7 @@ const PROVIDERS = {
   ICON: {
     loli: 'https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css',
     fontawesome: 'https://use.fontawesome.com/releases/v5.15.2/css/all.css',
+    bootcdn: 'https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css',
   },
 };
 
