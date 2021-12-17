@@ -56,10 +56,10 @@ KaTeX.Cacheable = cacheComponent(KaTeX, 'plugin.katex', (props) => {
     return null;
   }
   return {
-    jsUrl: helper.cdn('katex', '0.13.22', 'dist/katex.min.js'),
-    cssUrl: helper.cdn('katex', '0.13.22', 'dist/katex.min.css'),
-    autoRenderUrl: helper.cdn('katex', '0.13.22', 'dist/contrib/auto-render.min.js'),
-    mhchemUrl: helper.cdn('katex', '0.13.22', 'dist/contrib/mhchem.min.js'),
+    jsUrl: helper.cdn('katex', '0.15.1', 'dist/katex.min.js'),
+    cssUrl: helper.cdn('katex', '0.15.1', 'dist/katex.min.css'),
+    autoRenderUrl: helper.cdn('katex', '0.15.1', 'dist/contrib/auto-render.min.js'),
+    mhchemUrl: helper.cdn('katex', '0.15.1', 'dist/contrib/mhchem.min.js'),
   };
 });
 
