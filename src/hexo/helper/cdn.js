@@ -19,6 +19,8 @@
   FONT: {
     google: 'https://fonts.googleapis.com/${ type }?family=${ fontname }',
     loli: 'https://fonts.loli.net/${ type }?family=${ fontname }',
+    fontim: 'https://fonts.font.im/${ type }?family=${ fontname }',
+    ustc: 'https://fonts.lug.ustc.edu.cn/${ type }?family=${ fontname }',
   },
   ICON: {
     loli: 'https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css',
