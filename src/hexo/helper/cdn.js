@@ -7,7 +7,7 @@
 /**
  * @private
  */
- const PROVIDERS = {
+const PROVIDERS = {
   LIBRARY: {
     cdnjs: '[cdnjs]https://cdnjs.cloudflare.com/ajax/libs/${ package }/${ version }/${ filename }',
     loli: '[cdnjs]https://cdnjs.loli.net/ajax/libs/${ package }/${ version }/${ filename }',
