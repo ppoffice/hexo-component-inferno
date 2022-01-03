@@ -123,9 +123,7 @@ module.exports = function (hexo) {
     }
     // cdn.js does not follow a GitHub npm style like jsdeliver and unpkg do. Patch it!
     if (_cdn.startsWith('[cdnjs]')) {
-      if (_cdn.startsWith('[cdnjs]')) {
-        _cdn = _cdn.substr(7);
-      }
+      _cdn = _cdn.substr(7);
       try {
         [_package, version, filename] = applyFixture(CDNJS_FIXTURES, _package, version, filename);
         if (filename.startsWith('dist/')) {
