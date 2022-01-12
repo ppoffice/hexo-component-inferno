@@ -117,6 +117,48 @@ describe('Get JavaScript library URL', () => {
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
+  test('bootcdn', () => {
+    hexo.config.providers = { cdn: 'bootcdn' };
+    const expected = [
+      'https://cdn.bootcdn.net/ajax/libs/jquery/3.0.0/jquery.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/moment.js/2.24.0/moment.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/highlight.js/9.18.1/styles/a11y-dark.min.css',
+      'https://cdn.bootcdn.net/ajax/libs/mathjax/2.7.6/MathJax.js',
+      'https://cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/KaTeX/0.11.1/katex.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
+      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+      'https://cdn.bootcdn.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
+      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/example/1.0.0/example.js',
+    ];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
+  test('75cdn', () => {
+    hexo.config.providers = { cdn: '75cdn' };
+    const expected = [
+      'https://lib.baomitu.com/jquery/3.0.0/jquery.min.js',
+      'https://lib.baomitu.com/moment.js/2.24.0/moment.min.js',
+      'https://lib.baomitu.com/outdated-browser/1.1.5/outdatedbrowser.min.js',
+      'https://lib.baomitu.com/highlight.js/9.18.1/styles/a11y-dark.min.css',
+      'https://lib.baomitu.com/mathjax/2.7.6/MathJax.js',
+      'https://lib.baomitu.com/pace/1.0.2/pace.min.js',
+      'https://lib.baomitu.com/KaTeX/0.11.1/katex.min.js',
+      'https://lib.baomitu.com/clipboard.js/2.0.6/clipboard.min.js',
+      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://lib.baomitu.com/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+      'https://lib.baomitu.com/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://lib.baomitu.com/cookieconsent/3.1.1/cookieconsent.min.js',
+      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://lib.baomitu.com/example/1.0.0/example.js',
+    ];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
   test('Custom CDN', () => {
     hexo.config.providers = { cdn: 'https://my.cdn/${ package }@${ version }/${ filename }' };
     const expected = [
@@ -191,6 +233,24 @@ describe('Get web font URL', () => {
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
+  test('fontim', () => {
+    hexo.config.providers = { fontcdn: 'fontim' };
+    const expected = [
+      'https://fonts.font.im/css?family=Ubuntu:400,600|Source+Code+Pro',
+      'https://fonts.font.im/css2?family=Roboto:wght@100;400&display=swap',
+    ];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
+  test('ustc', () => {
+    hexo.config.providers = { fontcdn: 'ustc' };
+    const expected = [
+      'https://fonts.lug.ustc.edu.cn/css?family=Ubuntu:400,600|Source+Code+Pro',
+      'https://fonts.lug.ustc.edu.cn/css2?family=Roboto:wght@100;400&display=swap',
+    ];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
   test('Custom web font CDN', () => {
     hexo.config.providers = { fontcdn: 'https://my.cdn/${ type }?family=${ fontname }' };
     const expected = [
@@ -218,6 +278,18 @@ describe('Get icon font URL', () => {
   test('loli', () => {
     hexo.config.providers = { iconcdn: 'loli' };
     const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css'];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
+  test('bootcdn', () => {
+    hexo.config.providers = { iconcdn: 'bootcdn' };
+    const expected = ['https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css'];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
+  test('75cdn', () => {
+    hexo.config.providers = { iconcdn: '75cdn' };
+    const expected = ['https://lib.baomitu.com/font-awesome/5.12.1/css/all.min.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
