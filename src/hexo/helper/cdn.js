@@ -14,15 +14,19 @@ const PROVIDERS = {
     jsdelivr: 'https://cdn.jsdelivr.net/npm/${ package }@${ version }/${ filename }',
     unpkg: 'https://unpkg.com/${ package }@${ version }/${ filename }',
     bootcdn: '[cdnjs]https://cdn.bootcdn.net/ajax/libs/${ package }/${ version }/${ filename }',
+    '75cdn': '[cdnjs]https://lib.baomitu.com/${ package }/${ version }/${ filename }',
   },
   FONT: {
     google: 'https://fonts.googleapis.com/${ type }?family=${ fontname }',
     loli: 'https://fonts.loli.net/${ type }?family=${ fontname }',
+    fontim: 'https://fonts.font.im/${ type }?family=${ fontname }',
+    ustc: 'https://fonts.lug.ustc.edu.cn/${ type }?family=${ fontname }',
   },
   ICON: {
     loli: 'https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css',
     fontawesome: 'https://use.fontawesome.com/releases/v5.15.2/css/all.css',
     bootcdn: 'https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css',
+    '75cdn': 'https://lib.baomitu.com/font-awesome/5.12.1/css/all.min.css',
   },
 };
 
@@ -119,9 +123,7 @@ module.exports = function (hexo) {
     }
     // cdn.js does not follow a GitHub npm style like jsdeliver and unpkg do. Patch it!
     if (_cdn.startsWith('[cdnjs]')) {
-      if (_cdn.startsWith('[cdnjs]')) {
-        _cdn = _cdn.substr(7);
-      }
+      _cdn = _cdn.substr(7);
       try {
         [_package, version, filename] = applyFixture(CDNJS_FIXTURES, _package, version, filename);
         if (filename.startsWith('dist/')) {
