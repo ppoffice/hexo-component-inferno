@@ -6,6 +6,9 @@
   "repository": "https://github.com/ppoffice/hexo-component-inferno",
   "author": "ppoffice <ppoffice@users.noreply.github.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=12.4.0"
+  },
   "scripts": {
     "test": "jest lib",
     "test-cov": "jest lib --coverage",
