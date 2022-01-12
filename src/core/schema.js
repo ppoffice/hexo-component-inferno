@@ -432,7 +432,7 @@ class Schema {
 class SchemaLoader {
   constructor() {
     this.schemas = {};
-    this.ajv = new Ajv({ nullable: true });
+    this.ajv = new Ajv({ allowUnionTypes: true });
   }
 
   /**

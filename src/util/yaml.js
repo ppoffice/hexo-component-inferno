@@ -3,12 +3,10 @@
  * @module util/yaml
  */
 const yaml = require('js-yaml');
-const YamlType = require('js-yaml/lib/js-yaml/type');
-const YamlSchema = require('js-yaml/lib/js-yaml/schema');
+const YamlType = require('js-yaml/lib/type');
 
 // output null as empty in yaml
-const YAML_SCHEMA = new YamlSchema({
-  include: [require('js-yaml/lib/js-yaml/schema/default_full')],
+const YAML_SCHEMA = require('js-yaml/lib/schema/default').extend({
   implicit: [
     new YamlType('tag:yaml.org,2002:null', {
       kind: 'scalar',
@@ -40,7 +38,7 @@ module.exports = {
    * @returns {any} JavaScript object or primitive value.
    */
   parse(str) {
-    return yaml.safeLoad(str);
+    return yaml.load(str);
   },
 
   /**
@@ -50,7 +48,7 @@ module.exports = {
    * @returns {string} YAML string.
    */
   stringify(object) {
-    return yaml.safeDump(object, {
+    return yaml.dump(object, {
       indent: 4,
       lineWidth: 1024,
       schema: YAML_SCHEMA,

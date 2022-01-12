@@ -38,20 +38,12 @@ const basePageConfig = {
 beforeAll(async () => {
   await hexo.init();
   await hexo.load();
-  siteConfig = yaml.safeLoad(fs.readFileSync(path.join(hexo.base_dir, '_config.yml')));
-  themeConfig = yaml.safeLoad(fs.readFileSync(path.join(hexo.theme_dir, '_config.yml')));
-  pageConfigInSiteDir = yaml.safeLoad(
-    fs.readFileSync(path.join(hexo.base_dir, '_config.page.yml')),
-  );
-  postConfigInSiteDir = yaml.safeLoad(
-    fs.readFileSync(path.join(hexo.base_dir, '_config.post.yml')),
-  );
-  pageConfigInThemeDir = yaml.safeLoad(
-    fs.readFileSync(path.join(hexo.theme_dir, '_config.page.yml')),
-  );
-  postConfigInThemeDir = yaml.safeLoad(
-    fs.readFileSync(path.join(hexo.theme_dir, '_config.post.yml')),
-  );
+  siteConfig = yaml.load(fs.readFileSync(path.join(hexo.base_dir, '_config.yml')));
+  themeConfig = yaml.load(fs.readFileSync(path.join(hexo.theme_dir, '_config.yml')));
+  pageConfigInSiteDir = yaml.load(fs.readFileSync(path.join(hexo.base_dir, '_config.page.yml')));
+  postConfigInSiteDir = yaml.load(fs.readFileSync(path.join(hexo.base_dir, '_config.post.yml')));
+  pageConfigInThemeDir = yaml.load(fs.readFileSync(path.join(hexo.theme_dir, '_config.page.yml')));
+  postConfigInThemeDir = yaml.load(fs.readFileSync(path.join(hexo.theme_dir, '_config.post.yml')));
   register(hexo);
 });
 

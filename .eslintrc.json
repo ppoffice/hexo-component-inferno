@@ -1,11 +1,5 @@
 {
-  "extends": [
-    "hexo",
-    "plugin:react/recommended",
-    "plugin:json/recommended",
-    "prettier",
-    "prettier/react"
-  ],
+  "extends": ["hexo", "plugin:react/recommended", "plugin:json/recommended", "prettier"],
   "settings": {
     "node": {
       "tryExtensions": [".js", ".jsx", ".json"]

@@ -46,7 +46,7 @@ module.exports = (hexo) => {
     const configInThemeDir = path.join(hexo.theme_dir, '_config.' + layout + '.yml');
     [configInSiteDir, configInThemeDir].forEach((configPath) => {
       if (fs.existsSync(configPath)) {
-        config = Object.assign(config, yaml.safeLoad(fs.readFileSync(configPath)));
+        config = Object.assign(config, yaml.load(fs.readFileSync(configPath)));
       }
     });
     return config;
