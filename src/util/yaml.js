@@ -3,12 +3,11 @@
  * @module util/yaml
  */
 const yaml = require('js-yaml');
-const YamlType = require('js-yaml/lib/type');
 
 // output null as empty in yaml
-const YAML_SCHEMA = require('js-yaml/lib/schema/default').extend({
+const YAML_SCHEMA = yaml.DEFAULT_SCHEMA.extend({
   implicit: [
-    new YamlType('tag:yaml.org,2002:null', {
+    new yaml.Type('tag:yaml.org,2002:null', {
       kind: 'scalar',
       resolve(data) {
         if (data === null) {
