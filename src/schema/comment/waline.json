@@ -110,21 +110,22 @@
       "oneOf": [
         {
           "type": "number",
-          "minimum": 0
+          "minimum": 0,
+          "nullable": true
         },
         {
           "type": "array",
           "minItems": 2,
           "maxItems": 2,
-          "minimum": 0,
           "items": {
-            "type": "number"
-          }
+            "type": "number",
+            "minimum": 0
+          },
+          "nullable": true
         }
       ],
       "description": "Comment word s limit. When a single number is filled in, it 's the maximum number of comment words. No limit when set to 0.",
-      "default": 0,
-      "nullable": true
+      "default": 0
     },
     "page_size": {
       "type": "number",
