@@ -141,7 +141,7 @@ Waline.Cacheable = cacheComponent(Waline, 'comment.waline', (props) => {
     mathTagSupport: comment.math_tag_support,
     copyright: comment.copyright,
     locale: comment.locale,
-    jsUrl: helper.cdn('@waline/client', '1.3.11', 'dist/Waline.min.js'),
+    jsUrl: helper.cdn('@waline/client', '1.5.4', 'dist/Waline.min.js'),
   };
 });
 
