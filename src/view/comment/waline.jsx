@@ -12,6 +12,7 @@ const { cacheComponent } = require('../../util/cache');
  * @example
  * <Waline
  *     serverURL="https://path/to/waline/server"
+ *     path="window.location.pathname"
  *     lang="zh-CN"
  *     visitor={false}
  *     emoji={['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo']}
@@ -19,13 +20,11 @@ const { cacheComponent } = require('../../util/cache');
  *     meta={['nick', 'mail', 'link']}
  *     requiredMeta={[]}
  *     login="enable"
- *     avatar="mp"
  *     wordLimit={0},
  *     pageSize={10}
- *     avatarCDN = "https://sdn.geekzu.org/avatar/"
- *     avatarForce={false}
+ *     uploadImage={true}
  *     highlight={true}
- *     mathTagSupport={false}
+ *     math={false}
  *     copyright={true}
  *     locale={{placeholder: '', ...}}
  *     jsUrl="/path/to/Waline.js" />
@@ -34,6 +33,7 @@ class Waline extends Component {
   render() {
     const {
       serverURL,
+      path = 'window.location.pathname',
       lang = 'zh-CN',
       visitor = false,
       emoji = ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo'],
@@ -41,13 +41,11 @@ class Waline extends Component {
       meta = ['nick', 'mail', 'link'],
       requiredMeta = [],
       login = 'enable',
-      avatar = 'mp',
       wordLimit = 0,
       pageSize = 10,
-      avatarCDN = 'https://sdn.geekzu.org/avatar/',
-      avatarForce = false,
+      uploadImage = true,
       highlight = true,
-      mathTagSupport = false,
+      math = false,
       copyright = true,
       locale,
       jsUrl,
@@ -63,6 +61,7 @@ class Waline extends Component {
     const js = `Waline({
             el: '#waline-thread',
             serverURL: ${JSON.stringify(serverURL)},
+            path: ${path},
             ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
             ${`visitor: ${JSON.stringify(visitor)},`}
             ${emoji ? `emoji: ${JSON.stringify(emoji)},` : ''}
@@ -70,13 +69,11 @@ class Waline extends Component {
             ${meta ? `meta: ${JSON.stringify(meta)},` : ''}
             ${Array.isArray(requiredMeta) ? `requiredMeta: ${JSON.stringify(requiredMeta)},` : ''}
             ${login ? `login: ${JSON.stringify(login)},` : ''}
-            ${avatar ? `avatar: ${JSON.stringify(avatar)},` : ''}
             ${wordLimit ? `wordLimit: ${JSON.stringify(wordLimit)},` : ''}
             ${pageSize ? `pageSize: ${JSON.stringify(pageSize)},` : ''}
-            ${avatarCDN ? `avatarCDN: ${JSON.stringify(avatarCDN)},` : ''}
-            ${`avatarForce: ${JSON.stringify(avatarForce)},`}
-            ${`highlight: ${JSON.stringify(highlight)},`}
-            ${`mathTagSupport: ${JSON.stringify(mathTagSupport)},`}
+            ${uploadImage === false ? `uploadImage: false,` : ''}
+            ${highlight === false ? `highlight: false,` : ''}
+            ${math === false ? `math: false,` : ''}
             ${`copyright: ${JSON.stringify(copyright)},`}
             ${locale ? `locale: ${JSON.stringify(locale)},` : ''}
         });`;
@@ -100,22 +97,21 @@ class Waline extends Component {
  * @example
  * <Waline.Cacheable
  *     comment={{
- *         server_url: "https://path/to/waline/server"
- *         lang: "zh-CN"
- *         visitor: false
- *         emoji: "https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"
- *         dark: ""
- *         meta: ['nick', 'mail', 'link']
- *         required_meta: []
- *         login: false
- *         avatar: "mp"
- *         word_limit: 0
- *         page_size: 10
- *         avatar_cdn: "https://sdn.geekzu.org/avatar/"
- *         avatar_force: false
- *         highlight: true
- *         math_tag_support: false
- *         copyright: true
+ *         server_url: "https://path/to/waline/server",
+ *         path: "window.location.pathname",
+ *         lang: "zh-CN",
+ *         visitor: false,
+ *         emoji: "https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo",
+ *         dark: "",
+ *         meta: ['nick', 'mail', 'link'],
+ *         required_meta: [],
+ *         login: false,
+ *         word_limit: 0,
+ *         page_size: 10,
+ *         upload_image: true,
+ *         highlight: true,
+ *         math: false,
+ *         copyright: true,
  *         locale: {placeholder: '', ...}
  *     }}
  *     helper={{ cdn: function() {...} }} />
@@ -125,6 +121,7 @@ Waline.Cacheable = cacheComponent(Waline, 'comment.waline', (props) => {
 
   return {
     serverURL: comment.server_url,
+    path: comment.path,
     lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
     visitor: comment.visitor,
     emoji: comment.emoji,
@@ -132,13 +129,11 @@ Waline.Cacheable = cacheComponent(Waline, 'comment.waline', (props) => {
     meta: comment.meta,
     requiredMeta: comment.required_meta,
     login: comment.login,
-    avatar: comment.avatar,
     wordLimit: comment.word_limit,
     pageSize: comment.page_size,
-    avatarCDN: comment.avatar_cdn,
-    avatarForce: comment.avatar_force,
+    uploadImage: comment.upload_image,
     highlight: comment.highlight,
-    mathTagSupport: comment.math_tag_support,
+    math: comment.math,
     copyright: comment.copyright,
     locale: comment.locale,
     jsUrl: helper.cdn('@waline/client', '1.5.4', 'dist/Waline.min.js'),

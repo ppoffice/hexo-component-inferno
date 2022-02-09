@@ -12,6 +12,10 @@
       "type": "string",
       "description": "Waline server address url."
     },
+    "path": {
+      "type": "string",
+      "description": "Article path id. Used to distinguish different article pages to ensure loading the correct comment list under the article page."
+    },
     "lang": {
       "type": "string",
       "description": "Display language.",
@@ -34,31 +38,31 @@
           },
           {
             "type": "object",
-            "description": "Emoji set configuration",
+            "description": "Emoji set configuration.",
             "properties": {
               "name": {
                 "type": "string",
-                "description": "Emoji name on the tab"
+                "description": "Emoji name on the tab."
               },
               "folder": {
                 "type": "string",
-                "description": "Image folder link"
+                "description": "Image folder link."
               },
               "prefix": {
                 "type": "string",
-                "description": "The general prefix of images' filename"
+                "description": "The general prefix of images' filename."
               },
               "type": {
                 "type": "string",
-                "description": "Type of the picture, which will be used as file extension"
+                "description": "Type of the picture, which will be used as file extension."
               },
               "icon": {
                 "type": "string",
-                "description": "Filename of the icon image used in tab (requirement is the same as items)"
+                "description": "Filename of the icon image used in tab (requirement is the same as items)."
               },
               "items": {
                 "type": "array",
-                "description": "Each item is the picture filename without common prefix (do not include file extension)",
+                "description": "Each item is the picture filename without common prefix (do not include file extension).",
                 "items": {
                   "type": "string"
                 }
@@ -68,18 +72,18 @@
           }
         ]
       },
-      "description": "Emoji settings",
+      "description": "Emoji settings.",
       "default": ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
       "nullable": true
     },
     "dark": {
       "type": "string",
-      "description": "Darkmode support",
+      "description": "Darkmode support.",
       "nullable": true
     },
     "meta": {
       "type": "array",
-      "description": "Reviewer attributes",
+      "description": "Reviewer attributes.",
       "items": {
         "type": "string"
       },
@@ -88,22 +92,15 @@
     },
     "required_meta": {
       "type": "array",
-      "description": "Required commenter information fields",
+      "description": "Required commenter information fields.",
       "default": [],
       "nullable": true
     },
     "login": {
       "type": "string",
-      "description": "Login mode status",
+      "description": "Login mode status.",
       "enum": ["enable", "disable", "force"],
       "default": "enable",
-      "nullable": true
-    },
-    "avatar": {
-      "type": "string",
-      "description": "Gravatar type",
-      "enum": ["", "mp", "identicon", "monsterid", "wavatar", "robohash", "retro", "hide", "mm"],
-      "default": "mp",
       "nullable": true
     },
     "word_limit": {
@@ -133,16 +130,10 @@
       "default": 10,
       "nullable": true
     },
-    "avatar_cdn": {
-      "type": "string",
-      "description": "Gravatar CDN baseURL.",
-      "default": "https://sdn.geekzu.org/avatar/",
-      "nullable": true
-    },
-    "avatar_force": {
+    "upload_image": {
       "type": "boolean",
-      "description": "Whether force pulling the latest avatar each time.",
-      "default": false,
+      "description": "If you set it to false, image upload feature will be disabled.",
+      "default": true,
       "nullable": true
     },
     "highlight": {
@@ -151,9 +142,9 @@
       "default": true,
       "nullable": true
     },
-    "math_tag_support": {
+    "math": {
       "type": "boolean",
-      "description": "Whether inject extra styles to display <math> block",
+      "description": "If you set it to 'false', math preview feature will be disabled.",
       "default": false,
       "nullable": true
     },

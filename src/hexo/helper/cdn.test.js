@@ -29,7 +29,7 @@ describe('Get JavaScript library URL', () => {
       () => cdn('algoliasearch', '4.0.3', 'dist/algoliasearch-lite.umd.js'),
       () => cdn('instantsearch.js', '4.3.1', 'dist/instantsearch.production.min.js'),
       () => cdn('cookieconsent', '3.1.1', 'build/cookieconsent.min.js'),
-      () => cdn('@waline/client', '1.3.1', 'dist/Waline.min.js'),
+      () => cdn('@waline/client', '1.5.4', 'dist/Waline.min.js'),
       () => cdn('example', '1.0.0', 'example.js'),
     ];
   });
@@ -48,7 +48,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.jsdelivr.net/npm/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://cdn.jsdelivr.net/npm/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
       'https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js',
-      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://cdn.jsdelivr.net/npm/@waline/client@1.5.4/dist/Waline.min.js',
       'https://cdn.jsdelivr.net/npm/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -69,7 +69,7 @@ describe('Get JavaScript library URL', () => {
       'https://unpkg.com/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://unpkg.com/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
       'https://unpkg.com/cookieconsent@3.1.1/build/cookieconsent.min.js',
-      'https://unpkg.com/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://unpkg.com/@waline/client@1.5.4/dist/Waline.min.js',
       'https://unpkg.com/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -90,7 +90,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdnjs.cloudflare.com/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/waline/1.5.4/Waline.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -111,7 +111,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdnjs.loli.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdnjs.loli.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://cdnjs.loli.net/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://cdnjs.loli.net/ajax/libs/waline/1.5.4/Waline.min.js',
       'https://cdnjs.loli.net/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -132,7 +132,7 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.bootcdn.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdn.bootcdn.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://cdn.bootcdn.net/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/waline/1.5.4/Waline.min.js',
       'https://cdn.bootcdn.net/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -153,7 +153,7 @@ describe('Get JavaScript library URL', () => {
       'https://lib.baomitu.com/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://lib.baomitu.com/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://lib.baomitu.com/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://lib.baomitu.com/waline/1.5.4/Waline.min.js',
       'https://lib.baomitu.com/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -174,7 +174,7 @@ describe('Get JavaScript library URL', () => {
       'https://my.cdn/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://my.cdn/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
       'https://my.cdn/cookieconsent@3.1.1/build/cookieconsent.min.js',
-      'https://my.cdn/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://my.cdn/@waline/client@1.5.4/dist/Waline.min.js',
       'https://my.cdn/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -197,7 +197,7 @@ describe('Get JavaScript library URL', () => {
       'https://my.cdn/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://my.cdn/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://my.cdn/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js',
+      'https://my.cdn/ajax/libs/waline/1.5.4/Waline.min.js',
       'https://my.cdn/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
