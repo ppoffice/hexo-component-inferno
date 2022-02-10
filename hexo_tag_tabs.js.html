@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Schema - Documentation</title>
+    <title>hexo/tag/tabs.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,1182 +29,284 @@
 
 <div id="main">
     
-    <h1 class="page-title">Schema</h1>
-    
-
-    
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>
-            <span class="ancestors"><a href="module-core_schema.html">core/schema</a>~</span>
-        
-        Schema
-        </h2>
-        
-            <div class="class-description">A class that can resolving referenced JSON schemas and create <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a>s.</div>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-<div class="section-method">
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Schema"><span class="type-signature"></span>new Schema<span class="signature">(loader, def)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_schema.js.html">core/schema.js</a>, <a href="core_schema.js.html#line235">line 235</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>loader</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code><a href="module-core_schema-SchemaLoader.html">module:core/schema~SchemaLoader</a></code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                JSON schema loader.
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>def</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                The JSON schema definition.
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="getArrayDefaultValue"><span class="type-signature"></span>getArrayDefaultValue<span class="signature">(def)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Create the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for an array-typed JSON schema.
-<p>
-Each possible type of the array elements defined in <code>oneOf</code> will be processed and a
-<a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> will be added to the result array.
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_schema.js.html">core/schema.js</a>, <a href="core_schema.js.html#line275">line 275</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>def</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                JSON schema definition of the array.
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> The <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for the
-array definition.
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="getDefaultValue"><span class="type-signature"></span>getDefaultValue<span class="signature">(def)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Create the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for any JSON schema.
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_schema.js.html">core/schema.js</a>, <a href="core_schema.js.html#line397">line 397</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>def</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
-
-            <td class="description last">
-                JSON schema definition.
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> The <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for the
-definition.
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="getObjectDefaultValue"><span class="type-signature"></span>getObjectDefaultValue<span class="signature">(def)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Create the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for an object-typed JSON schema.
-<p>
-The first possible type of the object element defined in <code>oneOf</code> will be processed and its
-<a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> will be merged with the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a>
-created from the <code>properties</code> definition.
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_schema.js.html">core/schema.js</a>, <a href="core_schema.js.html#line313">line 313</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>def</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                JSON schema definition of the object.
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> The <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for the
-object definition.
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="getReferredDefaultValue"><span class="type-signature"></span>getReferredDefaultValue<span class="signature">(def)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Create the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for any JSON schema that is purely defined by its
-<code>$ref</code>.
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_schema.js.html">core/schema.js</a>, <a href="core_schema.js.html#line380">line 380</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>def</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                JSON schema definition.
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> The <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for the
-definition.
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="getTypedDefaultValue"><span class="type-signature"></span>getTypedDefaultValue<span class="signature">(def)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Create the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for any typed JSON schema that is not purely defined
-by its <code>$ref</code>.
-<p>
-If the definition also contains a <code>$ref</code>, the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for the
-<code>$ref</code> definition will be merged to the <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> of the current
-definition.
-<p>
-If <code>type</code> of the JSON schema is of primitive types, and the <code>nullable</code> is set to
-<code>false</code> in the schema definition, primitive default values will be set insided the result
-<a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a>.
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_schema.js.html">core/schema.js</a>, <a href="core_schema.js.html#line347">line 347</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>def</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Object</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                JSON schema definition.
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-throws">
-<h5>Throws:</h5>
-
-        
-
-<dl>
-    <dt>
-        <div class="param-desc">
-        If <code>type</code> is undefined or it is 'array', 'object', or primitive types.
-        </div>
-    </dt>
-    <dd></dd>
-    <dt>
-        <dl>
-            <dt>
-                Type
-            </dt>
-            <dd>
-                
-<span class="param-type"><code>Error</code></span>
-
-
-            </dd>
-        </dl>
-    </dt>
-    <dd></dd>
-</dl>
-
-
-    
-</div>
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-
-<div class="param-desc">
-    <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> The <a href="module-core_schema-DefaultValue.html">module:core/schema~DefaultValue</a> for the
-definition.
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="validate"><span class="type-signature"></span>validate<span class="signature">(obj)</span><span class="type-signature"> &rarr; {boolean|Object}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Validate an object against the JSON schema.
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core_schema.js.html">core/schema.js</a>, <a href="core_schema.js.html#line258">line 258</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>any</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                Object to be validated.
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>boolean</code></span>
-|
-
-<span class="param-type"><code>Object</code></span>
-
-
-    </dd>
-</dl>
-
-
-<div class="param-desc">
-    True if Object is valid, or validation errors.
-</div>
-
-    
-</div>
-
-
-
-</div>
-        
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">hexo/tag/tabs.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Register custom Hexo tag {% tabs %}.
+ * @module hexo/tag/tabs
+ */
+
+/**
+ * Register custom Hexo tag {% tabs %}.
+ * &lt;p>
+ * This tag is rendered as a Bulma tabs component.
+ * &lt;p>
+ * Each individual tab must be wrapped with &lt;code>&amp;lt;!-- tab [...tab_param] --&amp;gt;&amp;lt;!-- endtab --&amp;gt;&lt;/code>
+ *
+ * &lt;h5>Tag Parameters:&lt;h5>
+ * &lt;table class="params">
+ * &lt;tr>
+ *     &lt;th>Name&lt;/th>
+ *     &lt;th>Type&lt;/th>
+ *     &lt;th class="description">Description&lt;/th>
+ * &lt;/tr>
+ * &lt;tr>
+ *     &lt;td class="name">&lt;code>align&lt;/code>&lt;/td>
+ *     &lt;td class="type">&lt;span class="param-type">&lt;code>string&lt;/code>&lt;/span>&lt;/td>
+ *     &lt;td class="description">[Optional] Alignment of the tabs. Available values are: left, centered, right, fullwidth. Default alignment is left.&lt;/td>
+ * &lt;/tr>
+ * &lt;tr>
+ *     &lt;td class="name">&lt;code>size&lt;/code>&lt;/td>
+ *     &lt;td class="type">&lt;span class="param-type">&lt;code>string&lt;/code>&lt;/span>&lt;/td>
+ *     &lt;td class="description">[Optional] Size of the tabs. Available values are: small, medium, large. Default size is normal.&lt;/td>
+ * &lt;/tr>
+ * &lt;tr>
+ *     &lt;td class="name">&lt;code>style&lt;/code>&lt;/td>
+ *     &lt;td class="type">&lt;span class="param-type">&lt;code>string&lt;/code>&lt;/span>&lt;/td>
+ *     &lt;td class="description">[Optional] Style of the tabs. Available values are: boxed, toggle, toggle-rounded. Default style is none.&lt;/td>
+ * &lt;/tr>
+ * &lt;/table>
+ *
+ * &lt;h5>Tab Parameters:&lt;h5>
+ * &lt;table class="params">
+ * &lt;tr>
+ *     &lt;th>Name&lt;/th>
+ *     &lt;th>Type&lt;/th>
+ *     &lt;th class="description">Description&lt;/th>
+ * &lt;/tr>
+ * &lt;tr>
+ *     &lt;td class="name">&lt;code>id&lt;/code>&lt;/td>
+ *     &lt;td class="type">&lt;span class="param-type">&lt;code>string&lt;/code>&lt;/span>&lt;/td>
+ *     &lt;td class="description">[Optional] The ID of the current tab. This value must be unique on each page.&lt;/td>
+ * &lt;/tr>
+ * &lt;tr>
+ *     &lt;td class="name">&lt;code>active&lt;/code>&lt;/td>
+ *     &lt;td class="type">&lt;span class="param-type">&lt;code>boolean&lt;/code>&lt;/span>&lt;/td>
+ *     &lt;td class="description">[Optional] Whether to show current tab by default. Only one of the tabs can be set to active.&lt;/td>
+ * &lt;/tr>
+ * &lt;tr>
+ *     &lt;td class="name">&lt;code>title&lt;/code>&lt;/td>
+ *     &lt;td class="type">&lt;span class="param-type">&lt;code>string&lt;/code>&lt;/span>&lt;/td>
+ *     &lt;td class="description">[Optional] Title of the current tab.&lt;/td>
+ * &lt;/tr>
+ * &lt;tr>
+ *     &lt;td class="name">&lt;code>icon&lt;/code>&lt;/td>
+ *     &lt;td class="type">&lt;span class="param-type">&lt;code>string&lt;/code>&lt;/span>&lt;/td>
+ *     &lt;td class="description">[Optional] Icon of the current tab. Use FontAwesome icon class name for this field.&lt;/td>
+ * &lt;/tr>
+ * &lt;/table>
+ *
+ * @see https://bulma.io/documentation/components/tabs/.
+ *
+ * @param {Hexo} hexo The Hexo instance.
+ *
+ * @example
+ * {% tabs align:fullwidth size:small style:toggle-rounded %}
+ * &lt;!-- tab active id:tab_hello title:Hello -->
+ * This is hello.
+ * &lt;!-- endtab -->
+ * &lt;!-- tab id:tab_info 'icon:fas fa-info' 'title:Info Tab' -->This is info.&lt;!-- endtab -->
+ * {% endmessage %}
+ */
+module.exports = function (hexo) {
+  function splitTabOptions(s) {
+    const options = [];
+    const EOL = -1;
+
+    let i = 0;
+    let state = 1;
+    let begin = 0;
+
+    while (i &lt;= s.length) {
+      const c = i &lt; s.length ? s.charAt(i) : '';
+      switch (state) {
+        case 1:
+          if (c === ' ') {
+            state = 1;
+            begin = i + 1;
+          } else if (c === '"') {
+            state = 2;
+            begin = i + 1;
+          } else if (c === "'") {
+            state = 4;
+            begin = i + 1;
+          } else if (c === '') {
+            state = EOL;
+          } else {
+            state = 7;
+          }
+          break;
+        case 2:
+          if (c === '\\') {
+            state = 3;
+          } else if (c === '"') {
+            state = 6;
+          }
+          break;
+        case 3:
+          state = 2;
+          break;
+        case 4:
+          if (c === '\\') {
+            state = 5;
+          } else if (c === "'") {
+            state = 6;
+          }
+          break;
+        case 5:
+          state = 4;
+          break;
+        case 6:
+          options.push(s.substring(begin, i - 1));
+          begin = i + 1;
+          if (c === ' ') {
+            state = 1;
+          } else if (c === '') {
+            state = EOL;
+          } else {
+            throw new Error(`malformatted tab options: ${s}`);
+          }
+          break;
+        case 7:
+          if (c === ' ') {
+            options.push(s.substring(begin, i));
+            begin = i + 1;
+            state = 1;
+          } else if (c === '') {
+            options.push(s.substring(begin, i));
+            begin = i + 1;
+            state = EOL;
+          }
+          break;
+      }
+      i++;
+    }
+
+    if (state !== EOL) {
+      throw new Error(`malformatted tab options: ${s}`);
+    }
+
+    return options;
+  }
+
+  function processTag(options, content) {
+    let classes = '';
+
+    for (const option of options) {
+      const [key, value] = option.split(':');
+      switch (key) {
+        case 'align':
+          classes += ` is-${value}`;
+          break;
+        case 'size':
+          classes += ` is-${value}`;
+          break;
+        case 'style':
+          if (value === 'toggle-rounded') {
+            classes += ' is-toggle';
+          }
+          classes += ` is-${value}`;
+          break;
+      }
+    }
+
+    const pattern = /&lt;!--\s*tab\s*(.*?)\s*-->([\s\S]*?)&lt;!--\s*endtab\s*-->/g;
+
+    let match;
+    let tabElements = '';
+    let contentElements = '';
+
+    while ((match = pattern.exec(content)) !== null) {
+      const [, tabOptions, tabContent] = match;
+
+      let id = 'tab-' + Date.now() + ((Math.random() * 1000) | 0);
+      let icon = '';
+      let title = '';
+      let active = false;
+
+      for (const option of splitTabOptions(tabOptions)) {
+        const [key, value] = option.split(':');
+        switch (key) {
+          case 'id':
+            id = value;
+            break;
+          case 'active':
+            active = true;
+            break;
+          case 'icon':
+            icon = `&lt;span class="icon is-small ml-0">
+                &lt;i class="${value}" aria-hidden="true">&lt;/i>
+            &lt;/span>`;
+            break;
+          case 'title':
+            title = value;
+            break;
+        }
+      }
+
+      tabElements += `&lt;li${active ? ' class="is-active"' : ''}>
+          &lt;a href="#${id}">
+              ${hexo.render.renderSync({ text: icon + title, engine: 'markdown' })}
+          &lt;/a>
+      &lt;/li>`;
+
+      contentElements += `&lt;div id="${id}" class="tab-content${active ? '' : ' is-hidden'}">
+          ${hexo.render.renderSync({ text: tabContent, engine: 'markdown' })}
+      &lt;/div>`;
+    }
+
+    return `&lt;div class="tabs my-3${classes}">
+        &lt;ul class="mx-0 my-0">
+            ${tabElements}
+        &lt;/ul>
+    &lt;/div>
+    ${contentElements}`;
+  }
+
+  const script = `&lt;script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(\`a[href="\${location.hash}"]\`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  &lt;/script>`;
+
+  hexo.extend.injector.register('head_end', script);
+  hexo.extend.tag.register('tabs', processTag, { ends: true });
+};
+</code></pre>
+        </article>
+    </section>
 
 
 
