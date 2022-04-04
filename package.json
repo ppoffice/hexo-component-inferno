@@ -42,10 +42,7 @@
     "eslint-plugin-jest": "^25.3.4",
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-react": "^7.18.0",
-    "hexo": "^6.0.0",
-    "hexo-pagination": "^2.0.0",
     "hexo-renderer-markdown": "^1.3.0",
-    "hexo-util": "^2.2.0",
     "inferno-server": "^7.4.1",
     "jest": "^27.4.7",
     "jsdoc": "^3.6.3",
@@ -54,15 +51,13 @@
   },
   "dependencies": {
     "ajv": "^8.8.2",
+    "hexo": "^6.0.0",
+    "hexo-pagination": "^2.0.0",
+    "hexo-util": "^2.2.0",
     "inferno": "^7.3.3",
     "inferno-create-element": "^7.3.3",
     "js-yaml": "^4.1.0",
     "moment": "^2.24.0",
     "semver": "^7.1.1"
-  },
-  "peerDependencies": {
-    "hexo": "^6.0.0",
-    "hexo-pagination": "^2.0.0",
-    "hexo-util": "^2.2.0"
   }
 }
