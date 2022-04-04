@@ -149,7 +149,13 @@ module.exports = class extends Component {
     htmlTags.push(<meta property="twitter:card" content={twitterCard || 'summary'} />);
 
     if (images.length) {
-      htmlTags.push(<meta property="twitter:image" content={images[0]} />);
+      let image = images[0];
+      if (!urlFn.parse(image).host) {
+        // resolve `path`'s absolute path relative to current page's url
+        // `path` can be both absolute (starts with `/`) or relative.
+        image = urlFn.resolve(url, image);
+      }
+      htmlTags.push(<meta property="twitter:image:src" content={image} />);
     }
 
     if (twitterId) {
