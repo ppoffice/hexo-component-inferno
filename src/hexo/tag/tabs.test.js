@@ -11,7 +11,7 @@ beforeAll(async () => {
   await hexo.init();
   await hexo.load();
   register(hexo);
-  await hexo.loadPlugin(require.resolve('hexo-renderer-markdown'));
+  await hexo.loadPlugin(require.resolve('hexo-renderer-marked'));
 });
 
 test('create default tabs', async () => {
@@ -36,10 +36,10 @@ test('create default tabs', async () => {
   expect(actual).toEqual(
     `<div class="tabs my-3"> <ul class="mx-0 my-0"> <li> <a href="#${tabId1}"> </a> ` +
       `</li><li> <a href="#${tabId2}"> </a> </li> </ul> </div> ` +
-      `<div id="${tabId1}" class="tab-content is-hidden"> <h1 id="title 1">` +
-      '<a class="header-anchor" href="#title 1">&#xB6;</a> title 1</h1> </div>' +
-      `<div id="${tabId2}" class="tab-content is-hidden"> <h1 id="title 2">` +
-      '<a class="header-anchor" href="#title 2">&#xB6;</a> title 2</h1> </div>',
+      `<div id="${tabId1}" class="tab-content is-hidden"> <h1 id="title-1">` +
+      '<a href="#title-1" class="headerlink" title="title 1"/>title 1</h1> </div>' +
+      `<div id="${tabId2}" class="tab-content is-hidden"> <h1 id="title-2">` +
+      '<a href="#title-2" class="headerlink" title="title 2"/>title 2</h1> </div>',
   );
 });
 
@@ -138,7 +138,7 @@ test('create tabs with all properties', async () => {
     '<div class="tabs my-3 is-fullwidth is-large is-boxed"> <ul class="mx-0 my-0"> <li> ' +
       '<a href="#tab1"> <span class="icon is-small ml-0"> ' +
       '<i class="fas\\ fa-file" aria-hidden="true"/> </span> </a> </li><li class="is-active"> ' +
-      '<a href="#tab2"> <p>Tim&#x2019;s Tab</p> </a> </li> </ul> </div> ' +
+      '<a href="#tab2"> <p>Tim&apos;s Tab</p> </a> </li> </ul> </div> ' +
       '<div id="tab1" class="tab-content is-hidden"> <p>tab 1</p> </div>' +
       '<div id="tab2" class="tab-content"> <p>tab 2</p> </div>',
   );

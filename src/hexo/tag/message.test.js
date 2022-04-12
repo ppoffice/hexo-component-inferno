@@ -11,7 +11,7 @@ beforeAll(async () => {
   await hexo.init();
   await hexo.load();
   register(hexo);
-  await hexo.loadPlugin(require.resolve('hexo-renderer-markdown'));
+  await hexo.loadPlugin(require.resolve('hexo-renderer-marked'));
 });
 
 test('create default message', async () => {
@@ -28,7 +28,7 @@ test('create default message', async () => {
   actual = cheerio.load(await render(source), cheerioOptions, false).html();
   expect(actual).toEqual(
     '<article class="message"> <div class="message-body"> ' +
-      '<h1 id="title"><a class="header-anchor" href="#title">&#xB6;</a> title</h1> ' +
+      '<h1 id="title"><a href="#title" class="headerlink" title="title"/>title</h1> ' +
       '</div> </article>',
   );
 });
