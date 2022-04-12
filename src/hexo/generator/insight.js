@@ -49,9 +49,9 @@ module.exports = function (hexo) {
     };
     const index_pages = ((this.theme.config || {}).search || {}).index_pages;
     if (index_pages == false) {
-      site.pages = locals.pages.map(mapPost);
-    } else {
       site.pages = [];
+    } else {
+      site.pages = locals.pages.map(mapPost);
     }
 
     return {
