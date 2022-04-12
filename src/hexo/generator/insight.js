@@ -48,7 +48,7 @@ module.exports = function (hexo) {
       categories: locals.categories.map(mapTag),
     };
     const index_pages = ((this.theme.config || {}).search || {}).index_pages;
-    if (index_pages == false) {
+    if (index_pages === false) {
       site.pages = [];
     } else {
       site.pages = locals.pages.map(mapPost);

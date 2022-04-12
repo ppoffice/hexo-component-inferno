@@ -12,7 +12,7 @@
   "scripts": {
     "test": "jest lib",
     "test-cov": "jest lib --coverage",
-    "lint": "eslint {src,asset,fixture}/**/*.{js,jsx}",
+    "lint": "eslint '{src,asset,fixture}/**/*.{js,jsx}'",
     "_format": "prettier \"*.{json,babelrc,prettierrc,md}\" \"{.github,*[^lib]}/**/*.{js,jsx,json,yml}\"",
     "format": "npm run _format -- --write",
     "format-check": "npm run _format -- --check",
