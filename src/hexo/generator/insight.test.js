@@ -104,10 +104,20 @@ test('Export assets file from asset folder', async () => {
       (tag) => tag.name === 'tag2' && tag.slug === 'tag2' && tag.link.includes('tag2'),
     ),
   ).not.toBeUndefined();
+});
 
-  // Test for index_pages=False
-  hexo.theme.config.search = {}
-  hexo.theme.config.search.index_pages = false;
-  const data_nopages = JSON.parse((await generator(locals)).data);
-  expect(data_nopages.pages.length).toBe(0);
+test('Exclude pages from index when `index_pages` is false', async () => {
+  const locals = hexo.locals.toObject();
+  locals.config = hexo.config;
+  locals.posts = posts;
+  locals.pages = pages;
+  locals.categories = categories;
+  locals.tags = tags;
+  hexo.theme.config.search = { index_pages: false };
+  const generator = hexo.extend.generator.get('insight').bind(hexo);
+  const result = await generator(locals);
+  const data = JSON.parse(result.data);
+
+  expect(data.posts.length).toBe(2);
+  expect(data.pages.length).toBe(0);
 });
