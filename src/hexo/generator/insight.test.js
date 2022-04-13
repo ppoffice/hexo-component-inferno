@@ -104,4 +104,10 @@ test('Export assets file from asset folder', async () => {
       (tag) => tag.name === 'tag2' && tag.slug === 'tag2' && tag.link.includes('tag2'),
     ),
   ).not.toBeUndefined();
+
+  // Test for index_pages=False
+  hexo.theme.config.search = {}
+  hexo.theme.config.search.index_pages = false;
+  const data_nopages = JSON.parse((await generator(locals)).data);
+  expect(data_nopages.pages.length).toBe(0);
 });
