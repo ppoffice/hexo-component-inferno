@@ -44,7 +44,6 @@ class Twikoo extends Component {
  * <Twikoo.Cacheable
  *     comment={{
  *         env_id: "https://path/to/vercel/domain"
- *         jsURL: "https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.4.18/twikoo.all.min.js"
  *     }}
  */
 Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
