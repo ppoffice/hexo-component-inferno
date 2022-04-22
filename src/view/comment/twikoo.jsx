@@ -20,9 +20,9 @@ class Twikoo extends Component {
       env_id,
       jsUrl,
     } = this.props;
-    const js = `twikoo.init({
-      env_id: '${env_id}'
-    });`;
+    const js = `Twikoo.init({
+            env_id: '${env_id}'
+        });`;
     return (
       <Fragment>
         <div id="twikoo" class="content twikoo"></div>
@@ -48,6 +48,7 @@ class Twikoo extends Component {
  */
 Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
   const { comment } = props;
+  
   return {
     env_id: comment.env_id,
     jsUrl: 'https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.4.18/twikoo.all.min.js',
