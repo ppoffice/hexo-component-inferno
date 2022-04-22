@@ -3,7 +3,7 @@
  * @module view/comment/twikoo
  */
 const { Component, Fragment } = require('inferno');
-const { cacheComponent } = require('hexo-component-inferno/lib/util/cache');
+const { cacheComponent } = require('../../util/cache');
 
 /**
  * Twikoo comment JSX component.
