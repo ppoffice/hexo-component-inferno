@@ -15,6 +15,7 @@ const PROVIDERS = {
     unpkg: 'https://unpkg.com/${ package }@${ version }/${ filename }',
     bootcdn: '[cdnjs]https://cdn.bootcdn.net/ajax/libs/${ package }/${ version }/${ filename }',
     '75cdn': '[cdnjs]https://lib.baomitu.com/${ package }/${ version }/${ filename }',
+    bytedance: '[cdnjs]https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/${package}/${version}/${filename}',
   },
   FONT: {
     google: 'https://fonts.googleapis.com/${ type }?family=${ fontname }',
@@ -27,6 +28,7 @@ const PROVIDERS = {
     fontawesome: 'https://use.fontawesome.com/releases/v5.15.2/css/all.css',
     bootcdn: 'https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css',
     '75cdn': 'https://lib.baomitu.com/font-awesome/5.12.1/css/all.min.css',
+    bytedance: 'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
   },
 };
 
