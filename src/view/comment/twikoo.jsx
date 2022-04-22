@@ -16,10 +16,7 @@ const { cacheComponent } = require('hexo-component-inferno/lib/util/cache');
  */
 class Twikoo extends Component {
   render() {
-    const {
-      env_id,
-      jsUrl,
-    } = this.props;
+    const { env_id, jsUrl } = this.props;
     const js = `Twikoo.init({
             env_id: '${env_id}'
         });`;
@@ -48,7 +45,7 @@ class Twikoo extends Component {
  */
 Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
   const { comment } = props;
-  
+
   return {
     env_id: comment.env_id,
     jsUrl: 'https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.4.18/twikoo.all.min.js',
