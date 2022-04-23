@@ -313,6 +313,12 @@ describe('Get icon font URL', () => {
     const expected = ['https://lib.baomitu.com/font-awesome/5.12.1/css/all.min.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
+  
+  test('bytedance', () => {
+    hexo.config.providers = { iconcdn: '75cdn' };
+    const expected = ['https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css'];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
 
   test('Custom web font CDN', () => {
     hexo.config.providers = { iconcdn: 'https://my.cdn/icon' };
