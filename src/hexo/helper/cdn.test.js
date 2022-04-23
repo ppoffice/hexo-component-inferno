@@ -170,12 +170,12 @@ test('bytedance', () => {
       'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/pace/1.0.2/pace.min.js',
       'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js',
       'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/waline/1.5.4/Waline.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/example/1.0.0/example.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/disqusjs/1.2.6/disqus.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/cookieconsent/3.1.1/cookieconsent.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/waline/1.5.4/Waline.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
