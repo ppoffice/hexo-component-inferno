@@ -159,6 +159,27 @@ describe('Get JavaScript library URL', () => {
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
+test('bytedance', () => {
+    hexo.config.providers = { cdn: 'bytedance' };
+    const expected = [
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.0.0/jquery.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/moment.js/2.24.0/moment.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/outdated-browser/1.1.5/outdatedbrowser.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/9.18.1/styles/a11y-dark.min.css',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/2.7.6/MathJax.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/pace/1.0.2/pace.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js',
+      'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.6/clipboard.min.js',
+      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/waline/1.5.4/Waline.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/example/1.0.0/example.js',
+    ];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
   test('Custom CDN', () => {
     hexo.config.providers = { cdn: 'https://my.cdn/${ package }@${ version }/${ filename }' };
     const expected = [
