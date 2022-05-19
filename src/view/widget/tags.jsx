@@ -22,7 +22,7 @@ const { cacheComponent } = require('../../util/cache');
  */
 class Tags extends Component {
   render() {
-    const { tags, title, showCount } = this.props;
+    const { tags, title, show_count } = this.props;
 
     return (
       <div class="card widget" data-type="tags">
@@ -34,7 +34,7 @@ class Tags extends Component {
                 <div class="control">
                   <a class="tags has-addons" href={tag.url}>
                     <span class="tag">{tag.name}</span>
-                    {showCount ? <span class="tag">{tag.count}</span> : null}
+                    {show_count ? <span class="tag">{tag.count}</span> : null}
                   </a>
                 </div>
               ))}
@@ -62,13 +62,15 @@ class Tags extends Component {
  *         _p: function() {...}
  *     }}
  *     tags={{...}}
- *     orderBy="name"
- *     order={1}
- *     amount={100}
- *     showCount={true} />
+ *     widget={{
+ *       order_by: "name",
+ *       amount: 100,
+ *       show_count: true
+ *     }} />
  */
 Tags.Cacheable = cacheComponent(Tags, 'widget.tags', (props) => {
-  const { helper, orderBy = 'name', order = 1, amount, showCount = true } = props;
+  const { helper, widget = {} } = props;
+  const { order_by = 'name', amount, show_count = true } = widget;
   let tags = props.tags || props.site.tags;
   const { url_for, _p } = helper;
 
@@ -76,13 +78,13 @@ Tags.Cacheable = cacheComponent(Tags, 'widget.tags', (props) => {
     return null;
   }
 
-  tags = tags.sort(orderBy, order).filter((tag) => tag.length);
+  tags = tags.sort(order_by).filter((tag) => tag.length);
   if (amount) {
     tags = tags.limit(amount);
   }
 
   return {
-    showCount,
+    show_count,
     title: _p('common.tag', Infinity),
     tags: tags.map((tag) => ({
       name: tag.name,
