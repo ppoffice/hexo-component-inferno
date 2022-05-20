@@ -7,6 +7,23 @@
     "type": {
       "type": "string",
       "const": "tags"
+    },
+    "order_by": {
+      "type": "string",
+      "default": "name",
+      "description": "How to order tags. For example 'name' to order by name in ascending order, and '-length' to order by number of posts in each tags in descending order",
+      "nullable": true
+    },
+    "amount": {
+      "type": "integer",
+      "description": "Amount of tags to show. Will show all if not set.",
+      "nullable": true
+    },
+    "show_count": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to show tags count, i.e. number of posts in the tag.",
+      "nullable": true
     }
   },
   "required": ["type"]
