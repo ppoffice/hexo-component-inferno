@@ -22,7 +22,7 @@ const { cacheComponent } = require('../../util/cache');
  */
 class Tags extends Component {
   render() {
-    const { tags, title, show_count } = this.props;
+    const { tags, title, showCount } = this.props;
 
     return (
       <div class="card widget" data-type="tags">
@@ -34,7 +34,7 @@ class Tags extends Component {
                 <div class="control">
                   <a class="tags has-addons" href={tag.url}>
                     <span class="tag">{tag.name}</span>
-                    {show_count ? <span class="tag">{tag.count}</span> : null}
+                    {showCount ? <span class="tag">{tag.count}</span> : null}
                   </a>
                 </div>
               ))}
@@ -84,7 +84,7 @@ Tags.Cacheable = cacheComponent(Tags, 'widget.tags', (props) => {
   }
 
   return {
-    show_count,
+    showCount: show_count,
     title: _p('common.tag', Infinity),
     tags: tags.map((tag) => ({
       name: tag.name,
