@@ -18,7 +18,8 @@
     "format-check": "npm run _format -- --check",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
     "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
-    "clean": "rm -rf lib doc coverage"
+    "clean": "rm -rf lib doc coverage",
+    "prepare": "npm run build"
   },
   "directories": {
     "lib": "./lib"
