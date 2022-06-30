@@ -159,6 +159,27 @@ describe('Get JavaScript library URL', () => {
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
+  test('bytedance', () => {
+    hexo.config.providers = { cdn: 'bytedance' };
+    const expected = [
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.0.0/jquery.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/moment.js/2.24.0/moment.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/outdated-browser/1.1.5/outdatedbrowser.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/9.18.1/styles/a11y-dark.min.css',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/2.7.6/MathJax.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/pace/1.0.2/pace.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.6/clipboard.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/disqusjs/1.2.6/disqus.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/cookieconsent/3.1.1/cookieconsent.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/waline/1.5.4/Waline.min.js',
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/example/1.0.0/example.js',
+    ];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
   test('Custom CDN', () => {
     hexo.config.providers = { cdn: 'https://my.cdn/${ package }@${ version }/${ filename }' };
     const expected = [
@@ -271,25 +292,31 @@ describe('Get icon font URL', () => {
 
   test('fontawesome', () => {
     hexo.config.providers = { iconcdn: 'fontawesome' };
-    const expected = ['https://use.fontawesome.com/releases/v5.15.2/css/all.css'];
+    const expected = ['https://use.fontawesome.com/releases/v6.0.0/css/all.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
   test('loli', () => {
     hexo.config.providers = { iconcdn: 'loli' };
-    const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/5.15.2/css/all.min.css'];
+    const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/6.0.0/css/all.min.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
   test('bootcdn', () => {
     hexo.config.providers = { iconcdn: 'bootcdn' };
-    const expected = ['https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css'];
+    const expected = ['https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
   test('75cdn', () => {
     hexo.config.providers = { iconcdn: '75cdn' };
-    const expected = ['https://lib.baomitu.com/font-awesome/5.12.1/css/all.min.css'];
+    const expected = ['https://lib.baomitu.com/font-awesome/6.0.0/css/all.min.css'];
+    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
+  });
+
+  test('bytedance', () => {
+    hexo.config.providers = { iconcdn: 'bytedance' };
+    const expected = ['https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css'];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
