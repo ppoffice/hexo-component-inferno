@@ -316,7 +316,9 @@ describe('Get icon font URL', () => {
 
   test('bytedance', () => {
     hexo.config.providers = { iconcdn: 'bytedance' };
-    const expected = ['https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css'];
+    const expected = [
+      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
+    ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
