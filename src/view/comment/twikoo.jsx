@@ -41,7 +41,7 @@ class Twikoo extends Component {
  * <Twikoo.Cacheable
  *     comment={{
  *         env_id: "https://path/to/vercel/domain"
- *     }}
+ *     }} />
  */
 Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
   const { comment } = props;
