@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>view/share/sharejs - Documentation</title>
+    <title>view/comment/twikoo.jsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,135 +29,74 @@
 
 <div id="main">
     
-    <h1 class="page-title">view/share/sharejs</h1>
+    <h1 class="page-title">view/comment/twikoo.jsx</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-            
-        
-    
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Twikoo comment JSX component.
+ * @module view/comment/twikoo
+ */
+const { Component, Fragment } = require('inferno');
+const { cacheComponent } = require('../../util/cache');
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Share.js share buttons JSX component.</div>
-        
+/**
+ * Twikoo comment JSX component.
+ *
+ * @see https://twikoo.js.org/quick-start.html
+ * @example
+ * &lt;Twikoo
+ *     env_id="Vercel Domain"
+ *     jsUrl="/path/to/Twikoo.js" />
+ */
+class Twikoo extends Component {
+  render() {
+    const { env_id, jsUrl } = this.props;
+    const js = `Twikoo.init({
+            env_id: '${env_id}'
+        });`;
+    return (
+      &lt;Fragment>
+        &lt;div id="twikoo" class="content twikoo">&lt;/div>
+        &lt;script src={jsUrl}>&lt;/script>
+        &lt;script dangerouslySetInnerHTML={{ __html: js }}>&lt;/script>
+      &lt;/Fragment>
+    );
+  }
+}
 
-        
-            
-<div class="section-method">
+/**
+ * Cacheable Twikoo comment JSX component.
+ * &lt;p>
+ * This class is supposed to be used in combination with the &lt;code>locals&lt;/code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * &lt;Twikoo.Cacheable
+ *     comment={{
+ *         env_id: "https://path/to/vercel/domain"
+ *     }}
+ */
+Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
+  const { comment } = props;
 
+  return {
+    env_id: comment.env_id,
+    jsUrl: 'https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.4.18/twikoo.all.min.js',
+  };
+});
 
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_share_sharejs.jsx.html">view/share/sharejs.jsx</a>, <a href="view_share_sharejs.jsx.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-view_share_sharejs-ShareJs.html">ShareJs</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+module.exports = Twikoo;
+</code></pre>
+        </article>
+    </section>
 
 
 
