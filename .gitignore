@@ -124,3 +124,6 @@ yarn.lock
 # Built files
 lib/
 doc/
+
+# macOS
+.DS_Store
