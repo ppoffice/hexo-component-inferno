@@ -170,7 +170,7 @@ describe('Get JavaScript library URL', () => {
       'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/pace/1.0.2/pace.min.js',
       'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js',
       'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.6/clipboard.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/disqusjs/1.2.6/disqus.min.js',
+      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
       'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/cookieconsent/3.1.1/cookieconsent.min.js',
