@@ -1,11 +1,17 @@
 const { join } = require('path');
 const Hexo = require('hexo');
+const { minify } = require('html-minifier');
 const cheerio = require('cheerio');
 const register = require('./tabs');
 
 const rootDir = join(__dirname, '../../../fixture/site');
 const hexo = new Hexo(rootDir, { silent: true });
 const cheerioOptions = { xml: { normalizeWhitespace: true } };
+const minifierOptions = {
+  collapseWhitespace: true,
+  conservativeCollapse: true,
+  keepClosingSlash: true,
+};
 
 beforeAll(async () => {
   await hexo.init();
@@ -19,7 +25,7 @@ test('create default tabs', async () => {
 
   let source = '{% tabs %}<!--tab id:tab1-->**content**<!--endtab-->{% endtabs %}';
   let actual = cheerio.load(await render(source), cheerioOptions, false).html();
-  expect(actual).toEqual(
+  expect(minify(actual, minifierOptions)).toEqual(
     '<div class="tabs my-3"> <ul class="mx-0 my-0"> <li> <a href="#tab1"> </a> </li> </ul> ' +
       '</div> <div id="tab1" class="tab-content is-hidden"> <p><strong>content</strong></p> </div>',
   );
@@ -33,7 +39,7 @@ test('create default tabs', async () => {
     .get()
     .map((element) => $(element).attr('id'));
   actual = $.html();
-  expect(actual).toEqual(
+  expect(minify(actual, minifierOptions)).toEqual(
     `<div class="tabs my-3"> <ul class="mx-0 my-0"> <li> <a href="#${tabId1}"> </a> ` +
       `</li><li> <a href="#${tabId2}"> </a> </li> </ul> </div> ` +
       `<div id="${tabId1}" class="tab-content is-hidden"> <h1 id="title-1">` +
@@ -49,7 +55,7 @@ test('create tabs with different alignment', async () => {
   for (const align of ['left', 'centered', 'right', 'fullwidth']) {
     const source = `{% tabs align:${align} %}<!--tab id:tab1-->content<!--endtab-->{% endtabs %}`;
     const actual = cheerio.load(await render(source), cheerioOptions, false).html();
-    expect(actual).toEqual(
+    expect(minify(actual, minifierOptions)).toEqual(
       `<div class="tabs my-3 is-${align}"> <ul class="mx-0 my-0"> <li> <a href="#tab1"> </a> ` +
         '</li> </ul> </div> <div id="tab1" class="tab-content is-hidden"> ' +
         '<p>content</p> </div>',
@@ -63,7 +69,7 @@ test('create tabs with different sizes', async () => {
   for (const size of ['small', 'medium', 'large']) {
     const source = `{% tabs size:${size} %}<!--tab id:tab1-->content<!--endtab-->{% endtabs %}`;
     const actual = cheerio.load(await render(source), cheerioOptions, false).html();
-    expect(actual).toEqual(
+    expect(minify(actual, minifierOptions)).toEqual(
       `<div class="tabs my-3 is-${size}"> <ul class="mx-0 my-0"> <li> <a href="#tab1"> </a> ` +
         '</li> </ul> </div> <div id="tab1" class="tab-content is-hidden"> ' +
         '<p>content</p> </div>',
@@ -78,7 +84,7 @@ test('create tabs with different styles', async () => {
     const source = `{% tabs style:${style} %}<!--tab id:tab1-->content<!--endtab-->{% endtabs %}`;
     const actual = cheerio.load(await render(source), cheerioOptions, false).html();
     const classname = style === 'toggle-rounded' ? 'toggle is-toggle-rounded' : style;
-    expect(actual).toEqual(
+    expect(minify(actual, minifierOptions)).toEqual(
       `<div class="tabs my-3 is-${classname}"> <ul class="mx-0 my-0"> <li> <a href="#tab1"> </a> ` +
         '</li> </ul> </div> <div id="tab1" class="tab-content is-hidden"> ' +
         '<p>content</p> </div>',
@@ -94,7 +100,7 @@ test('create tabs with active status', async () => {
   <!-- tab id:tab2 active -->tab 2<!-- endtab -->
   {% endtabs %}`;
   const actual = cheerio.load(await render(source), cheerioOptions, false).html();
-  expect(actual).toEqual(
+  expect(minify(actual, minifierOptions)).toEqual(
     '<div class="tabs my-3"> <ul class="mx-0 my-0"> <li> <a href="#tab1"> </a> ' +
       '</li><li class="is-active"> <a href="#tab2"> </a> </li> </ul> </div> ' +
       '<div id="tab1" class="tab-content is-hidden"> <p>tab 1</p> </div>' +
@@ -107,7 +113,7 @@ test('create tabs with a title', async () => {
 
   const source = '{% tabs %}<!--tab id:tab1 "title:Tab Title"-->tab<!--endtab-->{% endtabs %}';
   const actual = cheerio.load(await render(source), cheerioOptions, false).html();
-  expect(actual).toEqual(
+  expect(minify(actual, minifierOptions)).toEqual(
     '<div class="tabs my-3"> <ul class="mx-0 my-0"> <li> <a href="#tab1"> <p>Tab Title</p> </a> ' +
       '</li> </ul> </div> <div id="tab1" class="tab-content is-hidden"> <p>tab</p> </div>',
   );
@@ -118,7 +124,7 @@ test('create tabs with an icon', async () => {
 
   const source = '{% tabs %}<!--tab id:tab1 "icon:fab fa-github"-->tab<!--endtab-->{% endtabs %}';
   const actual = cheerio.load(await render(source), cheerioOptions, false).html();
-  expect(actual).toEqual(
+  expect(minify(actual, minifierOptions)).toEqual(
     '<div class="tabs my-3"> <ul class="mx-0 my-0"> <li> <a href="#tab1"> ' +
       '<span class="icon is-small ml-0"> <i class="fab fa-github" aria-hidden="true"/> ' +
       '</span> </a> </li> </ul> </div> <div id="tab1" class="tab-content is-hidden"> ' +
@@ -134,7 +140,7 @@ test('create tabs with all properties', async () => {
   <!-- tab id:tab2 active 'title:Tim\\'s Tab' -->tab 2<!-- endtab -->
   {% endtabs %}`;
   const actual = cheerio.load(await render(source), cheerioOptions, false).html();
-  expect(actual).toEqual(
+  expect(minify(actual, minifierOptions)).toEqual(
     '<div class="tabs my-3 is-fullwidth is-large is-boxed"> <ul class="mx-0 my-0"> <li> ' +
       '<a href="#tab1"> <span class="icon is-small ml-0"> ' +
       '<i class="fas\\ fa-file" aria-hidden="true"/> </span> </a> </li><li class="is-active"> ' +
