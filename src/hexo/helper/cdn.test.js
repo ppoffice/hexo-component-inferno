@@ -122,72 +122,6 @@ describe('Get JavaScript library URL', () => {
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 
-  test('bootcdn', () => {
-    hexo.config.providers = { cdn: 'bootcdn' };
-    const expected = [
-      'https://cdn.bootcdn.net/ajax/libs/jquery/3.0.0/jquery.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/moment.js/2.24.0/moment.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/highlight.js/9.18.1/styles/a11y-dark.min.css',
-      'https://cdn.bootcdn.net/ajax/libs/mathjax/2.7.6/MathJax.js',
-      'https://cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/KaTeX/0.11.1/katex.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/disqusjs/1.3.0/disqus.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
-      'https://cdn.bootcdn.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/waline/2.6.3/waline.js',
-      'https://cdn.bootcdn.net/ajax/libs/twikoo/1.4.18/twikoo.all.min.js',
-      'https://cdn.bootcdn.net/ajax/libs/example/1.0.0/example.js',
-    ];
-    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
-  });
-
-  test('75cdn', () => {
-    hexo.config.providers = { cdn: '75cdn' };
-    const expected = [
-      'https://lib.baomitu.com/jquery/3.0.0/jquery.min.js',
-      'https://lib.baomitu.com/moment.js/2.24.0/moment.min.js',
-      'https://lib.baomitu.com/outdated-browser/1.1.5/outdatedbrowser.min.js',
-      'https://lib.baomitu.com/highlight.js/9.18.1/styles/a11y-dark.min.css',
-      'https://lib.baomitu.com/mathjax/2.7.6/MathJax.js',
-      'https://lib.baomitu.com/pace/1.0.2/pace.min.js',
-      'https://lib.baomitu.com/KaTeX/0.11.1/katex.min.js',
-      'https://lib.baomitu.com/clipboard.js/2.0.6/clipboard.min.js',
-      'https://lib.baomitu.com/disqusjs/1.3.0/disqus.min.js',
-      'https://lib.baomitu.com/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
-      'https://lib.baomitu.com/instantsearch.js/4.3.1/instantsearch.production.min.js',
-      'https://lib.baomitu.com/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://lib.baomitu.com/waline/2.6.3/waline.js',
-      'https://lib.baomitu.com/twikoo/1.4.18/twikoo.all.min.js',
-      'https://lib.baomitu.com/example/1.0.0/example.js',
-    ];
-    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
-  });
-
-  test('bytedance', () => {
-    hexo.config.providers = { cdn: 'bytedance' };
-    const expected = [
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.0.0/jquery.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/moment.js/2.24.0/moment.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/outdated-browser/1.1.5/outdatedbrowser.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/9.18.1/styles/a11y-dark.min.css',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/2.7.6/MathJax.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/pace/1.0.2/pace.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.6/clipboard.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/disqusjs/1.3.0/disqus.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/instantsearch.js/4.3.1/instantsearch.production.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/waline/2.6.3/waline.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.4.18/twikoo.all.min.js',
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/example/1.0.0/example.js',
-    ];
-    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
-  });
-
   test('Custom CDN', () => {
     hexo.config.providers = { cdn: 'https://my.cdn/${ package }@${ version }/${ filename }' };
     const expected = [
@@ -309,26 +243,6 @@ describe('Get icon font URL', () => {
   test('loli', () => {
     hexo.config.providers = { iconcdn: 'loli' };
     const expected = ['https://cdnjs.loli.net/ajax/libs/font-awesome/6.0.0/css/all.min.css'];
-    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
-  });
-
-  test('bootcdn', () => {
-    hexo.config.providers = { iconcdn: 'bootcdn' };
-    const expected = ['https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css'];
-    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
-  });
-
-  test('75cdn', () => {
-    hexo.config.providers = { iconcdn: '75cdn' };
-    const expected = ['https://lib.baomitu.com/font-awesome/6.0.0/css/all.min.css'];
-    cases.forEach((func, i) => expect(func()).toBe(expected[i]));
-  });
-
-  test('bytedance', () => {
-    hexo.config.providers = { iconcdn: 'bytedance' };
-    const expected = [
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
-    ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
 

@@ -13,10 +13,6 @@ const PROVIDERS = {
     loli: '[cdnjs]https://cdnjs.loli.net/ajax/libs/${ package }/${ version }/${ filename }',
     jsdelivr: 'https://cdn.jsdelivr.net/npm/${ package }@${ version }/${ filename }',
     unpkg: 'https://unpkg.com/${ package }@${ version }/${ filename }',
-    bootcdn: '[cdnjs]https://cdn.bootcdn.net/ajax/libs/${ package }/${ version }/${ filename }',
-    '75cdn': '[cdnjs]https://lib.baomitu.com/${ package }/${ version }/${ filename }',
-    bytedance:
-      '[cdnjs]https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/${package}/${version}/${filename}',
   },
   FONT: {
     google: 'https://fonts.googleapis.com/${ type }?family=${ fontname }',
@@ -27,10 +23,6 @@ const PROVIDERS = {
   ICON: {
     loli: 'https://cdnjs.loli.net/ajax/libs/font-awesome/6.0.0/css/all.min.css',
     fontawesome: 'https://use.fontawesome.com/releases/v6.0.0/css/all.css',
-    bootcdn: 'https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css',
-    '75cdn': 'https://lib.baomitu.com/font-awesome/6.0.0/css/all.min.css',
-    bytedance:
-      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
   },
 };
 
