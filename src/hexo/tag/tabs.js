@@ -73,7 +73,7 @@
  * This is hello.
  * <!-- endtab -->
  * <!-- tab id:tab_info 'icon:fas fa-info' 'title:Info Tab' -->This is info.<!-- endtab -->
- * {% endmessage %}
+ * {% endtabs %}
  */
 module.exports = function (hexo) {
   function splitTabOptions(s) {
