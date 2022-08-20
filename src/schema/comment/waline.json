@@ -14,19 +14,18 @@
     },
     "path": {
       "type": "string",
-      "description": "Article path id. Used to distinguish different article pages to ensure loading the correct comment list under the article page."
+      "description": "Article path id."
     },
     "lang": {
       "type": "string",
       "description": "Display language.",
-      "enum": ["zh", "zh-CN", "zh-TW", "en", "en-US", "jp", "jp-JP"],
+      "enum": ["zh", "zh-CN", "zh-TW", "en", "en-US", "jp", "jp-JP", "pt-BR", "ru", "ru-RU"],
       "default": "zh-CN",
       "nullable": true
     },
-    "visitor": {
-      "type": "boolean",
-      "description": "Show visitor count",
-      "default": false,
+    "locale": {
+      "type": "object",
+      "description": "I18n configurations",
       "nullable": true
     },
     "emoji": {
@@ -73,11 +72,11 @@
         ]
       },
       "description": "Emoji settings.",
-      "default": ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
+      "default": ["//unpkg.com/@waline/emojis@1.0.1/weibo"],
       "nullable": true
     },
     "dark": {
-      "type": "string",
+      "type": ["string", "boolean"],
       "description": "Darkmode support.",
       "nullable": true
     },
@@ -126,25 +125,43 @@
     },
     "page_size": {
       "type": "number",
-      "description": "number of comments per page.",
+      "description": "Number of comments per page.",
       "default": 10,
       "nullable": true
     },
-    "upload_image": {
+    "image_uploader": {
       "type": "boolean",
-      "description": "If you set it to false, image upload feature will be disabled.",
-      "default": true,
+      "description": "Whether to disable the image upload feature.",
+      "default": false,
       "nullable": true
     },
-    "highlight": {
+    "highlighter": {
       "type": "boolean",
-      "description": "Code highlighting, it's enabled by default, please close it selectively.",
-      "default": true,
+      "description": "Whether to disable the code highlight feature.",
+      "default": false,
       "nullable": true
     },
-    "math": {
+    "tex_renderer": {
       "type": "boolean",
-      "description": "If you set it to 'false', math preview feature will be disabled.",
+      "description": "Whether to disable TeX rendering.",
+      "default": false,
+      "nullable": true
+    },
+    "search": {
+      "type": "boolean",
+      "description": "Whether to disable the search feature.",
+      "default": false,
+      "nullable": true
+    },
+    "pageview": {
+      "type": ["string", "boolean"],
+      "description": "Whether to show page view count. It can also be a CSS selector to page view count container.",
+      "default": false,
+      "nullable": true
+    },
+    "comment": {
+      "type": ["string", "boolean"],
+      "description": "Whether to show comment count. It can also be a CSS selector to comment count container.",
       "default": false,
       "nullable": true
     },
@@ -152,11 +169,6 @@
       "type": "boolean",
       "description": "Whether show copyright and version in footer.",
       "default": true,
-      "nullable": true
-    },
-    "locale": {
-      "type": "object",
-      "description": "I18n configurations",
       "nullable": true
     }
   },
