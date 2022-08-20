@@ -19,8 +19,8 @@ const { cacheComponent } = require('../../util/cache');
 class Twikoo extends Component {
   render() {
     const { envId, region, lang, jsUrl } = this.props;
-    const js = `Twikoo.init({
-            env_id: '${envId}',
+    const js = `twikoo.init({
+            envId: '${envId}',
             ${region ? `region: ${JSON.stringify(region)},` : ''}
             ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
         });`;
