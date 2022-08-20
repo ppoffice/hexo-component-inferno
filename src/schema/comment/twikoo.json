@@ -10,7 +10,18 @@
     },
     "env_id": {
       "type": "string",
-      "description": "envId from Tencent CloudBase"
+      "description": "envId from Tencent CloudBase or Vercel URL"
+    },
+    "region": {
+      "type": "string",
+      "description": "Region of Tencent CloudBase",
+      "nullable": true
+    },
+    "lang": {
+      "type": "string",
+      "description": "i18n support",
+      "default": "zh-CN",
+      "nullable": true
     }
   },
   "required": ["type", "env_id"]

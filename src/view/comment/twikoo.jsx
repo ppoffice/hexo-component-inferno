@@ -11,14 +11,18 @@ const { cacheComponent } = require('../../util/cache');
  * @see https://twikoo.js.org/quick-start.html
  * @example
  * <Twikoo
- *     env_id="Vercel Domain"
+ *     envId="env_id"
+ *     region="ap-guangzhou"
+ *     lang="zh-CN"
  *     jsUrl="/path/to/Twikoo.js" />
  */
 class Twikoo extends Component {
   render() {
-    const { env_id, jsUrl } = this.props;
+    const { envId, region, lang, jsUrl } = this.props;
     const js = `Twikoo.init({
-            env_id: '${env_id}'
+            env_id: '${envId}',
+            ${region ? `region: ${JSON.stringify(region)},` : ''}
+            ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
         });`;
     return (
       <Fragment>
@@ -40,15 +44,19 @@ class Twikoo extends Component {
  * @example
  * <Twikoo.Cacheable
  *     comment={{
- *         env_id: "https://path/to/vercel/domain"
+ *         env_id: "env_id",
+ *         region: "ap-guangzhou",
+ *         lang: "zh-CN",
  *     }} />
  */
 Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
-  const { comment } = props;
+  const { comment, helper, page, config } = props;
 
   return {
-    env_id: comment.env_id,
-    jsUrl: 'https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.4.18/twikoo.all.min.js',
+    envId: comment.env_id,
+    region: comment.region,
+    lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
+    jsUrl: helper.cdn('twikoo', '1.4.18', 'dist/twikoo.all.min.js'),
   };
 });
 
