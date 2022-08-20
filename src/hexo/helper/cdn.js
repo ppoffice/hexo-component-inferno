@@ -16,7 +16,7 @@ const PROVIDERS = {
     bootcdn: '[cdnjs]https://cdn.bootcdn.net/ajax/libs/${ package }/${ version }/${ filename }',
     '75cdn': '[cdnjs]https://lib.baomitu.com/${ package }/${ version }/${ filename }',
     bytedance:
-      '[cdnjs]https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/${package}/${version}/${filename}',
+      '[cdnjs]https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/${package}/${version}/${filename}',
   },
   FONT: {
     google: 'https://fonts.googleapis.com/${ type }?family=${ fontname }',
@@ -30,7 +30,7 @@ const PROVIDERS = {
     bootcdn: 'https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css',
     '75cdn': 'https://lib.baomitu.com/font-awesome/6.0.0/css/all.min.css',
     bytedance:
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
   },
 };
 
@@ -63,8 +63,6 @@ const CDNJS_FIXTURES = {
   katex: (ver, fname) => ['KaTeX', ver, fname],
   'pace-js': (ver, fname) => ['pace', ver, fname],
   clipboard: (ver, fname) => ['clipboard.js', ver, fname],
-  // disqusjs is not hosted on CDN.js
-  disqusjs: (ver, fname) => [],
   cookieconsent: (ver, fname) => [
     'cookieconsent',
     ver,

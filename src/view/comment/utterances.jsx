@@ -60,7 +60,7 @@ class Utterances extends Component {
  * @example
  * <Utterances.Cacheable
  *     comment={{
- *         repo: '******',
+ *         repo: "******",
  *         issue_term: "******"
  *         issue_number: {123}
  *         label: "******"

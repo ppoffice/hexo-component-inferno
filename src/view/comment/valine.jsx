@@ -103,7 +103,7 @@ class Valine extends Component {
  *         placeholder: "******"
  *         avatar: "mm"
  *         avatar_force: false
- *         meta: ['nick', 'mail', 'link']
+ *         meta: ["nick", "mail", "link"]
  *         page_size: 10
  *         lang: "zh-CN"
  *         visitor: false

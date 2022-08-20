@@ -25,11 +25,12 @@ describe('Get JavaScript library URL', () => {
       () => cdn('pace-js', '1.0.2', 'pace.min.js'),
       () => cdn('katex', '0.11.1', 'dist/katex.min.js'),
       () => cdn('clipboard', '2.0.6', 'dist/clipboard.min.js'),
-      () => cdn('disqusjs', '1.2.6', 'dist/disqus.min.js'),
+      () => cdn('disqusjs', '1.3.0', 'dist/disqus.min.js'),
       () => cdn('algoliasearch', '4.0.3', 'dist/algoliasearch-lite.umd.js'),
       () => cdn('instantsearch.js', '4.3.1', 'dist/instantsearch.production.min.js'),
       () => cdn('cookieconsent', '3.1.1', 'build/cookieconsent.min.js'),
       () => cdn('@waline/client', '1.5.4', 'dist/Waline.min.js'),
+      () => cdn('twikoo', '1.4.18', 'dist/twikoo.all.min.js'),
       () => cdn('example', '1.0.0', 'example.js'),
     ];
   });
@@ -44,11 +45,12 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js',
       'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js',
       'https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://cdn.jsdelivr.net/npm/disqusjs@1.3.0/dist/disqus.min.js',
       'https://cdn.jsdelivr.net/npm/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://cdn.jsdelivr.net/npm/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
       'https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js',
       'https://cdn.jsdelivr.net/npm/@waline/client@1.5.4/dist/Waline.min.js',
+      'https://cdn.jsdelivr.net/npm/twikoo@1.4.18/dist/twikoo.all.min.js',
       'https://cdn.jsdelivr.net/npm/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -65,11 +67,12 @@ describe('Get JavaScript library URL', () => {
       'https://unpkg.com/pace-js@1.0.2/pace.min.js',
       'https://unpkg.com/katex@0.11.1/dist/katex.min.js',
       'https://unpkg.com/clipboard@2.0.6/dist/clipboard.min.js',
-      'https://unpkg.com/disqusjs@1.2.6/dist/disqus.js',
+      'https://unpkg.com/disqusjs@1.3.0/dist/disqus.js',
       'https://unpkg.com/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://unpkg.com/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
       'https://unpkg.com/cookieconsent@3.1.1/build/cookieconsent.min.js',
       'https://unpkg.com/@waline/client@1.5.4/dist/Waline.min.js',
+      'https://unpkg.com/twikoo@1.4.18/dist/twikoo.all.min.js',
       'https://unpkg.com/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -86,11 +89,12 @@ describe('Get JavaScript library URL', () => {
       'https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/disqusjs/1.3.0/disqus.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdnjs.cloudflare.com/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/waline/1.5.4/Waline.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/twikoo/1.4.18/twikoo.all.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -107,11 +111,12 @@ describe('Get JavaScript library URL', () => {
       'https://cdnjs.loli.net/ajax/libs/pace/1.0.2/pace.min.js',
       'https://cdnjs.loli.net/ajax/libs/KaTeX/0.11.1/katex.min.js',
       'https://cdnjs.loli.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://cdnjs.loli.net/ajax/libs/disqusjs/1.3.0/disqus.min.js',
       'https://cdnjs.loli.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdnjs.loli.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://cdnjs.loli.net/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://cdnjs.loli.net/ajax/libs/waline/1.5.4/Waline.min.js',
+      'https://cdnjs.loli.net/ajax/libs/twikoo/1.4.18/twikoo.all.min.js',
       'https://cdnjs.loli.net/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -128,11 +133,12 @@ describe('Get JavaScript library URL', () => {
       'https://cdn.bootcdn.net/ajax/libs/pace/1.0.2/pace.min.js',
       'https://cdn.bootcdn.net/ajax/libs/KaTeX/0.11.1/katex.min.js',
       'https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/disqusjs/1.3.0/disqus.min.js',
       'https://cdn.bootcdn.net/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://cdn.bootcdn.net/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://cdn.bootcdn.net/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://cdn.bootcdn.net/ajax/libs/waline/1.5.4/Waline.min.js',
+      'https://cdn.bootcdn.net/ajax/libs/twikoo/1.4.18/twikoo.all.min.js',
       'https://cdn.bootcdn.net/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -149,11 +155,12 @@ describe('Get JavaScript library URL', () => {
       'https://lib.baomitu.com/pace/1.0.2/pace.min.js',
       'https://lib.baomitu.com/KaTeX/0.11.1/katex.min.js',
       'https://lib.baomitu.com/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://lib.baomitu.com/disqusjs/1.3.0/disqus.min.js',
       'https://lib.baomitu.com/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://lib.baomitu.com/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://lib.baomitu.com/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://lib.baomitu.com/waline/1.5.4/Waline.min.js',
+      'https://lib.baomitu.com/twikoo/1.4.18/twikoo.all.min.js',
       'https://lib.baomitu.com/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -162,20 +169,21 @@ describe('Get JavaScript library URL', () => {
   test('bytedance', () => {
     hexo.config.providers = { cdn: 'bytedance' };
     const expected = [
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.0.0/jquery.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/moment.js/2.24.0/moment.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/outdated-browser/1.1.5/outdatedbrowser.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/9.18.1/styles/a11y-dark.min.css',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/2.7.6/MathJax.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/pace/1.0.2/pace.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/instantsearch.js/4.3.1/instantsearch.production.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/cookieconsent/3.1.1/cookieconsent.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/waline/1.5.4/Waline.min.js',
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/example/1.0.0/example.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.0.0/jquery.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/moment.js/2.24.0/moment.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/outdated-browser/1.1.5/outdatedbrowser.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/9.18.1/styles/a11y-dark.min.css',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/2.7.6/MathJax.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/pace/1.0.2/pace.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/clipboard.js/2.0.6/clipboard.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/disqusjs/1.3.0/disqus.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/instantsearch.js/4.3.1/instantsearch.production.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/cookieconsent/3.1.1/cookieconsent.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/waline/1.5.4/Waline.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.4.18/twikoo.all.min.js',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
@@ -191,11 +199,12 @@ describe('Get JavaScript library URL', () => {
       'https://my.cdn/pace-js@1.0.2/pace.min.js',
       'https://my.cdn/katex@0.11.1/dist/katex.min.js',
       'https://my.cdn/clipboard@2.0.6/dist/clipboard.min.js',
-      'https://my.cdn/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://my.cdn/disqusjs@1.3.0/dist/disqus.min.js',
       'https://my.cdn/algoliasearch@4.0.3/dist/algoliasearch-lite.umd.js',
       'https://my.cdn/instantsearch.js@4.3.1/dist/instantsearch.production.min.js',
       'https://my.cdn/cookieconsent@3.1.1/build/cookieconsent.min.js',
       'https://my.cdn/@waline/client@1.5.4/dist/Waline.min.js',
+      'https://my.cdn/twikoo@1.4.18/dist/twikoo.all.min.js',
       'https://my.cdn/example@1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -214,11 +223,12 @@ describe('Get JavaScript library URL', () => {
       'https://my.cdn/ajax/libs/pace/1.0.2/pace.min.js',
       'https://my.cdn/ajax/libs/KaTeX/0.11.1/katex.min.js',
       'https://my.cdn/ajax/libs/clipboard.js/2.0.6/clipboard.min.js',
-      'https://cdn.jsdelivr.net/npm/disqusjs@1.2.6/dist/disqus.min.js',
+      'https://my.cdn/ajax/libs/disqusjs/1.3.0/disqus.min.js',
       'https://my.cdn/ajax/libs/algoliasearch/4.0.3/algoliasearch-lite.umd.js',
       'https://my.cdn/ajax/libs/instantsearch.js/4.3.1/instantsearch.production.min.js',
       'https://my.cdn/ajax/libs/cookieconsent/3.1.1/cookieconsent.min.js',
       'https://my.cdn/ajax/libs/waline/1.5.4/Waline.min.js',
+      'https://my.cdn/ajax/libs/twikoo/1.4.18/twikoo.all.min.js',
       'https://my.cdn/ajax/libs/example/1.0.0/example.js',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
@@ -317,7 +327,7 @@ describe('Get icon font URL', () => {
   test('bytedance', () => {
     hexo.config.providers = { iconcdn: 'bytedance' };
     const expected = [
-      'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
+      'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css',
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
