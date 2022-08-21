@@ -236,23 +236,24 @@ module.exports = function (hexo) {
           if (!location.hash) {
             return;
           }
-          Array
-              .from(document.querySelectorAll('.tab-content'))
-              .forEach($tab => {
-                  $tab.classList.add('is-hidden');
-              });
-          Array
-              .from(document.querySelectorAll('.tabs li'))
-              .forEach($tab => {
-                  $tab.classList.remove('is-active');
-              });
+
+          const $tabMenu = document.querySelector(\`a[href="\${location.hash}"]\`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
           const $activeTab = document.querySelector(location.hash);
           if ($activeTab) {
               $activeTab.classList.remove('is-hidden');
-          }
-          const $tabMenu = document.querySelector(\`a[href="\${location.hash}"]\`);
-          if ($tabMenu) {
-              $tabMenu.parentElement.classList.add('is-active');
           }
       }
       switchTab();
