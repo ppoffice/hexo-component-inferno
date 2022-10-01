@@ -237,7 +237,8 @@ module.exports = function (hexo) {
             return;
           }
 
-          const $tabMenu = document.querySelector(\`a[href="\${location.hash}"]\`);
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(\`.tabs a[href="\${id}"]\`);
           if (!$tabMenu) {
             return;
           }
@@ -251,7 +252,7 @@ module.exports = function (hexo) {
           if ($tabMenu) {
               $tabMenu.parentElement.classList.add('is-active');
           }
-          const $activeTab = document.querySelector(location.hash);
+          const $activeTab = document.querySelector(id);
           if ($activeTab) {
               $activeTab.classList.remove('is-hidden');
           }
