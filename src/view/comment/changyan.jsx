@@ -27,6 +27,7 @@ class ChangYan extends Component {
       );
     }
     const js = `window.changyan.api.config({appid: '${appId}',conf: '${conf}'});`;
+    /* eslint-disable react/no-unknown-property */
     return (
       <>
         <div id="SOHUCS" sid={path}></div>
@@ -34,6 +35,7 @@ class ChangYan extends Component {
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
     );
+    /* eslint-enable react/no-unknown-property */
   }
 }
 
