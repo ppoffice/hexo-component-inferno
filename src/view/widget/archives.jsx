@@ -3,6 +3,7 @@
  * @module view/widget/archives
  */
 const { Component } = require('inferno');
+const { toMomentLocale } = require('hexo/lib/plugins/helper/date');
 const { cacheComponent } = require('../../util/cache');
 
 /**
@@ -98,7 +99,7 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
     return null;
   }
 
-  const language = page.lang || page.language || config.language;
+  const language = toMomentLocale(page.lang || page.language || config.language);
 
   const data = [];
   let length = 0;
