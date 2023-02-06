@@ -5,6 +5,7 @@
 const { tocObj: getTocObj, unescapeHTML } = require('hexo-util');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const classname = require('../../util/classname');
 
 /**
  * Export a tree of headings of an article
@@ -92,6 +93,7 @@ function getToc(content, maxDepth) {
  *     showIndex={true}
  *     collapsed={true}
  *     maxDepth={3}
+ *     sticky={false}
  *     jsUrl="******" />
  */
 class Toc extends Component {
@@ -123,7 +125,7 @@ class Toc extends Component {
   }
 
   render() {
-    const { showIndex, maxDepth = 3, collapsed = true } = this.props;
+    const { showIndex, maxDepth = 3, collapsed = true, sticky = false } = this.props;
     const toc = getToc(this.props.content, maxDepth);
     if (!Object.keys(toc).length) {
       return null;
@@ -134,7 +136,10 @@ class Toc extends Component {
       '#toc .menu-list > li > a + .menu-list { display: none; }';
 
     return (
-      <div class="card widget" id="toc" data-type="toc">
+      <div
+        class={classname({ card: true, widget: true, 'is-sticky': sticky })}
+        id="toc"
+        data-type="toc">
         <div class="card-content">
           <div class="menu">
             <h3 class="menu-label">{this.props.title}</h3>
@@ -168,7 +173,7 @@ class Toc extends Component {
 Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
   const { config, page, widget, helper } = props;
   const { layout, content, encrypt, origin } = page;
-  const { index, collapsed = true, depth = 3 } = widget;
+  const { index, collapsed = true, depth = 3, sticky = false } = widget;
 
   if (config.toc !== true || (layout !== 'page' && layout !== 'post')) {
     return null;
@@ -179,6 +184,7 @@ Toc.Cacheable = cacheComponent(Toc, 'widget.toc', (props) => {
     collapsed: collapsed !== false,
     maxDepth: depth | 0,
     showIndex: index !== false,
+    sticky,
     content: encrypt ? origin : content,
     jsUrl: helper.url_for('/js/toc.js'),
   };
