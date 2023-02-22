@@ -23,6 +23,22 @@ const { cacheComponent } = require('../../util/cache');
 class Links extends Component {
   render() {
     const { title, links } = this.props;
+
+    for (const name in links) {
+      let link = links[name];
+
+      if (typeof (link) === "string") {
+        link = { link };
+        links[name] = link;
+      }
+
+      if (link.hide_hostname !== true) {
+        try {
+          link.hostname = new URL(link.link).hostname;
+        } catch (e) { }
+      }
+    }
+
     return (
       <div class="card widget" data-type="links">
         <div class="card-content">
@@ -30,21 +46,15 @@ class Links extends Component {
             <h3 class="menu-label">{title}</h3>
             <ul class="menu-list">
               {Object.keys(links).map((i) => {
-                let hostname = links[i];
-                if (typeof hostname === 'object') hostname = !hostname.hide_hostname;
-                else
-                  try {
-                    hostname = new URL(hostname).hostname;
-                  } catch (e) {}
                 return (
                   <li>
-                    <a class="level is-mobile" href={links[i]} target="_blank" rel="noopener">
+                    <a class="level is-mobile" href={links[i].link} target="_blank" rel="noopener">
                       <span class="level-left">
                         <span class="level-item">{i}</span>
                       </span>
-                      {hostname ? (
+                      {links[i].hostname ? (
                         <span class="level-right">
-                          <span class="level-item tag">{hostname}</span>
+                          <span class="level-item tag">{links[i].hostname}</span>
                         </span>
                       ) : null}
                     </a>
