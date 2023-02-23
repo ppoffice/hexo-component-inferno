@@ -83,16 +83,9 @@ class Archives extends Component {
  *     format="MMMM YYYY" />
  */
 Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
-  const {
-    site,
-    config,
-    page,
-    helper,
-    type = 'monthly',
-    order = -1,
-    showCount = true,
-    format = null,
-  } = props;
+  const { site, config, page, helper, widget } = props;
+  const { type = 'monthly', order = -1, showCount = true, format = null } = widget;
+
   const { url_for, _p } = helper;
   const posts = site.posts.sort('date', order);
   if (!posts.length) {
@@ -117,7 +110,7 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
 
     const year = date.year();
     const month = date.month() + 1;
-    const name = date.format(format || type === 'monthly' ? 'MMMM YYYY' : 'YYYY');
+    const name = date.format(format || (type === 'monthly' ? 'MMMM YYYY' : 'YYYY'));
     const lastData = data[length - 1];
 
     if (!lastData || lastData.name !== name) {

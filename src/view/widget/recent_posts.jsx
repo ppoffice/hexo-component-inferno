@@ -68,7 +68,8 @@ class RecentPosts extends Component {
  *     limit={5} />
  */
 RecentPosts.Cacheable = cacheComponent(RecentPosts, 'widget.recentposts', (props) => {
-  const { site, helper, limit = 5 } = props;
+  const { site, helper, widget } = props;
+  const { limit = 5 } = widget;
   const { url_for, __, date_xml, date } = helper;
   if (!site.posts.length) {
     return null;

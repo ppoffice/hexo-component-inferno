@@ -27,7 +27,7 @@ class Links extends Component {
     for (const name in links) {
       let link = links[name];
 
-      if (typeof (link) === "string") {
+      if (typeof link === 'string') {
         link = { link };
         links[name] = link;
       }
@@ -35,7 +35,7 @@ class Links extends Component {
       if (link.hide_hostname !== true) {
         try {
           link.hostname = new URL(link.link).hostname;
-        } catch (e) { }
+        } catch (e) {}
       }
     }
 

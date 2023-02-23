@@ -88,15 +88,14 @@ class Categories extends Component {
  *     depth={3} />
  */
 Categories.Cacheable = cacheComponent(Categories, 'widget.categories', (props) => {
+  const { page, helper, widget = {} } = props;
   const {
-    page,
-    helper,
     categories = props.site.categories,
     orderBy = 'name',
     order = 1,
     showCurrent = false,
     showCount = true,
-  } = props;
+  } = widget;
   const { url_for, _p } = helper;
 
   if (!categories || !categories.length) {
