@@ -10,8 +10,8 @@
     "node": ">=12.4.0"
   },
   "scripts": {
-    "test": "jest lib",
-    "test-cov": "jest lib --coverage",
+    "test": "jest",
+    "test-cov": "jest --coverage",
     "lint": "eslint '{src,asset,fixture}/**/*.{js,jsx}'",
     "_format": "prettier \"*.{json,babelrc,prettierrc,md}\" \"{.github,*[^lib]}/**/*.{js,jsx,json,yml}\"",
     "format": "npm run _format -- --write",
@@ -46,6 +46,7 @@
     "hexo-renderer-marked": "^5.0.0",
     "html-minifier": "^4.0.0",
     "inferno-server": "^7.4.1",
+    "inferno-test-utils": "^8.1.1",
     "jest": "^27.4.7",
     "jsdoc": "^3.6.3",
     "minami": "^1.2.3",

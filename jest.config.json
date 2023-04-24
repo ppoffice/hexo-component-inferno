@@ -1,0 +1,15 @@
+{
+  "projects": [
+    {
+      "displayName": "default",
+      "testMatch": ["<rootDir>/lib/**/*.test.js"],
+      "testPathIgnorePatterns": ["<rootDir>/lib/view/"],
+      "testEnvironment": "node"
+    },
+    {
+      "displayName": "inferno",
+      "testMatch": ["<rootDir>/lib/view/**/*.test.js"],
+      "testEnvironment": "jsdom"
+    }
+  ]
+}

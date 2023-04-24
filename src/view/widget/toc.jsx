@@ -42,34 +42,34 @@ const { cacheComponent } = require('../../util/cache');
 function getToc(content, maxDepth) {
   const toc = {};
   const tocObj = getTocObj(content, { min_depth: 1, max_depth: 6 });
-  const minLevels = Array.from(new Set(tocObj.map((item) => item.level)))
+  const levels = Array.from(new Set(tocObj.map((item) => item.level)))
     .sort((a, b) => a - b)
     .slice(0, maxDepth);
-  const levels = new Array(minLevels.length).fill(0);
+  const counters = new Array(levels.length).fill(0);
 
   tocObj.forEach((item) => {
-    if (!minLevels.includes(item.level)) {
+    if (!levels.includes(item.level)) {
       return;
     }
 
     const { text, id } = item;
-    const level = item.level - minLevels[0];
+    const normalizedLevel = levels.indexOf(item.level);
 
-    for (let i = 0; i < levels.length; i++) {
-      if (i > level) {
-        levels[i] = 0;
-      } else if (i < level) {
-        if (levels[i] === 0) {
+    for (let i = 0; i < counters.length; i++) {
+      if (i > normalizedLevel) {
+        counters[i] = 0;
+      } else if (i < normalizedLevel) {
+        if (counters[i] === 0) {
           // if headings start with a lower level heading, set the former heading index to 1
           // e.g. h3, h2, h1, h2, h3 => 1.1.1, 1.2, 2, 2.1, 2.1.1
-          levels[i] = 1;
+          counters[i] = 1;
         }
       } else {
-        levels[i] += 1;
+        counters[i] += 1;
       }
     }
     let node = toc;
-    for (const i of levels.slice(0, level + 1)) {
+    for (const i of counters.slice(0, normalizedLevel + 1)) {
       if (!(i in node)) {
         node[i] = {};
       }
@@ -77,7 +77,7 @@ function getToc(content, maxDepth) {
     }
     node.id = id;
     node.text = text;
-    node.index = levels.slice(0, level + 1).join('.');
+    node.index = counters.slice(0, normalizedLevel + 1).join('.');
   });
   return toc;
 }
