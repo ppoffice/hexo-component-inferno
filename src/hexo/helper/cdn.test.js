@@ -63,7 +63,7 @@ describe('Get JavaScript library URL', () => {
       'https://unpkg.com/moment@2.24.0/min/moment.min.js',
       'https://unpkg.com/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js',
       'https://unpkg.com/highlight.js@9.18.1/styles/a11y-dark.css',
-      'https://unpkg.com/mathjax@3.2.2/es5/node-main.js',
+      'https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js',
       'https://unpkg.com/pace-js@1.0.2/pace.min.js',
       'https://unpkg.com/katex@0.11.1/dist/katex.min.js',
       'https://unpkg.com/clipboard@2.0.6/dist/clipboard.min.js',
