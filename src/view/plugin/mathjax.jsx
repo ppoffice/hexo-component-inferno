@@ -61,7 +61,7 @@ Mathjax.Cacheable = cacheComponent(Mathjax, 'plugin.mathjax', (props) => {
     return null;
   }
   return {
-    jsUrl: helper.cdn('mathjax', '2.7.9', 'unpacked/MathJax.js?config=TeX-MML-AM_CHTML'),
+    jsUrl: helper.cdn('mathjax', '3.2.2', 'unpacked/MathJax.js?config=TeX-MML-AM_CHTML'),
   };
 });
 
