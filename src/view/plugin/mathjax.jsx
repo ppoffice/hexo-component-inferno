@@ -16,28 +16,26 @@ class Mathjax extends Component {
   render() {
     const { jsUrl } = this.props;
 
-    const js = `MathJax.Hub.Config({
-            'HTML-CSS': {
-                matchFontHeight: false
-            },
-            SVG: {
-                matchFontHeight: false
-            },
-            CommonHTML: {
-                matchFontHeight: false
-            },
-            tex2jax: {
-                inlineMath: [
-                    ['$','$'],
-                    ['\\\\(','\\\\)']
-                ]
-            }
-        });`;
+    const js = `MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      },
+      chtml: {
+        matchFontHeight: false
+      }
+    };`;
 
     return (
       <>
-        <script type="text/x-mathjax-config" dangerouslySetInnerHTML={{ __html: js }}></script>
-        <script src={jsUrl} defer={true}></script>
+        <script
+          type="text/javascript"
+          id="MathJax-script"
+          async
+          dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script src={jsUrl}></script>
       </>
     );
   }
@@ -61,7 +59,7 @@ Mathjax.Cacheable = cacheComponent(Mathjax, 'plugin.mathjax', (props) => {
     return null;
   }
   return {
-    jsUrl: helper.cdn('mathjax', '2.7.9', 'unpacked/MathJax.js?config=TeX-MML-AM_CHTML'),
+    jsUrl: helper.cdn('mathjax', '3.2.2', 'es5/tex-mml-chtml.js'),
   };
 });
 
