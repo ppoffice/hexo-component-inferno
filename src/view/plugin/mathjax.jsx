@@ -22,6 +22,9 @@ class Mathjax extends Component {
       },
       svg: {
         fontCache: 'global'
+      },
+      chtml: {
+        matchFontHeight: false
       }
     };`;
 
