@@ -30,8 +30,12 @@ class Mathjax extends Component {
 
     return (
       <>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
-        <script src={jsUrl} defer={true}></script>
+        <script
+          type="text/javascript"
+          id="MathJax-script"
+          async
+          dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script src={jsUrl}></script>
       </>
     );
   }
