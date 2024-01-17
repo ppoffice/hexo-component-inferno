@@ -56,7 +56,7 @@ Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
     envId: comment.env_id,
     region: comment.region,
     lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
-    jsUrl: helper.cdn('twikoo', '1.6.6', 'dist/twikoo.all.min.js'),
+    jsUrl: helper.cdn('twikoo', '1.6.30', 'dist/twikoo.all.min.js'),
   };
 });
 
