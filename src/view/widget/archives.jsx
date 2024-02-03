@@ -3,7 +3,7 @@
  * @module view/widget/archives
  */
 const { Component } = require('inferno');
-const { toMomentLocale } = require('hexo/lib/plugins/helper/date');
+const { toMomentLocale } = require('hexo/dist/plugins/helper/date');
 const { cacheComponent } = require('../../util/cache');
 
 /**
