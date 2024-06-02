@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/comment/giscus.json",
+  "description": "Giscus comment plugin configurations",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "giscus"
+    },
+    "repo": {
+      "type": "string",
+      "description": "GitHub repository to which Giscus connects"
+    },
+    "repoId": {
+      "type": "string",
+      "description": "GitHub repository id to which Giscus connects"
+    },
+    "category": {
+      "type": "string",
+      "description": "The discussion category where new discussions will be created",
+      "default": "Announcements",
+      "nullable": true
+    },
+    "categoryId": {
+      "type": "string",
+      "description": "Id code of the category of Github discussions which Giscus will access to"
+    },
+    "mapping": {
+      "type": "string",
+      "description": "The mapping between the embedding page and the embedded discussion",
+      "enum": ["pathname", "url", "title", "og:title", "specific", "number"],
+      "default": "pathname",
+      "nullable": true
+    },
+    "strict": {
+      "type": "boolean",
+      "description": "Avoid mismatches due to GitHub's fuzzy searching method when there are multiple discussions with similar titles",
+      "default": false,
+      "nullable": true
+    },
+    "reactionsEnabled": {
+      "type": "boolean",
+      "description": "Whether enable reactions",
+      "default": false,
+      "nullable": true
+    },
+    "emitMetadata": {
+      "type": "boolean",
+      "description": "Whether will discussion emit metadata",
+      "default": false,
+      "nullable": true
+    },
+    "inputPosition": {
+      "type": "string",
+      "description": "Where the input block will display",
+      "enum": ["top", "bottom"],
+      "default": "top",
+      "nullable": true
+    },
+    "theme": {
+      "type": "string",
+      "description": "Giscus look and feel",
+      "enum": [
+        "light",
+        "light_high_contrast",
+        "light_protanopia",
+        "light_tritanopia",
+        "dark",
+        "dark_high_contrast",
+        "dark_protanopia",
+        "dark_tritanopia",
+        "dark_dimmed",
+        "preferred_color_scheme",
+        "transparent_dark",
+        "noborder_light",
+        "noborder_dark",
+        "noborder_gray",
+        "cobalt",
+        "purple_dark",
+        "custom"
+      ],
+      "default": "noborder_light",
+      "nullable": true
+    },
+    "customThemeCss": {
+      "type": "string",
+      "description": "The url of custom Giscus theme css, only affect when theme is set to custom",
+      "nullable": true
+    },
+    "lang": {
+      "type": "string",
+      "description": "Language of Giscus",
+      "default": "en",
+      "nullable": true
+    },
+    "lazy": {
+      "type": "boolean",
+      "description": "Loading of the comments will be deferred until the user scrolls near the comments container",
+      "default": false,
+      "nullable": true
+    }
+  },
+  "required": ["repo", "repoId", "categoryId"]
+}
