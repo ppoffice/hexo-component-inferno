@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>view/misc/structured_data - Documentation</title>
+    <title>Giscus - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">view/misc/structured_data</h1>
+    <h1 class="page-title">Giscus</h1>
     
 
     
@@ -41,8 +41,13 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="module-view_comment_giscus.html">view/comment/giscus</a>~</span>
         
-            
+        Giscus
+        </h2>
+        
+            <div class="class-description">Giscus comment JSX component.</div>
         
     
 </header>
@@ -51,12 +56,15 @@
     <div class="container-overview">
     
         
-            <div class="description">A JSX component that renders simple Google structured data.</div>
-        
-
-        
-            
 <div class="section-method">
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="Giscus"><span class="type-signature"></span>new Giscus<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
 
 
 
@@ -93,12 +101,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_misc_structured_data.jsx.html">view/misc/structured_data.jsx</a>, <a href="view_misc_structured_data.jsx.html#line1">line 1</a>
+        <a href="view_comment_giscus.jsx.html">view/comment/giscus.jsx</a>, <a href="view_comment_giscus.jsx.html#line27">line 27</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://giscus.app/">https://giscus.app/</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -126,8 +141,26 @@
 
 
 
+<div class="section-examples">
+<h5>Example</h5>
+
+    <pre class="prettyprint"><code>&lt;Giscus
+    repo="usr/repo"
+    repoId="X_xxxxxxxxxx"
+    category="******"
+    categoryId="XXX_xxxxxxxxxxxxxxxx"
+    mapping="******"
+    strict={0}
+    reactionsEnabled={0}
+    emitMetadata={0}
+    inputPosition="******"
+    theme="******"
+    lang="******"
+    lazy="******" /></code></pre>
+
 </div>
-        
+
+</div>
     
     </div>
 
@@ -147,13 +180,16 @@
         
             
 <div class="section-members">
-<h4 class="name" id="~StructuredData"><span class="type-signature">(inner) </span>StructuredData<span class="type-signature"></span></h4>
+<h4 class="name" id=".Cacheable"><span class="type-signature">(static) </span>Cacheable<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    A JSX component that renders simple Google structured data.
+    Cacheable Giscus comment JSX component.
+<p>
+This class is supposed to be used in combination with the <code>locals</code> hexo filter
+(<a href="module-hexo_filter_locals.html">module:hexo/filter/locals</a>).
 </div>
 
 
@@ -189,12 +225,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_misc_structured_data.jsx.html">view/misc/structured_data.jsx</a>, <a href="view_misc_structured_data.jsx.html#line10">line 10</a>
+        <a href="view_comment_giscus.jsx.html">view/comment/giscus.jsx</a>, <a href="view_comment_giscus.jsx.html#line153">line 153</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-util_cache.html#.cacheComponent">module:util/cache.cacheComponent</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -208,16 +251,21 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>&lt;StructuredData
-    title="Page title"
-    url="/page/url"
-    author="Page author name"
-    publisher="Page publisher name"
-    publisherLogo="/path/to/logo"
-    description="Page description"
-    images={[ '/path/to/image' ]}
-    date="Page publish date"
-    updated="Page update date" /></code></pre>
+    <pre class="prettyprint"><code>&lt;Giscus.Cacheable
+    comment={{
+        repo: "usr/repo"
+        repoId: "X_xxxxxxxxxx"
+        category: "******"
+        categoryId: "XXX_xxxxxxxxxxxxxxxx"
+        mapping: "******"
+        strict: {false}
+        reactionsEnabled: {false}
+        emitMetadata: {false}
+        inputPosition: "******"
+        theme: "******"
+        lang: "******"
+        lazy: "******"
+    }} /></code></pre>
 
 
 </div>

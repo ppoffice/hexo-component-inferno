@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>view/misc/structured_data - Documentation</title>
+    <title>view/comment/giscus.jsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,210 +29,208 @@
 
 <div id="main">
     
-    <h1 class="page-title">view/misc/structured_data</h1>
+    <h1 class="page-title">view/comment/giscus.jsx</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-            
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">A JSX component that renders simple Google structured data.</div>
-        
-
-        
-            
-<div class="section-method">
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_misc_structured_data.jsx.html">view/misc/structured_data.jsx</a>, <a href="view_misc_structured_data.jsx.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<div class="section-members">
-<h4 class="name" id="~StructuredData"><span class="type-signature">(inner) </span>StructuredData<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    A JSX component that renders simple Google structured data.
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="view_misc_structured_data.jsx.html">view/misc/structured_data.jsx</a>, <a href="view_misc_structured_data.jsx.html#line10">line 10</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>&lt;StructuredData
-    title="Page title"
-    url="/page/url"
-    author="Page author name"
-    publisher="Page publisher name"
-    publisherLogo="/path/to/logo"
-    description="Page description"
-    images={[ '/path/to/image' ]}
-    date="Page publish date"
-    updated="Page update date" /></code></pre>
-
-
-</div>
-
-        
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Giscus comment JSX component.
+ * @module view/comment/giscus
+ */
+const { Component } = require('inferno');
+const { cacheComponent } = require('../../util/cache');
+
+/**
+ * Giscus comment JSX component.
+ *
+ * @see https://giscus.app/
+ * @example
+ * &lt;Giscus
+ *     repo="usr/repo"
+ *     repoId="X_xxxxxxxxxx"
+ *     category="******"
+ *     categoryId="XXX_xxxxxxxxxxxxxxxx"
+ *     mapping="******"
+ *     strict={0}
+ *     reactionsEnabled={0}
+ *     emitMetadata={0}
+ *     inputPosition="******"
+ *     theme="******"
+ *     lang="******"
+ *     lazy="******" />
+ */
+class Giscus extends Component {
+  render() {
+    const {
+      repo,
+      repoId,
+      category,
+      categoryId,
+      mapping,
+      term,
+      strict,
+      reactionsEnabled,
+      emitMetadata,
+      inputPosition,
+      theme,
+      customThemeCss,
+      lang,
+      lazy,
+    } = this.props;
+    if (!repo || !repoId || !categoryId) {
+      return (
+        &lt;div class="notification is-danger">
+          You forgot to set the &lt;code>repo&lt;/code>, &lt;code>repoId&lt;/code>, or &lt;code>categoryId&lt;/code>{' '}
+          for Giscus. Please set it in &lt;code>_config.yml&lt;/code>.
+        &lt;/div>
+      );
+    }
+    if ((mapping === 'specific' || mapping === 'number') &amp;&amp; !term) {
+      return (
+        &lt;div class="notification is-danger">
+          You set &lt;code>mapping&lt;/code> to &lt;code>specific&lt;/code> or &lt;code>number&lt;/code>, but did not
+          set &lt;code>term&lt;/code> for Giscus. Please set &lt;code>term&lt;/code> in &lt;code>_config.yml&lt;/code>
+          .
+        &lt;/div>
+      );
+    }
+    const config = { repo };
+    if (category) {
+      config['data-category'] = category;
+    } else {
+      config['data-category'] = 'Announcements';
+    }
+    if (mapping) {
+      config['data-mapping'] = mapping;
+    } else {
+      config['data-mapping'] = 'pathname';
+    }
+    if (strict) {
+      config['data-strict'] = 1;
+    } else {
+      config['data-strict'] = 0;
+    }
+    if (reactionsEnabled) {
+      config['data-reactions-enabled'] = 1;
+    } else {
+      config['data-reactions-enabled'] = 0;
+    }
+    if (emitMetadata) {
+      config['data-emit-metadata'] = 1;
+    } else {
+      config['data-emit-metadata'] = 0;
+    }
+    if (inputPosition) {
+      config['data-input-position'] = inputPosition;
+    } else {
+      config['data-input-position'] = 'top';
+    }
+    if (theme) {
+      if (theme === 'custom') {
+        if (customThemeCss) {
+          config['data-theme'] = customThemeCss;
+        } else {
+          return (
+            &lt;div class="notification is-danger">
+              You set &lt;code>theme&lt;/code> to &lt;code>custom&lt;/code>, but did not apply a{' '}
+              &lt;code>customThemeCss&lt;/code> for Giscus. Please set it in &lt;code>_config.yml&lt;/code>.
+            &lt;/div>
+          );
+        }
+      } else {
+        config['data-theme'] = theme;
+      }
+    } else {
+      config['data-theme'] = 'noborder_light';
+    }
+    if (lang) {
+      config['data-lang'] = lang;
+    } else {
+      config['data-lang'] = 'en';
+    }
+    if (lazy) {
+      config['data-loading'] = 'lazy';
+    }
+    return (
+      &lt;script
+        src="https://giscus.app/client.js"
+        {...config}
+        crossorigin="anonymous"
+        async={true}>&lt;/script>
+    );
+  }
+}
+
+/**
+ * Cacheable Giscus comment JSX component.
+ * &lt;p>
+ * This class is supposed to be used in combination with the &lt;code>locals&lt;/code> hexo filter
+ * ({@link module:hexo/filter/locals}).
+ *
+ * @see module:util/cache.cacheComponent
+ * @example
+ * &lt;Giscus.Cacheable
+ *     comment={{
+ *         repo: "usr/repo"
+ *         repoId: "X_xxxxxxxxxx"
+ *         category: "******"
+ *         categoryId: "XXX_xxxxxxxxxxxxxxxx"
+ *         mapping: "******"
+ *         strict: {false}
+ *         reactionsEnabled: {false}
+ *         emitMetadata: {false}
+ *         inputPosition: "******"
+ *         theme: "******"
+ *         lang: "******"
+ *         lazy: "******"
+ *     }} />
+ */
+Giscus.Cacheable = cacheComponent(Giscus, 'comment.giscus', (props) => {
+  const {
+    repo,
+    repoId,
+    category,
+    categoryId,
+    mapping,
+    term,
+    strict,
+    reactionsEnabled,
+    emitMetadata,
+    inputPosition,
+    theme,
+    customThemeCss,
+    lang,
+    lazy,
+  } = props.comment;
+
+  return {
+    repo,
+    repoId,
+    category,
+    categoryId,
+    mapping,
+    term,
+    strict,
+    reactionsEnabled,
+    emitMetadata,
+    inputPosition,
+    theme,
+    customThemeCss,
+    lang,
+    lazy,
+  };
+});
+
+module.exports = Giscus;
+</code></pre>
+        </article>
+    </section>
 
 
 
