@@ -60,6 +60,9 @@ class Giscus extends Component {
       );
     }
     const config = { repo };
+    config['data-repo'] = repo;
+    config['data-repo-id'] = repoId;
+    config['data-category-id'] = categoryId;
     if (category) {
       config['data-category'] = category;
     } else {
