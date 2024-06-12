@@ -25,6 +25,11 @@
       "description": "Maximum level of headings to show (1-6)",
       "default": 3,
       "nullable": true
+    },
+    "sticky": {
+      "type": "boolean",
+      "description": "Whether to be sticky",
+      "default": false
     }
   },
   "required": ["type"]
