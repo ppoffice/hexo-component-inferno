@@ -44,8 +44,8 @@ class Insight extends Component {
             <div class="searchbox-body"></div>
           </div>
         </div>
-        <script src={jsUrl} defer={true}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script data-pjax src={jsUrl} defer={true}></script>
+        <script data-pjax dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
     );
   }
