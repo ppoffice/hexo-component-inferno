@@ -64,7 +64,8 @@ class Waline extends Component {
         </div>
       );
     }
-    const js = `Waline.init({
+    const js = `import { init } from "${jsUrl}";
+        init({
             el: '#waline-thread',
             serverURL: ${JSON.stringify(serverURL)},
             path: ${path},
@@ -89,8 +90,7 @@ class Waline extends Component {
       <>
         <div id="waline-thread" class="content"></div>
         <link rel="stylesheet" href={cssUrl} />
-        <script src={jsUrl}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script type="module" dangerouslySetInnerHTML={{ __html: js }} />
       </>
     );
   }
@@ -149,8 +149,8 @@ Waline.Cacheable = cacheComponent(Waline, 'comment.waline', (props) => {
     pageview: comment.pageview,
     comment: comment.comment,
     copyright: comment.copyright,
-    jsUrl: helper.cdn('@waline/client', '2.6.3', 'dist/waline.js'),
-    cssUrl: helper.cdn('@waline/client', '2.6.3', 'dist/waline.css'),
+    jsUrl: helper.cdn('@waline/client', '3.3.0', 'dist/waline.js'),
+    cssUrl: helper.cdn('@waline/client', '3.3.0', 'dist/waline.css'),
   };
 });
 
