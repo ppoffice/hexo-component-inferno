@@ -45,7 +45,7 @@ class WebApp extends Component {
         {tileIcon ? <meta name="msapplication-TileImage" content={tileIcon} /> : null}
         {themeColor ? <meta name="msapplication-TileColor" content={themeColor} /> : null}
         {/* iOS home screen launcher */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content={name} />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         {icons.map((icon) => (
