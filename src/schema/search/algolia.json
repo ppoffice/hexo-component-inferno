@@ -7,6 +7,10 @@
     "type": {
       "type": "string",
       "const": "algolia"
+    },
+    "excerpt": {
+      "type": "string",
+      "description": "The field name to be used as the excerpt in the Algolia index. Defaults to 'excerpt'."
     }
   },
   "required": ["type"]
