@@ -31,6 +31,7 @@ class Algolia extends Component {
       applicationId,
       apiKey,
       indexName,
+      excerpt,
       jsUrl,
       algoliaSearchUrl,
       instantSearchUrl,
@@ -45,7 +46,7 @@ class Algolia extends Component {
       );
     }
 
-    const config = { applicationId, apiKey, indexName };
+    const config = { applicationId, apiKey, indexName, excerpt };
     const js = `document.addEventListener('DOMContentLoaded', function () {
             loadAlgolia(${JSON.stringify(config)}, ${JSON.stringify(translation)});
         });`;
@@ -99,7 +100,7 @@ class Algolia extends Component {
  *     }} />
  */
 Algolia.Cacheable = cacheComponent(Algolia, 'search.algolia', (props) => {
-  const { config, helper } = props;
+  const { config, helper, search } = props;
   const { algolia } = config;
 
   return {
@@ -112,6 +113,7 @@ Algolia.Cacheable = cacheComponent(Algolia, 'search.algolia', (props) => {
     applicationId: algolia ? algolia.applicationID : null,
     apiKey: algolia ? algolia.apiKey : null,
     indexName: algolia ? algolia.indexName : null,
+    excerpt: search.excerpt ? search.excerpt : 'excerpt',
     algoliaSearchUrl: helper.cdn('algoliasearch', '4.0.3', 'dist/algoliasearch-lite.umd.js'),
     instantSearchUrl: helper.cdn(
       'instantsearch.js',
