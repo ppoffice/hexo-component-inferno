@@ -36,6 +36,9 @@ class Baidu extends Component {
     return (
       <>
         <div class="searchbox">
+          <div
+            class="searchbox-mask"
+            style="position:absolute;bottom:0px;left:0px;right:0px;top:0px;"></div>
           <div class="searchbox-container">
             <div class="searchbox-header">
               <form class="searchbox-input-container">
