@@ -54,6 +54,9 @@ class Algolia extends Component {
     return (
       <>
         <div class="searchbox">
+          <div
+            class="searchbox-mask"
+            style="position:absolute;bottom:0px;left:0px;right:0px;top:0px;"></div>
           <div class="searchbox-container">
             <div class="searchbox-header">
               <div class="searchbox-input-container" id="algolia-input"></div>
