@@ -26,6 +26,7 @@
   },
   "files": [
     "lib/",
+    "!lib/**/*.test.js",
     "asset/"
   ],
   "devDependencies": {
