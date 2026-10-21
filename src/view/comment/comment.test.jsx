@@ -7,6 +7,7 @@ const Twikoo = require('./twikoo');
 const Valine = require('./valine');
 const ChangYan = require('./changyan');
 const Isso = require('./isso');
+const Waline = require('./waline');
 
 /**
  * Render a comment component, check that it does not block rendering, and run its inline script.
@@ -158,5 +159,129 @@ test('Isso adds a new script every time', () => {
     expect(script.getAttribute('src')).toBe('//isso.example.com/js/embed.min.js');
     expect(script.getAttribute('data-isso')).toBe('//isso.example.com');
     expect(script.async).toBe(true);
+  });
+});
+
+/**
+ * Render Waline, check that its script is a classic script that PJAX can run, and run the script with
+ * the dynamic import replaced, since Jest cannot import the URL.
+ */
+function renderWaline(element) {
+  const container = document.createElement('div');
+  container.innerHTML = renderToString(element);
+  const script = container.querySelector('script');
+  // PJAX only runs classic scripts, so the script must not be a module
+  expect(script.hasAttribute('type')).toBe(false);
+
+  const code = script.textContent.replace('import(', 'loadWaline(');
+  const loadWaline = (url) => {
+    calls.push(['import', url]);
+    return Promise.resolve({
+      init: (options) => {
+        calls.push(['init', options]);
+        return { destroy: () => calls.push(['destroy']) };
+      },
+    });
+  };
+  // eslint-disable-next-line no-new-func
+  return () => new Function('loadWaline', `return ${code}`)(loadWaline);
+}
+
+test('Waline destroys and initializes again when its script runs again', async () => {
+  const run = renderWaline(
+    <Waline serverURL="https://waline.example.com" path="'/post/'" jsUrl="/waline.js" />,
+  );
+  delete window.__walineInstance;
+  await run();
+  await run();
+  expect(calls.map((call) => call[0])).toEqual(['import', 'init', 'import', 'destroy', 'init']);
+  expect(calls[0][1]).toBe('/waline.js');
+  expect(calls[1][1].el).toBe('#waline-thread');
+  expect(calls[1][1].path).toBe('/post/');
+});
+
+describe('Waline options', () => {
+  const helper = { cdn: (name, version, file) => `/cdn/${name}@${version}/${file}` };
+  const page = {};
+  const config = { language: 'en' };
+
+  async function getInitOptions(comment) {
+    delete window.__walineInstance;
+    await renderWaline(
+      <Waline.Cacheable comment={comment} helper={helper} page={page} config={config} />,
+    )();
+    expect(calls[0]).toEqual(['import', '/cdn/@waline/client@3.3.0/dist/waline.js']);
+    return calls[1][1];
+  }
+
+  test('Default options', async () => {
+    expect(await getInitOptions({ server_url: 'https://waline.example.com' })).toEqual({
+      el: '#waline-thread',
+      serverURL: 'https://waline.example.com',
+      path: window.location.pathname,
+      lang: 'en',
+      emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo'],
+      meta: ['nick', 'mail', 'link'],
+      requiredMeta: [],
+      login: 'enable',
+      pageSize: 10,
+      imageUploader: false,
+      highlighter: false,
+      texRenderer: false,
+      search: false,
+      pageview: false,
+      comment: false,
+      copyright: true,
+    });
+  });
+
+  test('Configured options', async () => {
+    expect(
+      await getInitOptions({
+        server_url: 'https://waline.example.com',
+        path: "'/custom/'",
+        lang: 'zh-CN',
+        locale: { placeholder: 'Hi' },
+        emoji: ['/emoji'],
+        dark: 'auto',
+        meta: ['nick'],
+        required_meta: ['nick'],
+        login: 'force',
+        word_limit: 100,
+        page_size: 20,
+        image_uploader: true,
+        highlighter: true,
+        tex_renderer: true,
+        search: true,
+        pageview: true,
+        comment: true,
+        copyright: false,
+      }),
+    ).toEqual({
+      el: '#waline-thread',
+      serverURL: 'https://waline.example.com',
+      path: '/custom/',
+      lang: 'zh-CN',
+      locale: { placeholder: 'Hi' },
+      emoji: ['/emoji'],
+      dark: 'auto',
+      meta: ['nick'],
+      requiredMeta: ['nick'],
+      login: 'force',
+      wordLimit: 100,
+      pageSize: 20,
+      pageview: true,
+      comment: true,
+      copyright: false,
+    });
+  });
+
+  test('Show an error without the server URL', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(
+      <Waline.Cacheable comment={{}} helper={helper} page={page} config={config} />,
+    );
+    expect(container.querySelector('.notification.is-danger')).not.toBe(null);
+    expect(container.querySelector('script')).toBe(null);
   });
 });
