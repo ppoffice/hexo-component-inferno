@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { getAppearance } = require('../../util/appearance');
 
 /**
  * Waline comment JSX component.
@@ -40,7 +41,7 @@ class Waline extends Component {
       lang = 'zh-CN',
       locale,
       emoji = ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo'],
-      dark = '',
+      dark,
       meta = ['nick', 'mail', 'link'],
       requiredMeta = [],
       login = 'enable',
@@ -64,6 +65,12 @@ class Waline extends Component {
         </div>
       );
     }
+    // Without the dark option, follow the appearance of the page: the system color scheme for the auto
+    // appearance, or the data-appearance="dark" attribute of <html> otherwise
+    const darkOption =
+      dark === null || typeof dark === 'undefined' || dark === ''
+        ? `${getAppearance()} === 'auto' ? 'auto' : 'html[data-appearance="dark"]'`
+        : JSON.stringify(dark);
     // Use a classic script with a dynamic import instead of a module script, so that PJAX, which only
     // runs classic scripts, initializes Waline again after switching pages. The previous instance,
     // whose element PJAX has replaced, is destroyed first.
@@ -78,7 +85,7 @@ class Waline extends Component {
             ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
             ${locale ? `locale: ${JSON.stringify(locale)},` : ''}
             ${emoji ? `emoji: ${JSON.stringify(emoji)},` : ''}
-            ${dark ? `dark: ${JSON.stringify(dark)},` : ''}
+            dark: ${darkOption},
             ${meta ? `meta: ${JSON.stringify(meta)},` : ''}
             ${Array.isArray(requiredMeta) ? `requiredMeta: ${JSON.stringify(requiredMeta)},` : ''}
             ${login ? `login: ${JSON.stringify(login)},` : ''}

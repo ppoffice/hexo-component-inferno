@@ -8,6 +8,8 @@ const Valine = require('./valine');
 const ChangYan = require('./changyan');
 const Isso = require('./isso');
 const Waline = require('./waline');
+const Giscus = require('./giscus');
+const Utterances = require('./utterances');
 
 /**
  * Render a comment component, check that it does not block rendering, and run its inline script.
@@ -221,6 +223,7 @@ describe('Waline options', () => {
       path: window.location.pathname,
       lang: 'en',
       emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo'],
+      dark: 'html[data-appearance="dark"]',
       meta: ['nick', 'mail', 'link'],
       requiredMeta: [],
       login: 'enable',
@@ -283,5 +286,119 @@ describe('Waline options', () => {
     );
     expect(container.querySelector('.notification.is-danger')).not.toBe(null);
     expect(container.querySelector('script')).toBe(null);
+  });
+});
+
+describe('Waline dark mode', () => {
+  afterEach(() => document.documentElement.removeAttribute('data-appearance'));
+
+  async function getDark(appearance, props = {}) {
+    if (appearance) {
+      document.documentElement.setAttribute('data-appearance', appearance);
+    }
+    delete window.__walineInstance;
+    await renderWaline(
+      <Waline serverURL="https://waline.example.com" jsUrl="/waline.js" {...props} />,
+    )();
+    return calls[1][1].dark;
+  }
+
+  test('Follow the appearance of the page if not set', async () => {
+    expect(await getDark(null)).toBe('html[data-appearance="dark"]');
+    expect(await getDark('dark')).toBe('html[data-appearance="dark"]');
+    calls = [];
+    expect(await getDark('auto')).toBe('auto');
+  });
+
+  test('Keep the configured value', async () => {
+    expect(await getDark('auto', { dark: false })).toBe(false);
+    calls = [];
+    expect(await getDark('auto', { dark: '.dark' })).toBe('.dark');
+  });
+});
+
+/**
+ * Render a comment component that adds its client script to a thread element, run its inline script
+ * with the given appearance, and get the client script from the thread element.
+ */
+function renderClientScript(element, thread, appearance, prefersDark = false) {
+  if (appearance) {
+    document.documentElement.setAttribute('data-appearance', appearance);
+  }
+  window.matchMedia = (query) => ({ matches: query.includes('dark') && prefersDark });
+  jest.useFakeTimers();
+  renderAndRun(element);
+  // The client script is added after the inline script has finished
+  expect(document.querySelector(`${thread} > script[src]`)).toBe(null);
+  jest.runAllTimers();
+  jest.useRealTimers();
+  const script = document.querySelector(`${thread} > script[src]`);
+  document.head.innerHTML = '';
+  document.body.innerHTML = '';
+  document.documentElement.removeAttribute('data-appearance');
+  delete window.matchMedia;
+  return script;
+}
+
+describe('Giscus', () => {
+  const props = { repo: 'user/repo', repoId: 'R_1', categoryId: 'C_1' };
+  const theme = (element, ...args) =>
+    renderClientScript(element, 'head', ...args).getAttribute('data-theme');
+
+  test('Render the giscus element, and add the client script with its attributes to <head>', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Giscus {...props} />);
+    expect(container.querySelector('#giscus-thread.giscus')).not.toBe(null);
+
+    const script = renderClientScript(
+      <Giscus {...props} mapping="specific" term="Welcome" />,
+      'head',
+    );
+    expect(script.getAttribute('src')).toBe('https://giscus.app/client.js');
+    expect(script.getAttribute('data-repo')).toBe('user/repo');
+    expect(script.getAttribute('data-repo-id')).toBe('R_1');
+    expect(script.getAttribute('data-category-id')).toBe('C_1');
+    expect(script.getAttribute('data-mapping')).toBe('specific');
+    expect(script.getAttribute('data-term')).toBe('Welcome');
+    expect(script.getAttribute('crossorigin')).toBe('anonymous');
+    expect(script.async).toBe(true);
+  });
+
+  test('Choose the theme by the appearance of the page', () => {
+    expect(theme(<Giscus {...props} />)).toBe('noborder_light');
+    expect(theme(<Giscus {...props} />, 'dark')).toBe('noborder_dark');
+    expect(theme(<Giscus {...props} />, 'auto', false)).toBe('noborder_light');
+    expect(theme(<Giscus {...props} />, 'auto', true)).toBe('noborder_dark');
+    expect(theme(<Giscus {...props} theme="light" darkTheme="dark_dimmed" />, 'dark')).toBe(
+      'dark_dimmed',
+    );
+  });
+
+  test('Always use the custom theme', () => {
+    expect(theme(<Giscus {...props} theme="custom" customThemeCss="/giscus.css" />, 'dark')).toBe(
+      '/giscus.css',
+    );
+  });
+});
+
+describe('Utterances', () => {
+  const props = { repo: 'user/repo', issueTerm: 'pathname' };
+
+  test('Add the client script with its attributes to the thread element', () => {
+    const script = renderClientScript(<Utterances {...props} />, '#utterances-thread');
+    expect(script.getAttribute('src')).toBe('https://utteranc.es/client.js');
+    expect(script.getAttribute('repo')).toBe('user/repo');
+    expect(script.getAttribute('issue-term')).toBe('pathname');
+    expect(script.getAttribute('crossorigin')).toBe('anonymous');
+  });
+
+  test('Choose the theme by the appearance of the page', () => {
+    const theme = (element, ...args) =>
+      renderClientScript(element, '#utterances-thread', ...args).getAttribute('theme');
+    expect(theme(<Utterances {...props} />)).toBe('github-light');
+    expect(theme(<Utterances {...props} />, 'dark')).toBe('github-dark');
+    expect(
+      theme(<Utterances {...props} theme="github-light" darkTheme="icy-dark" />, 'auto', true),
+    ).toBe('icy-dark');
   });
 });

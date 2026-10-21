@@ -1,5 +1,5 @@
 /**
- * A utility function for building inline scripts that load external scripts without blocking the page.
+ * Utility functions for building inline scripts that load external scripts without blocking the page.
  * @module util/script
  */
 
@@ -20,7 +20,7 @@
  * @example
  * <script dangerouslySetInnerHTML={{ __html: loadScripts('/path/to/lib.js', 'lib.init();') }} />
  */
-module.exports = function (urls, code, attrs = {}) {
+function loadScripts(urls, code, attrs = {}) {
   return `(function () {
     var urls = ${JSON.stringify([].concat(urls))};
     var attrs = ${JSON.stringify(attrs)};
@@ -62,4 +62,52 @@ module.exports = function (urls, code, attrs = {}) {
     }
     load(0);
   })();`;
-};
+}
+
+/**
+ * Build an inline script that adds an external script to an element, for example the client script of
+ * a comment system that reads its options from the attributes of its own <code>&lt;script&gt;</code>
+ * tag.
+ * <p>
+ * The external script is added every time the inline script runs. Unlike a <code>&lt;script&gt;</code>
+ * tag in the page, which PJAX runs again without its attributes and outside of its element, it keeps
+ * its attributes and stays in the element. It is added after the inline script has finished, so that
+ * PJAX, which runs the scripts of the new page right after switching to it, does not run it again.
+ *
+ * @param {string} selector CSS selector of the element to add the external script to.
+ * @param {string} url URL of the external script.
+ * @param {Object} attrs Attributes to set on the external script element.
+ * @param {Object} [dynamicAttrs] More attributes, whose values are JavaScript expressions evaluated by
+ * the inline script, for example to choose a theme in the browser.
+ * @returns {string} The inline JavaScript code.
+ *
+ * @example
+ * appendScript('#comments-thread', 'https://comments.example.com/client.js', { repo: 'user/repo' }, {
+ *   theme: "window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'",
+ * });
+ */
+function appendScript(selector, url, attrs, dynamicAttrs = {}) {
+  const dynamic = Object.keys(dynamicAttrs)
+    .map((name) => `attrs[${JSON.stringify(name)}] = ${dynamicAttrs[name]};`)
+    .join('\n    ');
+  return `(function () {
+    var element = document.querySelector(${JSON.stringify(selector)});
+    if (!element) {
+      return;
+    }
+    var attrs = ${JSON.stringify(attrs)};
+    ${dynamic}
+    var script = document.createElement('script');
+    for (var name in attrs) {
+      script.setAttribute(name, attrs[name]);
+    }
+    script.src = ${JSON.stringify(url)};
+    script.async = true;
+    setTimeout(function () {
+      element.appendChild(script);
+    });
+  })();`;
+}
+
+module.exports = loadScripts;
+module.exports.appendScript = appendScript;

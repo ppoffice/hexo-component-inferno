@@ -60,7 +60,7 @@
     },
     "theme": {
       "type": "string",
-      "description": "Giscus look and feel",
+      "description": "Giscus look and feel when the page looks light",
       "enum": [
         "light",
         "light_high_contrast",
@@ -81,6 +81,12 @@
         "custom"
       ],
       "default": "noborder_light",
+      "nullable": true
+    },
+    "darkTheme": {
+      "type": "string",
+      "description": "Giscus look and feel when the page looks dark, e.g., with the dark or auto appearance of the theme. Not used when theme is custom",
+      "default": "noborder_dark",
       "nullable": true
     },
     "customThemeCss": {

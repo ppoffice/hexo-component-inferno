@@ -4,6 +4,8 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { appendScript } = require('../../util/script');
+const { isDark } = require('../../util/appearance');
 
 /**
  * Utterances comment JSX component.
@@ -15,11 +17,12 @@ const { cacheComponent } = require('../../util/cache');
  *     issueTerm="******"
  *     issueNumber={123}
  *     label="******"
- *     theme="******" />
+ *     theme="******"
+ *     darkTheme="******" />
  */
 class Utterances extends Component {
   render() {
-    const { repo, issueTerm, issueNumber, label, theme } = this.props;
+    const { repo, issueTerm, issueNumber, label, theme, darkTheme } = this.props;
     if (!repo || (!issueTerm && !issueNumber)) {
       return (
         <div class="notification is-danger">
@@ -37,15 +40,18 @@ class Utterances extends Component {
     if (label) {
       config.label = label;
     }
-    if (theme) {
-      config.theme = theme;
-    }
+    config.crossorigin = 'anonymous';
+    // Use the dark theme when the page looks dark
+    const js = appendScript('#utterances-thread', 'https://utteranc.es/client.js', config, {
+      theme: `${isDark()} ? ${JSON.stringify(darkTheme || 'github-dark')} : ${JSON.stringify(
+        theme || 'github-light',
+      )}`,
+    });
     return (
-      <script
-        src="https://utteranc.es/client.js"
-        {...config}
-        crossorigin="anonymous"
-        async={true}></script>
+      <>
+        <div id="utterances-thread"></div>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </>
     );
   }
 }
@@ -65,10 +71,11 @@ class Utterances extends Component {
  *         issue_number: {123}
  *         label: "******"
  *         theme: "******"
+ *         dark_theme: "******"
  *     }} />
  */
 Utterances.Cacheable = cacheComponent(Utterances, 'comment.utterances', (props) => {
-  const { repo, issue_term, issue_number, label, theme } = props.comment;
+  const { repo, issue_term, issue_number, label, theme, dark_theme } = props.comment;
 
   return {
     repo,
@@ -76,6 +83,7 @@ Utterances.Cacheable = cacheComponent(Utterances, 'comment.utterances', (props) 
     issueNumber: issue_number,
     label,
     theme,
+    darkTheme: dark_theme,
   };
 });
 

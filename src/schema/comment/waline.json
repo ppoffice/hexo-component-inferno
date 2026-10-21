@@ -77,7 +77,7 @@
     },
     "dark": {
       "type": ["string", "boolean"],
-      "description": "Darkmode support.",
+      "description": "Darkmode support. Can be true, false, 'auto' to follow the system color scheme, or a CSS selector that enables the dark mode when it matches an ancestor of Waline. Follows the appearance of the theme (the data-appearance attribute of <html>) if not set",
       "nullable": true
     },
     "meta": {
