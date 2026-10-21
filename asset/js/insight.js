@@ -87,7 +87,7 @@ function loadInsight(config, translation) {
 
     return `<a class="searchbox-result-item" href="${url}">
             <span class="searchbox-result-icon">
-                <i class="fa fa-${icon}" />
+                <i class="fa fa-${icon}"></i>
             </span>
             <span class="searchbox-result-content">
                 <span class="searchbox-result-title">
