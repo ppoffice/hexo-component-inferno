@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/plugin/matomo.json",
+  "description": "Matomo analytics plugin settings\nhttps://matomo.org",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "description": "URL of your Matomo server, e.g., https://matomo.example.com/ or https://example.matomo.cloud/",
+      "nullable": true
+    },
+    "site_id": {
+      "type": ["string", "number"],
+      "description": "Matomo site ID",
+      "nullable": true
+    },
+    "disable_cookies": {
+      "type": "boolean",
+      "description": "Track visitors without setting cookies",
+      "default": false,
+      "nullable": true
+    }
+  },
+  "required": ["url", "site_id"]
+}
