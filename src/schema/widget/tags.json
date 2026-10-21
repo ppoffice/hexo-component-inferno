@@ -16,7 +16,7 @@
     },
     "amount": {
       "type": "integer",
-      "description": "Amount of tags to show. Will show all if not set.",
+      "description": "Amount of tags to show, with a link to the tag page for the rest. Will show all if not set.",
       "nullable": true
     },
     "show_count": {

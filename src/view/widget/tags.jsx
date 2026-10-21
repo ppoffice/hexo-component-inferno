@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { translate } = require('../../util/i18n');
 
 /**
  * Tags widget JSX component.
@@ -22,7 +23,7 @@ const { cacheComponent } = require('../../util/cache');
  */
 class Tags extends Component {
   render() {
-    const { tags, title, showCount } = this.props;
+    const { tags, title, showCount, moreUrl, moreTitle } = this.props;
 
     return (
       <div class="card widget" data-type="tags">
@@ -38,6 +39,18 @@ class Tags extends Component {
                   </a>
                 </div>
               ))}
+              {moreUrl ? (
+                <div class="control">
+                  <a class="tags has-addons" href={moreUrl}>
+                    <span class="tag">
+                      <span>{moreTitle}</span>
+                      <span class="icon is-small" aria-hidden="true">
+                        <i class="fas fa-chevron-right"></i>
+                      </span>
+                    </span>
+                  </a>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -72,20 +85,24 @@ Tags.Cacheable = cacheComponent(Tags, 'widget.tags', (props) => {
   const { helper, widget = {} } = props;
   const { order_by = 'name', amount, show_count = true } = widget;
   let tags = props.tags || props.site.tags;
-  const { url_for, _p } = helper;
+  const { url_for, _p, __ } = helper;
 
   if (!tags || !tags.length) {
     return null;
   }
 
   tags = tags.sort(order_by).filter((tag) => tag.length);
-  if (amount) {
+  // Link to the tag page when some of the tags are not shown
+  const hasMore = amount > 0 && tags.length > amount;
+  if (hasMore) {
     tags = tags.limit(amount);
   }
 
   return {
     showCount: show_count,
     title: _p('common.tag', Infinity),
+    moreUrl: hasMore ? url_for('tags/') : null,
+    moreTitle: translate(__, 'widget.more', 'More'),
     tags: tags.map((tag) => ({
       name: tag.name,
       count: tag.length,
