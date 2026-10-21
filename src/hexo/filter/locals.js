@@ -36,8 +36,8 @@ const yaml = require('js-yaml');
  */
 module.exports = (hexo) => {
   const RESERVED_KEYS = {
-    post: Object.keys(require('hexo/dist/models/post')(hexo).paths),
-    page: Object.keys(require('hexo/dist/models/page')(hexo).paths),
+    post: Object.keys(hexo.model('Post').schema.paths),
+    page: Object.keys(hexo.model('Page').schema.paths),
   };
 
   function loadLayoutConfig(layout) {

@@ -3,8 +3,27 @@
  * @module view/widget/archives
  */
 const { Component } = require('inferno');
-const { toMomentLocale } = require('hexo/dist/plugins/helper/date');
 const { cacheComponent } = require('../../util/cache');
+
+/**
+ * Convert a Hexo language code into a Moment.js locale name.
+ * <p>
+ * Same as Hexo's internal <code>toMomentLocale</code>, copied here so that the component does not
+ * depend on Hexo's private modules.
+ *
+ * @param {string} lang Hexo language code, such as <code>zh-CN</code> or <code>en_US</code>.
+ * @returns {string|undefined} Moment.js locale name.
+ */
+function toMomentLocale(lang) {
+  if (lang === undefined) {
+    return undefined;
+  }
+  // moment.locale('') and moment.locale(null) both equal moment.locale('en')
+  if (!lang || lang === 'en' || lang === 'default') {
+    return 'en';
+  }
+  return lang.toLowerCase().replace('_', '-');
+}
 
 /**
  * Archives widget JSX component.
