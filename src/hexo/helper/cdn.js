@@ -86,6 +86,11 @@ const UNPKG_FIXTURES = {
  * cdn('jquery', '3.3.1', 'dist/jquery.min.js');
  * // -> https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js
  *
+ * // Set providers.cdn_overrides, e.g., { jquery: 'unpkg' }, to use a different CDN provider or URL
+ * // template for some packages
+ * cdn('jquery', '3.3.1', 'dist/jquery.min.js');
+ * // -> https://unpkg.com/jquery@3.3.1/dist/jquery.min.js
+ *
  * // Use the function below to resolve the CDN URL web font files
  * fontcdn('Ubuntu:400,600|Source+Code+Pro', 'css');
  * // -> https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro
@@ -108,8 +113,13 @@ module.exports = function (hexo) {
   }
 
   hexo.extend.helper.register('cdn', function (_package, version, filename) {
-    const { cdn = 'jsdelivr' } =
-      typeof this.config.providers === 'object' ? this.config.providers : {};
+    const providers = typeof this.config.providers === 'object' ? this.config.providers : {};
+    const { cdn_overrides: overrides } = providers;
+    // A package can use a different provider or URL than the rest in providers.cdn_overrides
+    const cdn =
+      typeof overrides === 'object' && overrides !== null && overrides[_package]
+        ? overrides[_package]
+        : providers.cdn || 'jsdelivr';
     let _cdn = cdn;
     if (_cdn in PROVIDERS.LIBRARY) {
       _cdn = PROVIDERS.LIBRARY[_cdn];

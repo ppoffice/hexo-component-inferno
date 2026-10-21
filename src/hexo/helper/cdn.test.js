@@ -167,6 +167,43 @@ describe('Get JavaScript library URL', () => {
     ];
     cases.forEach((func, i) => expect(func()).toBe(expected[i]));
   });
+
+  test('Different CDN for some packages', () => {
+    hexo.config.providers = {
+      cdn: 'jsdelivr',
+      cdn_overrides: {
+        moment: 'cdnjs',
+        mathjax: 'unpkg',
+        '@waline/client': 'https://my.cdn/waline/${ version }/${ filename }',
+        example: 'https://my.cdn/example.min.js',
+      },
+    };
+    const cdn = hexo.extend.helper.get('cdn').bind(hexo);
+    expect(cdn('jquery', '3.0.0', 'dist/jquery.min.js')).toBe(
+      'https://cdn.jsdelivr.net/npm/jquery@3.0.0/dist/jquery.min.js',
+    );
+    expect(cdn('moment', '2.24.0', 'min/moment.min.js')).toBe(
+      'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+    );
+    expect(cdn('mathjax', '3.2.2', 'es5/tex-mml-chtml.js')).toBe(
+      'https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js',
+    );
+    expect(cdn('@waline/client', '3.3.0', 'dist/waline.js')).toBe(
+      'https://my.cdn/waline/3.3.0/dist/waline.js',
+    );
+    expect(cdn('example', '1.0.0', 'example.js')).toBe('https://my.cdn/example.min.js');
+  });
+
+  test('Default CDN with overrides only', () => {
+    hexo.config.providers = { cdn_overrides: { moment: 'unpkg' } };
+    const cdn = hexo.extend.helper.get('cdn').bind(hexo);
+    expect(cdn('jquery', '3.0.0', 'dist/jquery.min.js')).toBe(
+      'https://cdn.jsdelivr.net/npm/jquery@3.0.0/dist/jquery.min.js',
+    );
+    expect(cdn('moment', '2.24.0', 'min/moment.min.js')).toBe(
+      'https://unpkg.com/moment@2.24.0/min/moment.min.js',
+    );
+  });
 });
 
 describe('Get web font URL', () => {
