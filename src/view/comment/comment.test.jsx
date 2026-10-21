@@ -553,3 +553,114 @@ test('Schemas of the new comment plugins', () => {
   );
   expect(validate('beaudar', { type: 'beaudar', repo: 'user/repo' })).not.toBe(true);
 });
+
+describe('Configuration of the comment plugins', () => {
+  const helper = {
+    cdn: (name, version, file) => `/cdn/${name}@${version}/${file}`,
+    url_for: (url) => `/blog/${url}`,
+  };
+  const page = { path: 'post/', permalink: 'https://example.com/blog/post/', title: 'Post' };
+
+  function renderCacheable(Component, comment) {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(
+      <Component.Cacheable comment={comment} helper={helper} page={page} config={{}} />,
+    );
+    return container;
+  }
+
+  function getError(Component, props) {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Component {...props} />);
+    const error = container.querySelector('.notification.is-danger');
+    return error ? error.textContent : null;
+  }
+
+  test('Giscus', () => {
+    const container = renderCacheable(Giscus, {
+      repo: 'user/repo',
+      repoId: 'R_1',
+      category: 'General',
+      categoryId: 'C_1',
+      mapping: 'title',
+      strict: true,
+      reactionsEnabled: true,
+      emitMetadata: true,
+      inputPosition: 'bottom',
+      theme: 'light',
+      darkTheme: 'dark',
+      lang: 'zh-CN',
+      lazy: true,
+    });
+    const js = container.querySelector('script').textContent;
+    for (const value of [
+      '"data-category":"General"',
+      '"data-mapping":"title"',
+      '"data-strict":1',
+      '"data-reactions-enabled":1',
+      '"data-emit-metadata":1',
+      '"data-input-position":"bottom"',
+      '"data-lang":"zh-CN"',
+      '"data-loading":"lazy"',
+      '"dark" : "light"',
+    ]) {
+      expect(js).toContain(value);
+    }
+
+    const props = { repo: 'user/repo', repoId: 'R_1', categoryId: 'C_1' };
+    expect(getError(Giscus, { repo: 'user/repo' })).toContain('repoId');
+    expect(getError(Giscus, { ...props, mapping: 'number' })).toContain('term');
+    expect(getError(Giscus, { ...props, theme: 'custom' })).toContain('customThemeCss');
+  });
+
+  test('Utterances and Beaudar', () => {
+    for (const [Component, thread] of [
+      [Utterances, '#utterances-thread'],
+      [Beaudar, '#beaudar-thread'],
+    ]) {
+      const comment = {
+        repo: 'user/repo',
+        issue_number: 1,
+        label: 'comment',
+        dark_theme: 'icy-dark',
+      };
+      const js = renderCacheable(Component, comment).querySelector('script').textContent;
+      expect(js).toContain(`document.querySelector("${thread}")`);
+      expect(js).toContain('"issue-number":1');
+      expect(js).toContain('"label":"comment"');
+      expect(js).toContain('"icy-dark"');
+      expect(getError(Component, { repo: 'user/repo' })).toContain('issue_term');
+    }
+  });
+
+  test('Artalk', () => {
+    const container = renderCacheable(Artalk, {
+      server: 'https://artalk.example.com',
+      site: 'Blog',
+      page_key: '/post/',
+      locale: 'en',
+      dark_mode: 'auto',
+    });
+    const js = container.querySelector('script').textContent;
+    expect(js).toContain('"/cdn/artalk@2.9.1/dist/Artalk.js"');
+    expect(js).toContain('pageKey: "/post/"');
+    expect(js).toContain('pageTitle: "Post"');
+    expect(js).toContain('darkMode: "auto"');
+    expect(container.querySelector('link').getAttribute('href')).toBe(
+      '/cdn/artalk@2.9.1/dist/Artalk.css',
+    );
+  });
+
+  test('Cusdis', () => {
+    const thread = renderCacheable(Cusdis, {
+      app_id: 'app',
+      host: 'https://cusdis.example.com/',
+      theme: 'dark',
+    }).querySelector('#cusdis_thread');
+    expect(thread.getAttribute('data-host')).toBe('https://cusdis.example.com');
+    expect(thread.getAttribute('data-page-id')).toBe('/blog/post/');
+    expect(thread.getAttribute('data-page-url')).toBe('https://example.com/blog/post/');
+    expect(thread.getAttribute('data-page-title')).toBe('Post');
+    expect(getError(Cusdis, {})).toContain('app_id');
+  });
+});
