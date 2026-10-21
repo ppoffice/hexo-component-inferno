@@ -7,6 +7,7 @@ const Twikoo = require('./twikoo');
 const Valine = require('./valine');
 const ChangYan = require('./changyan');
 const Isso = require('./isso');
+const Waline = require('./waline');
 
 /**
  * Render a comment component, check that it does not block rendering, and run its inline script.
@@ -159,4 +160,40 @@ test('Isso adds a new script every time', () => {
     expect(script.getAttribute('data-isso')).toBe('//isso.example.com');
     expect(script.async).toBe(true);
   });
+});
+
+test('Waline initializes with a classic script that PJAX can run again', async () => {
+  const container = document.createElement('div');
+  container.innerHTML = renderToString(
+    <Waline serverURL="https://waline.example.com" path="'/post/'" jsUrl="/waline.js" />,
+  );
+  // PJAX only runs classic scripts, so the script must not be a module
+  const script = container.querySelector('script');
+  expect(script.hasAttribute('type')).toBe(false);
+
+  // Run the script with the dynamic import replaced, since Jest cannot import the URL
+  const code = script.textContent.replace('import(', 'loadWaline(');
+  const loadWaline = (url) => {
+    calls.push(['import', url]);
+    return Promise.resolve({
+      init: (options) => {
+        calls.push(['init', options.el, options.serverURL, options.path]);
+        return { destroy: () => calls.push(['destroy']) };
+      },
+    });
+  };
+  const run = async () => {
+    // eslint-disable-next-line no-new-func
+    await new Function('loadWaline', `return ${code}`)(loadWaline);
+  };
+  delete window.__walineInstance;
+  await run();
+  await run();
+  expect(calls).toEqual([
+    ['import', '/waline.js'],
+    ['init', '#waline-thread', 'https://waline.example.com', '/post/'],
+    ['import', '/waline.js'],
+    ['destroy'],
+    ['init', '#waline-thread', 'https://waline.example.com', '/post/'],
+  ]);
 });

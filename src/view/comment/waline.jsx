@@ -64,8 +64,14 @@ class Waline extends Component {
         </div>
       );
     }
-    const js = `import { init } from "${jsUrl}";
-        init({
+    // Use a classic script with a dynamic import instead of a module script, so that PJAX, which only
+    // runs classic scripts, initializes Waline again after switching pages. The previous instance,
+    // whose element PJAX has replaced, is destroyed first.
+    const js = `import(${JSON.stringify(jsUrl)}).then(function (Waline) {
+        if (window.__walineInstance) {
+            window.__walineInstance.destroy();
+        }
+        window.__walineInstance = Waline.init({
             el: '#waline-thread',
             serverURL: ${JSON.stringify(serverURL)},
             path: ${path},
@@ -85,12 +91,13 @@ class Waline extends Component {
             ${typeof pageview !== 'undefined' ? `pageview: ${JSON.stringify(pageview)},` : ''}
             ${typeof comment !== 'undefined' ? `comment: ${JSON.stringify(comment)},` : ''}
             ${`copyright: ${JSON.stringify(copyright)},`}
-        });`;
+        });
+    });`;
     return (
       <>
         <div id="waline-thread" class="content"></div>
         <link rel="stylesheet" href={cssUrl} media="print" onload="this.media='all'" />
-        <script type="module" dangerouslySetInnerHTML={{ __html: js }} />
+        <script dangerouslySetInnerHTML={{ __html: js }} />
       </>
     );
   }
