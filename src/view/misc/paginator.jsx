@@ -74,13 +74,17 @@ module.exports = class extends Component {
       return elements;
     }
 
+    const hasPrev = current > 1;
+    const hasNext = current < total;
+
+    // The hidden prev/next placeholders keep the layout but must not link to missing pages
     return (
       <nav class="pagination" role="navigation" aria-label="pagination">
-        <div class={`pagination-previous${current > 1 ? '' : ' is-invisible is-hidden-mobile'}`}>
-          <a href={getPageUrl(current - 1)}>{prevTitle}</a>
+        <div class={`pagination-previous${hasPrev ? '' : ' is-invisible is-hidden-mobile'}`}>
+          <a href={hasPrev ? getPageUrl(current - 1) : null}>{prevTitle}</a>
         </div>
-        <div class={`pagination-next${current < total ? '' : ' is-invisible is-hidden-mobile'}`}>
-          <a href={getPageUrl(current + 1)}>{nextTitle}</a>
+        <div class={`pagination-next${hasNext ? '' : ' is-invisible is-hidden-mobile'}`}>
+          <a href={hasNext ? getPageUrl(current + 1) : null}>{nextTitle}</a>
         </div>
         <ul class="pagination-list is-hidden-mobile">{pagination(current, total)}</ul>
       </nav>

@@ -23,10 +23,19 @@ class Isso extends Component {
         </div>
       );
     }
+    // Isso renders the thread as soon as its script runs, so add a new script every time this code
+    // runs (e.g., again by PJAX after switching pages) instead of loading it only once.
+    const js = `(function () {
+      var script = document.createElement('script');
+      script.src = ${JSON.stringify(`//${url}/js/embed.min.js`)};
+      script.async = true;
+      script.setAttribute('data-isso', ${JSON.stringify('//' + url)});
+      document.head.appendChild(script);
+    })();`;
     return (
       <>
         <div id="isso-thread"></div>
-        <script data-isso={'//' + url} src={`//${url}/js/embed.min.js`}></script>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
     );
   }

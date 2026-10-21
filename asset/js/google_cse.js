@@ -16,15 +16,58 @@
     };
   }
 
+  let opener = null;
+
+  function open() {
+    const $main = $('.searchbox');
+    if (!$main.hasClass('show')) {
+      opener = document.activeElement;
+      $main.addClass('show');
+    }
+    $main.find('.searchbox-input').focus();
+  }
+
+  // Return the focus to the element that opened the search box, unless it moved elsewhere
+  function close(restoreFocus = true) {
+    $('.searchbox').removeClass('show');
+    if (restoreFocus && opener && document.contains(opener)) {
+      opener.focus();
+    }
+    opener = null;
+  }
+
+  // Open the search box with "/" (unless typing in a field) or Ctrl/Cmd+K
+  function isSearchShortcut(e) {
+    if (e.altKey) {
+      return false;
+    }
+    if (e.ctrlKey || e.metaKey) {
+      return !e.shiftKey && typeof e.key === 'string' && e.key.toLowerCase() === 'k';
+    }
+    // e.key is "/" whatever keys type it on the keyboard layout, so do not check e.shiftKey
+    const target = e.target;
+    const typing = target.isContentEditable || /^(input|textarea|select)$/i.test(target.tagName);
+    return e.key === '/' && !typing;
+  }
+
   $(document)
-    .on('click', '.navbar-main .search', () => {
-      $('.searchbox').toggleClass('show');
+    .on('click', '.navbar-main .search', open)
+    .on('click', '.searchbox .searchbox-mask', () => close())
+    .on('click', '.searchbox-close', () => close())
+    .on('focusin', (e) => {
+      // Close the search box when the focus moves to the rest of the page, e.g., by Tab
+      const main = $('.searchbox')[0];
+      if (main && $(main).hasClass('show') && !main.contains(e.target)) {
+        close(false);
+      }
     })
-    .on('click', '.searchbox .searchbox-mask', () => {
-      $('.searchbox').removeClass('show');
-    })
-    .on('click', '.searchbox-close', () => {
-      $('.searchbox').removeClass('show');
+    .on('keydown', (e) => {
+      if (isSearchShortcut(e)) {
+        e.preventDefault();
+        open();
+      } else if (e.keyCode === 27 && $('.searchbox').hasClass('show')) {
+        close();
+      }
     })
     .on(
       'keydown',

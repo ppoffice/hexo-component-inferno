@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * DisqusJS comment JSX component.
@@ -66,15 +67,14 @@ class DisqusJs extends Component {
         });`;
     return (
       <>
-        <link rel="stylesheet" href={cssUrl} />
+        <link rel="stylesheet" href={cssUrl} media="print" onload="this.media='all'" />
         <div id="disqus_thread">
           <noscript>
             Please enable JavaScript to view the{' '}
             <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
           </noscript>
         </div>
-        <script src={jsUrl}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
       </>
     );
   }

@@ -17,7 +17,7 @@
     "format": "npm run _format -- --write",
     "format-check": "npm run _format -- --check",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
-    "build": "babel src --out-dir lib && cp -r src/schema lib/schema",
+    "build": "babel src --out-dir lib && mkdir -p lib/schema && cp -r src/schema/. lib/schema",
     "clean": "rm -rf lib doc coverage",
     "prepare": "npm run build"
   },
@@ -26,6 +26,7 @@
   },
   "files": [
     "lib/",
+    "!lib/**/*.test.js",
     "asset/"
   ],
   "devDependencies": {
@@ -34,7 +35,7 @@
     "@babel/preset-env": "^7.23.9",
     "@types/hexo": "^3.8.12",
     "@types/hexo-util": "^0.6.8",
-    "babel-plugin-inferno": "^6.7.1",
+    "babel-plugin-inferno": "~6.8.5",
     "cheerio": "1.0.0-rc.12",
     "deepmerge": "^4.3.1",
     "eslint": "^8.56.0",
@@ -43,6 +44,7 @@
     "eslint-plugin-jest": "^27.6.3",
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-react": "^7.33.2",
+    "hexo": "^7.1.1",
     "hexo-renderer-marked": "^6.2.0",
     "html-minifier": "^4.0.0",
     "inferno-server": "^8.2.3",
@@ -52,11 +54,11 @@
     "jsdoc": "^4.0.2",
     "minami": "^1.2.3",
     "prettier": "^3.2.4",
-    "taffydb": "^2.7.3"
+    "taffydb": "^2.7.3",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "ajv": "^8.12.0",
-    "hexo": "^7.1.1",
     "hexo-pagination": "^3.0.0",
     "hexo-util": "^3.2.0",
     "inferno": "^8.2.3",
@@ -64,5 +66,8 @@
     "js-yaml": "^4.1.0",
     "moment": "^2.30.1",
     "semver": "^7.5.4"
+  },
+  "peerDependencies": {
+    "hexo": "^7.1.1 || ^8.0.0"
   }
 }

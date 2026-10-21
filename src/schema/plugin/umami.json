@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/plugin/umami.json",
+  "description": "Umami analytics plugin settings\nhttps://umami.is/docs/tracker-configuration",
+  "type": "object",
+  "properties": {
+    "website_id": {
+      "type": "string",
+      "description": "Umami website ID",
+      "nullable": true
+    },
+    "script_url": {
+      "type": "string",
+      "description": "URL of the Umami tracker script. Change it to the one on your server if you host Umami yourself",
+      "default": "https://cloud.umami.is/script.js",
+      "nullable": true
+    },
+    "domains": {
+      "type": "string",
+      "description": "Only track the visits on these comma-separated domains",
+      "nullable": true
+    }
+  },
+  "required": ["website_id"]
+}
