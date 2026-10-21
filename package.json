@@ -35,7 +35,7 @@
     "@babel/preset-env": "^7.23.9",
     "@types/hexo": "^3.8.12",
     "@types/hexo-util": "^0.6.8",
-    "babel-plugin-inferno": "^6.7.1",
+    "babel-plugin-inferno": "~6.8.5",
     "cheerio": "1.0.0-rc.12",
     "deepmerge": "^4.3.1",
     "eslint": "^8.56.0",
