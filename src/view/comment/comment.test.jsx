@@ -10,6 +10,10 @@ const Isso = require('./isso');
 const Waline = require('./waline');
 const Giscus = require('./giscus');
 const Utterances = require('./utterances');
+const Beaudar = require('./beaudar');
+const Artalk = require('./artalk');
+const Cusdis = require('./cusdis');
+const { SchemaLoader } = require('../../core/schema');
 
 /**
  * Render a comment component, check that it does not block rendering, and run its inline script.
@@ -401,4 +405,151 @@ describe('Utterances', () => {
       theme(<Utterances {...props} theme="github-light" darkTheme="icy-dark" />, 'auto', true),
     ).toBe('icy-dark');
   });
+});
+
+describe('Beaudar', () => {
+  const props = { repo: 'user/repo', branch: 'main', issueTerm: 'pathname', label: 'comment' };
+
+  test('Add the client script with its attributes to the thread element', () => {
+    const script = renderClientScript(<Beaudar {...props} />, '#beaudar-thread');
+    expect(script.getAttribute('src')).toBe('https://beaudar.lipk.org/client.js');
+    expect(script.getAttribute('repo')).toBe('user/repo');
+    expect(script.getAttribute('branch')).toBe('main');
+    expect(script.getAttribute('issue-term')).toBe('pathname');
+    expect(script.getAttribute('label')).toBe('comment');
+    expect(script.getAttribute('crossorigin')).toBe('anonymous');
+  });
+
+  test('Choose the theme by the appearance of the page', () => {
+    const theme = (element, ...args) =>
+      renderClientScript(element, '#beaudar-thread', ...args).getAttribute('theme');
+    expect(theme(<Beaudar {...props} />)).toBe('github-light');
+    expect(theme(<Beaudar {...props} />, 'dark')).toBe('github-dark');
+    expect(theme(<Beaudar {...props} darkTheme="icy-dark" />, 'auto', true)).toBe('icy-dark');
+  });
+
+  test('Show an error without the repository', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Beaudar issueTerm="pathname" />);
+    expect(container.querySelector('.notification.is-danger')).not.toBe(null);
+  });
+});
+
+describe('Artalk', () => {
+  const props = {
+    server: 'https://artalk.example.com',
+    jsUrl: '/artalk.js',
+    cssUrl: '/artalk.css',
+  };
+  const Artalk_ = {
+    init: (options) => {
+      calls.push(['init', options]);
+      return { destroy: () => calls.push(['destroy']) };
+    },
+  };
+
+  afterEach(() => {
+    delete window.__artalkInstance;
+    document.documentElement.removeAttribute('data-appearance');
+  });
+
+  test('Load Artalk and initialize it, and destroy the previous instance', () => {
+    const element = <Artalk {...props} site="Blog" pageTitle="Post" locale="en" />;
+    renderAndRun(element);
+    expect(calls).toEqual([]);
+    expect(loadAddedScripts({ Artalk: Artalk_ })).toEqual(['/artalk.js']);
+    expect(calls).toEqual([
+      [
+        'init',
+        {
+          el: '#artalk-thread',
+          server: 'https://artalk.example.com',
+          site: 'Blog',
+          pageTitle: 'Post',
+          locale: 'en',
+          darkMode: false,
+        },
+      ],
+    ]);
+    // Run again, e.g., by PJAX
+    renderAndRun(element);
+    expect(calls.map((call) => call[0])).toEqual(['init', 'destroy', 'init']);
+  });
+
+  test('Follow the appearance of the page if dark_mode is not set', () => {
+    const darkMode = (appearance, extra = {}) => {
+      calls = [];
+      document.documentElement.setAttribute('data-appearance', appearance);
+      window.Artalk = Artalk_;
+      renderAndRun(<Artalk {...props} {...extra} />);
+      loadAddedScripts({ Artalk: Artalk_ });
+      return calls.find((call) => call[0] === 'init')[1].darkMode;
+    };
+    expect(darkMode('dark')).toBe(true);
+    expect(darkMode('auto')).toBe('auto');
+    expect(darkMode('dark', { darkMode: false })).toBe(false);
+  });
+
+  test('Show an error without the server', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Artalk jsUrl="/artalk.js" />);
+    expect(container.querySelector('.notification.is-danger')).not.toBe(null);
+  });
+});
+
+describe('Cusdis', () => {
+  const props = { appId: 'app', pageId: '/post/', pageUrl: 'https://example.com/post/' };
+
+  afterEach(() => {
+    delete window.renderCusdis;
+    document.documentElement.removeAttribute('data-appearance');
+  });
+
+  test('Load the Cusdis script, which renders the thread element', () => {
+    renderAndRun(<Cusdis {...props} lang="zh-cn" />);
+    const thread = document.getElementById('cusdis_thread');
+    expect(thread.getAttribute('data-host')).toBe('https://cusdis.com');
+    expect(thread.getAttribute('data-app-id')).toBe('app');
+    expect(thread.getAttribute('data-page-id')).toBe('/post/');
+    expect(thread.getAttribute('data-page-url')).toBe('https://example.com/post/');
+    expect(thread.getAttribute('data-theme')).toBe('light');
+    expect(loadAddedScripts()).toEqual([
+      'https://cusdis.com/js/widget/lang/zh-cn.js',
+      'https://cusdis.com/js/cusdis.es.js',
+    ]);
+  });
+
+  test('Render the thread element directly when the script is already loaded', () => {
+    window.renderCusdis = (element) => calls.push(element.id);
+    renderAndRun(<Cusdis {...props} host="https://cusdis.example.com" />);
+    expect(calls).toEqual(['cusdis_thread']);
+    expect(document.head.querySelectorAll('script').length).toBe(0);
+  });
+
+  test('Follow the appearance of the page if theme is not set', () => {
+    const theme = (appearance, extra = {}) => {
+      document.body.innerHTML = '';
+      document.documentElement.setAttribute('data-appearance', appearance);
+      renderAndRun(<Cusdis {...props} {...extra} />);
+      return document.getElementById('cusdis_thread').getAttribute('data-theme');
+    };
+    expect(theme('dark')).toBe('dark');
+    expect(theme('auto')).toBe('auto');
+    expect(theme('auto', { theme: 'light' })).toBe('light');
+  });
+});
+
+test('Schemas of the new comment plugins', () => {
+  const validate = (name, config) => {
+    const def = require(`../../schema/comment/${name}.json`);
+    return SchemaLoader.load(def).getSchema(def.$id).validate(config);
+  };
+  expect(validate('artalk', { type: 'artalk', server: 'https://artalk.example.com' })).toBe(true);
+  expect(validate('artalk', { type: 'artalk' })).not.toBe(true);
+  expect(validate('cusdis', { type: 'cusdis', app_id: 'app' })).toBe(true);
+  expect(validate('cusdis', { type: 'cusdis', app_id: 'app', theme: 'blue' })).not.toBe(true);
+  expect(validate('beaudar', { type: 'beaudar', repo: 'user/repo', issue_term: 'pathname' })).toBe(
+    true,
+  );
+  expect(validate('beaudar', { type: 'beaudar', repo: 'user/repo' })).not.toBe(true);
 });
