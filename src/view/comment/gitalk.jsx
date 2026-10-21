@@ -5,6 +5,7 @@
 const crypto = require('crypto');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * Gitalk comment JSX component.
@@ -79,9 +80,8 @@ class Gitalk extends Component {
     return (
       <>
         <div id="comment-container"></div>
-        <link rel="stylesheet" href={cssUrl} />
-        <script src={jsUrl}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <link rel="stylesheet" href={cssUrl} media="print" onload="this.media='all'" />
+        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
       </>
     );
   }

@@ -6,6 +6,7 @@
 const crypto = require('crypto');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * Gitment comment JSX component.
@@ -57,9 +58,16 @@ class Gitment extends Component {
     return (
       <>
         <div id="comment-container"></div>
-        <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css" />
-        <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <link
+          rel="stylesheet"
+          href="https://imsun.github.io/gitment/style/default.css"
+          media="print"
+          onload="this.media='all'"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: loadScripts('https://imsun.github.io/gitment/dist/gitment.browser.js', js),
+          }}></script>
       </>
     );
   }

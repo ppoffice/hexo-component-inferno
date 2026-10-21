@@ -89,7 +89,7 @@ class Waline extends Component {
     return (
       <>
         <div id="waline-thread" class="content"></div>
-        <link rel="stylesheet" href={cssUrl} />
+        <link rel="stylesheet" href={cssUrl} media="print" onload="this.media='all'" />
         <script type="module" dangerouslySetInnerHTML={{ __html: js }} />
       </>
     );

@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * Valine comment JSX component.
@@ -80,9 +81,13 @@ class Valine extends Component {
     return (
       <>
         <div id="valine-thread" class="content"></div>
-        <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3/dist/av-min.js"></script>
-        <script src={jsUrl}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: loadScripts(
+              ['//cdn.jsdelivr.net/npm/leancloud-storage@3/dist/av-min.js', jsUrl],
+              js,
+            ),
+          }}></script>
       </>
     );
   }

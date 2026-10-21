@@ -4,6 +4,7 @@
  */
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * Twikoo comment JSX component.
@@ -27,8 +28,7 @@ class Twikoo extends Component {
     return (
       <Fragment>
         <div id="twikoo" class="content twikoo"></div>
-        <script src={jsUrl}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
       </Fragment>
     );
   }

@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * ChangYan comment JSX component.
@@ -31,8 +32,12 @@ class ChangYan extends Component {
     return (
       <>
         <div id="SOHUCS" sid={path}></div>
-        <script charset="utf-8" src="https://changyan.sohu.com/upload/changyan.js"></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: loadScripts('https://changyan.sohu.com/upload/changyan.js', js, {
+              charset: 'utf-8',
+            }),
+          }}></script>
       </>
     );
     /* eslint-enable react/no-unknown-property */
