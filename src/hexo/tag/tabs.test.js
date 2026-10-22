@@ -149,3 +149,42 @@ test('create tabs with all properties', async () => {
       '<div id="tab2" class="tab-content"> <p>tab 2</p> </div>',
   );
 });
+
+test('create tabs with a colon in the title, and different IDs', async () => {
+  const render = hexo.extend.tag.render.bind(hexo.extend.tag);
+  const tabs = Array.from({ length: 50 }, () => '<!-- tab -->x<!-- endtab -->').join('');
+  const $ = cheerio.load(
+    await render(
+      `{% tabs %}<!-- tab 'title:Step 1: Install' -->x<!-- endtab -->${tabs}{% endtabs %}`,
+    ),
+    cheerioOptions,
+    false,
+  );
+  expect($('.tabs a').first().text()).toContain('Step 1: Install');
+  const ids = $('.tab-content')
+    .get()
+    .map((element) => $(element).attr('id'));
+  expect(new Set(ids).size).toBe(51);
+});
+
+test('switch to the tab in the URL when the page loads', async () => {
+  const { JSDOM } = require('jsdom');
+  const render = hexo.extend.tag.render.bind(hexo.extend.tag);
+  const tabs = await render(
+    '{% tabs %}<!-- tab id:first active -->1<!-- endtab --><!-- tab id:第二 -->2<!-- endtab -->{% endtabs %}',
+  );
+  const script = hexo.extend.injector.getText('head_end');
+  const dom = new JSDOM(`<html><head>${script}</head><body>${tabs}</body></html>`, {
+    url: 'https://example.com/post/#' + encodeURIComponent('第二'),
+    runScripts: 'dangerously',
+    beforeParse(window) {
+      // jsdom does not have CSS.escape
+      window.CSS = { escape: (value) => value };
+    },
+  });
+  await new Promise((resolve) => dom.window.addEventListener('DOMContentLoaded', resolve));
+  const document = dom.window.document;
+  expect(document.getElementById('第二').classList.contains('is-hidden')).toBe(false);
+  expect(document.getElementById('first').classList.contains('is-hidden')).toBe(true);
+  dom.window.close();
+});

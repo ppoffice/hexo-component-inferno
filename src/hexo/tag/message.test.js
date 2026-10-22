@@ -102,3 +102,9 @@ test('create message with all properties', async () => {
       '<div class="message-body"> <p>content</p> </div> </article>',
   );
 });
+
+test('create message with a colon in the title', async () => {
+  const render = hexo.extend.tag.render.bind(hexo.extend.tag);
+  const html = await render("{% message 'title:Step 1: Install' %}content{% endmessage %}");
+  expect(html).toContain('Step 1: Install');
+});

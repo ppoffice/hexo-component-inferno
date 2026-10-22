@@ -4,6 +4,16 @@
  */
 
 /**
+ * Split a tag option at its first colon, so that the value can contain colons, as in
+ * <code>'title:Step 1: Install'</code>.
+ * @private
+ */
+function splitOption(option) {
+  const index = option.indexOf(':');
+  return index === -1 ? [option] : [option.slice(0, index), option.slice(index + 1)];
+}
+
+/**
  * Register custom Hexo tag {% message %}.
  * <p>
  * This tag is rendered as a Bulma message box.
@@ -54,7 +64,7 @@ module.exports = function (hexo) {
     let header = '';
 
     for (const option of options) {
-      const [key, value] = option.split(':');
+      const [key, value] = splitOption(option);
       switch (key) {
         case 'size':
           classes += ` is-${value}`;
