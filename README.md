@@ -161,6 +161,8 @@ npm run docs          # generate the API documentation in doc/
 Tests sit next to the source files (`*.test.js` / `*.test.jsx`) and run against the compiled files in
 `lib/`, so run `npm run build` after changing `src/`.
 
+The tests use Hexo 8, which needs Node.js 20.19 or later. CI also tests Node.js 14 with Hexo 7.
+
 Releases are published to npm by GitHub Actions when a GitHub release is published.
 
 ## License
