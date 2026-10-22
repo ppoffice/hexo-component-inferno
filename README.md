@@ -154,4 +154,4 @@ Releases are published to npm by GitHub Actions when a GitHub release is publish
 
 ## License
 
-MIT
+[MIT](LICENSE)
