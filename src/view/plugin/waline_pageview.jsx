@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Waline page view counter plugin JSX component.
@@ -26,12 +27,12 @@ class WalinePageview extends Component {
     const js = `(function () {
         var abort = null;
         function count() {
-          import(${JSON.stringify(jsUrl)}).then(function (Waline) {
+          import(${toJs(jsUrl)}).then(function (Waline) {
             if (abort) {
               abort();
             }
             abort = Waline.pageviewCount({
-              serverURL: ${JSON.stringify(serverURL)},
+              serverURL: ${toJs(serverURL)},
               path: window.location.pathname,
             });
           });

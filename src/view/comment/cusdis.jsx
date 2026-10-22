@@ -5,6 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 const { getAppearance } = require('../../util/appearance');
 
 /**
@@ -52,7 +53,7 @@ class Cusdis extends Component {
         if (!element) {
           return;
         }
-        element.setAttribute('data-theme', ${theme ? JSON.stringify(theme) : getAppearance()});
+        element.setAttribute('data-theme', ${theme ? toJs(theme) : getAppearance()});
         if (window.renderCusdis) {
           window.renderCusdis(element);
           return;

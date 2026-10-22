@@ -97,3 +97,11 @@ test('Do nothing without the element', () => {
   new Function(loadScripts.appendScript('#thread', '/client.js', {}))();
   expect(document.querySelectorAll('script').length).toBe(0);
 });
+
+test('Convert values to JavaScript that cannot end the inline script', () => {
+  const value = { title: 'A </script><script>alert(1)</script>', text: 'a\u2028b\u2029c' };
+  const code = loadScripts.toJs(value);
+  expect(code).not.toMatch(/<|\u2028|\u2029/);
+  // eslint-disable-next-line no-new-func
+  expect(new Function(`return ${code}`)()).toEqual(value);
+});

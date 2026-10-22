@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 const { getAppearance } = require('../../util/appearance');
 
 /**
@@ -70,34 +71,34 @@ class Waline extends Component {
     const darkOption =
       dark === null || typeof dark === 'undefined' || dark === ''
         ? `${getAppearance()} === 'auto' ? 'auto' : 'html[data-appearance="dark"]'`
-        : JSON.stringify(dark);
+        : toJs(dark);
     // Use a classic script with a dynamic import instead of a module script, so that PJAX, which only
     // runs classic scripts, initializes Waline again after switching pages. The previous instance,
     // whose element PJAX has replaced, is destroyed first.
-    const js = `import(${JSON.stringify(jsUrl)}).then(function (Waline) {
+    const js = `import(${toJs(jsUrl)}).then(function (Waline) {
         if (window.__walineInstance) {
             window.__walineInstance.destroy();
         }
         window.__walineInstance = Waline.init({
             el: '#waline-thread',
-            serverURL: ${JSON.stringify(serverURL)},
+            serverURL: ${toJs(serverURL)},
             path: ${path},
-            ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
-            ${locale ? `locale: ${JSON.stringify(locale)},` : ''}
-            ${emoji ? `emoji: ${JSON.stringify(emoji)},` : ''}
+            ${lang ? `lang: ${toJs(lang)},` : ''}
+            ${locale ? `locale: ${toJs(locale)},` : ''}
+            ${emoji ? `emoji: ${toJs(emoji)},` : ''}
             dark: ${darkOption},
-            ${meta ? `meta: ${JSON.stringify(meta)},` : ''}
-            ${Array.isArray(requiredMeta) ? `requiredMeta: ${JSON.stringify(requiredMeta)},` : ''}
-            ${login ? `login: ${JSON.stringify(login)},` : ''}
-            ${wordLimit ? `wordLimit: ${JSON.stringify(wordLimit)},` : ''}
-            ${pageSize ? `pageSize: ${JSON.stringify(pageSize)},` : ''}
+            ${meta ? `meta: ${toJs(meta)},` : ''}
+            ${Array.isArray(requiredMeta) ? `requiredMeta: ${toJs(requiredMeta)},` : ''}
+            ${login ? `login: ${toJs(login)},` : ''}
+            ${wordLimit ? `wordLimit: ${toJs(wordLimit)},` : ''}
+            ${pageSize ? `pageSize: ${toJs(pageSize)},` : ''}
             ${imageUploader === false ? `imageUploader: false,` : ''}
             ${highlighter === false ? `highlighter: false,` : ''}
             ${texRenderer === false ? `texRenderer: false,` : ''}
             ${search === false ? `search: false,` : ''}
-            ${typeof pageview !== 'undefined' ? `pageview: ${JSON.stringify(pageview)},` : ''}
-            ${typeof comment !== 'undefined' ? `comment: ${JSON.stringify(comment)},` : ''}
-            ${`copyright: ${JSON.stringify(copyright)},`}
+            ${typeof pageview !== 'undefined' ? `pageview: ${toJs(pageview)},` : ''}
+            ${typeof comment !== 'undefined' ? `comment: ${toJs(comment)},` : ''}
+            ${`copyright: ${toJs(copyright)},`}
         });
     });`;
     return (

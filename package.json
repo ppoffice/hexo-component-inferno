@@ -51,6 +51,7 @@
     "inferno-test-utils": "^8.2.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "jquery": "^3.7.1",
     "jsdoc": "^4.0.2",
     "minami": "^1.2.3",
     "prettier": "^3.2.4",

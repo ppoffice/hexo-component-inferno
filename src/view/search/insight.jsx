@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Algolia search engine JSX component.
@@ -26,7 +27,7 @@ class Insight extends Component {
     const { translation, contentUrl, jsUrl } = this.props;
 
     const js = `document.addEventListener('DOMContentLoaded', function () {
-            loadInsight(${JSON.stringify({ contentUrl })}, ${JSON.stringify(translation)});
+            loadInsight(${toJs({ contentUrl })}, ${toJs(translation)});
         });`;
 
     return (

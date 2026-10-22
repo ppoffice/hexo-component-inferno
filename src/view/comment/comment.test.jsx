@@ -13,6 +13,7 @@ const Utterances = require('./utterances');
 const Beaudar = require('./beaudar');
 const Artalk = require('./artalk');
 const Cusdis = require('./cusdis');
+const Disqus = require('./disqus');
 const { SchemaLoader } = require('../../core/schema');
 
 /**
@@ -662,5 +663,44 @@ describe('Configuration of the comment plugins', () => {
     expect(thread.getAttribute('data-page-url')).toBe('https://example.com/blog/post/');
     expect(thread.getAttribute('data-page-title')).toBe('Post');
     expect(getError(Cusdis, {})).toContain('app_id');
+  });
+});
+
+describe('Page values in the inline scripts', () => {
+  const helper = { cdn: (name, version, file) => `/cdn/${name}@${version}/${file}` };
+  const title = 'Why </script><img src=x onerror=alert(1)> breaks';
+  const permalink = "https://example.com/2024/it's-alive/";
+  const page = { title, path: "2024/it's-alive/", permalink };
+
+  test.each([
+    [
+      'Artalk',
+      <Artalk.Cacheable
+        comment={{ server: 'https://artalk.example.com' }}
+        helper={helper}
+        page={page}
+      />,
+      'Why \\u003c/script>',
+    ],
+    [
+      'DisqusJS',
+      <DisqusJs.Cacheable
+        comment={{ shortname: "it's", api_key: 'key' }}
+        helper={helper}
+        page={page}
+        config={{ title }}
+      />,
+    ],
+    ['Disqus', <Disqus.Cacheable comment={{ shortname: 'name' }} page={page} />],
+  ])('%s', (name, element, kept = "it's") => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(element);
+    expect(container.querySelector('img')).toBe(null);
+    const scripts = container.querySelectorAll('script');
+    expect(scripts.length).toBe(1);
+    // The script parses, and keeps the values
+    // eslint-disable-next-line no-new-func
+    expect(() => new Function(scripts[0].textContent)).not.toThrow();
+    expect(scripts[0].textContent).toContain(kept);
   });
 });

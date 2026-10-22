@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Google custom search engine JSX component.
@@ -22,7 +23,7 @@ class GoogleCSE extends Component {
     const css = '.searchbox .searchbox-body { background: white; }';
 
     const js1 = `(function() {
-            var cx = '${cx}';
+            var cx = ${toJs(cx)};
             var gcse = document.createElement('script');
             gcse.type = 'text/javascript';
             gcse.async = true;

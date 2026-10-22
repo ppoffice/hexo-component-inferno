@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Baidu Analytics plugin JSX component.
@@ -19,7 +20,7 @@ class BaiduAnalytics extends Component {
     const js = `var _hmt = _hmt || [];
         (function() {
             var hm = document.createElement("script");
-            hm.src = "//hm.baidu.com/hm.js?${trackingId}";
+            hm.src = ${toJs(`//hm.baidu.com/hm.js?${trackingId}`)};
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         })();`;

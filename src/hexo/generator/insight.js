@@ -12,33 +12,37 @@ const util = require('hexo-util');
 module.exports = function (hexo) {
   hexo.extend.generator.register('insight', function (locals) {
     const url_for = hexo.extend.helper.get('url_for').bind(this);
-    function escape(str) {
-      return util.escapeHTML(str).trim();
+    // content.json holds plain text, which the search script escapes when it shows it
+    const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+    function decodeEntities(str) {
+      return str.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (match, entity) => {
+        if (entity[0] === '#') {
+          const code =
+            entity[1] === 'x' || entity[1] === 'X'
+              ? parseInt(entity.slice(2), 16)
+              : parseInt(entity.slice(1), 10);
+          return code <= 0x10ffff ? String.fromCodePoint(code) : match;
+        }
+        const char = ENTITIES[entity.toLowerCase()];
+        return char === undefined ? match : char;
+      });
     }
-    function minify(str) {
-      return util
-        .stripHTML(str)
-        .trim()
-        .replace(/\n/g, ' ')
+    function plain(str) {
+      return decodeEntities(util.stripHTML(str || ''))
         .replace(/\s+/g, ' ')
-        .replace(/&#x([\da-fA-F]+);/g, (match, hex) => {
-          return String.fromCharCode(parseInt(hex, 16));
-        })
-        .replace(/&#([\d]+);/g, (match, dec) => {
-          return String.fromCharCode(dec);
-        });
+        .trim();
     }
     function mapPost(post) {
       return {
-        title: escape(post.title),
-        text: minify(post.content),
+        title: (post.title || '').trim(),
+        text: plain(post.content),
         link: url_for(post.path),
       };
     }
     function mapTag(tag) {
       return {
-        name: escape(tag.name),
-        slug: minify(tag.slug),
+        name: (tag.name || '').trim(),
+        slug: (tag.slug || '').trim(),
         link: url_for(tag.path),
       };
     }

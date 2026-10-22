@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Baidu search engine JSX component.
@@ -19,7 +20,7 @@ class Baidu extends Component {
     const js = `(function ($) {
             $('.searchbox-input-container').on('submit', function (e) {
                 var keyword = $('.searchbox-input[name="wd"]').val();
-                window.location = 'https://www.baidu.com/s?wd=site:${siteUrl} ' + keyword;
+                window.location = ${toJs(`https://www.baidu.com/s?wd=site:${siteUrl} `)} + keyword;
                 return false;
             });
         })(jQuery);

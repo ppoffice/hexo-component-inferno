@@ -5,6 +5,7 @@
 const { Component, Fragment } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 
 /**
  * Twikoo comment JSX component.
@@ -21,9 +22,9 @@ class Twikoo extends Component {
   render() {
     const { envId, region, lang, jsUrl } = this.props;
     const js = `twikoo.init({
-            envId: '${envId}',
-            ${region ? `region: ${JSON.stringify(region)},` : ''}
-            ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
+            envId: ${toJs(envId)},
+            ${region ? `region: ${toJs(region)},` : ''}
+            ${lang ? `lang: ${toJs(lang)},` : ''}
         });`;
     return (
       <Fragment>

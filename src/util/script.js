@@ -4,6 +4,26 @@
  */
 
 /**
+ * Convert a value to JavaScript code that can be put in an inline <code>&lt;script&gt;</code>.
+ * <p>
+ * Unlike <code>JSON.stringify</code> alone, it escapes <code>&lt;</code>, so that a value containing
+ * <code>&lt;/script&gt;</code>, such as a page title, cannot end the inline script, and the line
+ * separators U+2028 and U+2029, which older browsers do not allow in JavaScript strings.
+ *
+ * @param {any} value A value that can be converted to JSON.
+ * @returns {string} The JavaScript code.
+ *
+ * @example
+ * toJs('</script>'); // '"\\u003c/script>"'
+ */
+function toJs(value) {
+  return JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+/**
  * Build an inline script that loads external scripts asynchronously and in order, and then runs the
  * given code.
  * <p>
@@ -22,8 +42,8 @@
  */
 function loadScripts(urls, code, attrs = {}) {
   return `(function () {
-    var urls = ${JSON.stringify([].concat(urls))};
-    var attrs = ${JSON.stringify(attrs)};
+    var urls = ${toJs([].concat(urls))};
+    var attrs = ${toJs(attrs)};
     function run() {
       ${code}
     }
@@ -88,20 +108,20 @@ function loadScripts(urls, code, attrs = {}) {
  */
 function appendScript(selector, url, attrs, dynamicAttrs = {}) {
   const dynamic = Object.keys(dynamicAttrs)
-    .map((name) => `attrs[${JSON.stringify(name)}] = ${dynamicAttrs[name]};`)
+    .map((name) => `attrs[${toJs(name)}] = ${dynamicAttrs[name]};`)
     .join('\n    ');
   return `(function () {
-    var element = document.querySelector(${JSON.stringify(selector)});
+    var element = document.querySelector(${toJs(selector)});
     if (!element) {
       return;
     }
-    var attrs = ${JSON.stringify(attrs)};
+    var attrs = ${toJs(attrs)};
     ${dynamic}
     var script = document.createElement('script');
     for (var name in attrs) {
       script.setAttribute(name, attrs[name]);
     }
-    script.src = ${JSON.stringify(url)};
+    script.src = ${toJs(url)};
     script.async = true;
     setTimeout(function () {
       element.appendChild(script);
@@ -111,3 +131,4 @@ function appendScript(selector, url, attrs, dynamicAttrs = {}) {
 
 module.exports = loadScripts;
 module.exports.appendScript = appendScript;
+module.exports.toJs = toJs;

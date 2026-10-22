@@ -5,6 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 const { getAppearance, isDark } = require('../../util/appearance');
 
 /**
@@ -37,18 +38,18 @@ class Artalk extends Component {
     const darkModeOption =
       darkMode === null || typeof darkMode === 'undefined'
         ? `${getAppearance()} === 'auto' ? 'auto' : ${isDark()}`
-        : JSON.stringify(darkMode);
+        : toJs(darkMode);
     // PJAX replaces the element of the previous instance, so destroy it before initializing again
     const js = `if (window.__artalkInstance) {
             window.__artalkInstance.destroy();
         }
         window.__artalkInstance = Artalk.init({
             el: '#artalk-thread',
-            server: ${JSON.stringify(server)},
-            ${site ? `site: ${JSON.stringify(site)},` : ''}
-            ${pageKey ? `pageKey: ${JSON.stringify(pageKey)},` : ''}
-            ${pageTitle ? `pageTitle: ${JSON.stringify(pageTitle)},` : ''}
-            ${locale ? `locale: ${JSON.stringify(locale)},` : ''}
+            server: ${toJs(server)},
+            ${site ? `site: ${toJs(site)},` : ''}
+            ${pageKey ? `pageKey: ${toJs(pageKey)},` : ''}
+            ${pageTitle ? `pageTitle: ${toJs(pageTitle)},` : ''}
+            ${locale ? `locale: ${toJs(locale)},` : ''}
             darkMode: ${darkModeOption},
         });`;
     return (

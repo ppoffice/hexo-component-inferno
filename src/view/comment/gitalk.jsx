@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 
 /**
  * Gitalk comment JSX component.
@@ -61,20 +62,20 @@ class Gitalk extends Component {
       );
     }
     const js = `var gitalk = new Gitalk({
-            id: ${JSON.stringify(id)},
-            repo: ${JSON.stringify(repo)},
-            owner: ${JSON.stringify(owner)},
-            clientID: ${JSON.stringify(clientId)},
-            clientSecret: ${JSON.stringify(clientSecret)},
-            admin: ${JSON.stringify(admin)},
+            id: ${toJs(id)},
+            repo: ${toJs(repo)},
+            owner: ${toJs(owner)},
+            clientID: ${toJs(clientId)},
+            clientSecret: ${toJs(clientSecret)},
+            admin: ${toJs(admin)},
             createIssueManually: ${!!createIssueManually},
             distractionFreeMode: ${!!distractionFreeMode},
-            perPage: ${JSON.stringify(perPage)},
-            pagerDirection: ${JSON.stringify(pagerDirection)},
-            ${proxy ? `proxy: ${JSON.stringify(proxy)},` : ''}
-            ${flipMoveOptions ? `flipMoveOptions: ${JSON.stringify(flipMoveOptions)},` : ''}
+            perPage: ${toJs(perPage)},
+            pagerDirection: ${toJs(pagerDirection)},
+            ${proxy ? `proxy: ${toJs(proxy)},` : ''}
+            ${flipMoveOptions ? `flipMoveOptions: ${toJs(flipMoveOptions)},` : ''}
             enableHotKey: ${enableHotKey ? !!enableHotKey : true},
-            ${language ? `language: ${JSON.stringify(language)},` : ''}
+            ${language ? `language: ${toJs(language)},` : ''}
         })
         gitalk.render('comment-container')`;
     return (

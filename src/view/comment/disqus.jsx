@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Disqus comment JSX component.
@@ -28,12 +29,12 @@ class Disqus extends Component {
       );
     }
     const js = `var disqus_config = function () {
-            this.page.url = '${permalink}';
-            this.page.identifier = '${disqusId || path}';
+            this.page.url = ${toJs(permalink)};
+            this.page.identifier = ${toJs(disqusId || path)};
         };
         (function() {
             var d = document, s = d.createElement('script');  
-            s.src = '//' + '${shortname}' + '.disqus.com/embed.js';
+            s.src = ${toJs(`//${shortname}.disqus.com/embed.js`)};
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();`;
