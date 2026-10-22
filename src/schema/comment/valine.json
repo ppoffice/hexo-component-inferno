@@ -24,7 +24,18 @@
     "avatar": {
       "type": "string",
       "description": "Gravatar type",
-      "enum": ["", "mp", "identicon", "monsterid", "wavatar", "robohash", "retro", "hide", "mm"],
+      "enum": [
+        "",
+        "mp",
+        "identicon",
+        "monsterid",
+        "wavatar",
+        "robohash",
+        "retro",
+        "hide",
+        "mm",
+        null
+      ],
       "default": "mm",
       "nullable": true
     },

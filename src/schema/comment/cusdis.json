@@ -21,7 +21,7 @@
     "theme": {
       "type": "string",
       "description": "Theme of Cusdis: light, dark, or auto to follow the system color scheme. Follows the appearance of the theme (the data-appearance attribute of <html>) if not set",
-      "enum": ["light", "dark", "auto"],
+      "enum": ["light", "dark", "auto", null],
       "nullable": true
     },
     "lang": {

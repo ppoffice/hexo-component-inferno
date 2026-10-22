@@ -126,7 +126,10 @@ class Archives extends Component {
  */
 Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
   const { site, config, page, helper, widget } = props;
-  const { group_by = 'monthly', order = -1, format = null, amount } = widget;
+  // Options left empty in the config are null, which also take the defaults
+  const groupBy = firstSet(widget.group_by, 'monthly');
+  const order = firstSet(widget.order, -1);
+  const { format, amount } = widget;
   // show_count, like the tags widget, or showCount, which this widget used to read
   const showCount = firstSet(widget.show_count, widget.showCount, true);
 
@@ -154,7 +157,7 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
 
     const year = date.year();
     const month = date.month() + 1;
-    const name = date.format(format || (group_by === 'monthly' ? 'MMMM YYYY' : 'YYYY'));
+    const name = date.format(format || (groupBy === 'monthly' ? 'MMMM YYYY' : 'YYYY'));
     const lastData = data[length - 1];
 
     if (!lastData || lastData.name !== name) {
@@ -172,7 +175,7 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
   const link = (item) => {
     let url = `${config.archive_dir}/${item.year}/`;
 
-    if (group_by === 'monthly') {
+    if (groupBy === 'monthly') {
       if (item.month < 10) url += '0';
       url += `${item.month}/`;
     }

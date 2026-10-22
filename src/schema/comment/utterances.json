@@ -26,7 +26,8 @@
         "github-dark-orange",
         "icy-dark",
         "dark-blue",
-        "photon-dark"
+        "photon-dark",
+        null
       ],
       "default": "github-light",
       "nullable": true
@@ -40,7 +41,8 @@
         "github-dark-orange",
         "icy-dark",
         "dark-blue",
-        "photon-dark"
+        "photon-dark",
+        null
       ],
       "default": "github-dark",
       "nullable": true

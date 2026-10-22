@@ -29,7 +29,7 @@
     "mapping": {
       "type": "string",
       "description": "The mapping between the embedding page and the embedded discussion",
-      "enum": ["pathname", "url", "title", "og:title", "specific", "number"],
+      "enum": ["pathname", "url", "title", "og:title", "specific", "number", null],
       "default": "pathname",
       "nullable": true
     },
@@ -59,7 +59,7 @@
     "inputPosition": {
       "type": "string",
       "description": "Where the input block will display",
-      "enum": ["top", "bottom"],
+      "enum": ["top", "bottom", null],
       "default": "top",
       "nullable": true
     },
@@ -83,7 +83,8 @@
         "noborder_gray",
         "cobalt",
         "purple_dark",
-        "custom"
+        "custom",
+        null
       ],
       "default": "noborder_light",
       "nullable": true

@@ -19,7 +19,7 @@
     "lang": {
       "type": "string",
       "description": "Display language.",
-      "enum": ["zh", "zh-CN", "zh-TW", "en", "en-US", "jp", "jp-JP", "pt-BR", "ru", "ru-RU"],
+      "enum": ["zh", "zh-CN", "zh-TW", "en", "en-US", "jp", "jp-JP", "pt-BR", "ru", "ru-RU", null],
       "default": "zh-CN",
       "nullable": true
     },
@@ -98,7 +98,7 @@
     "login": {
       "type": "string",
       "description": "Login mode status.",
-      "enum": ["enable", "disable", "force"],
+      "enum": ["enable", "disable", "force", null],
       "default": "enable",
       "nullable": true
     },

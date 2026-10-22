@@ -15,13 +15,13 @@
     },
     "group_by": {
       "type": "string",
-      "enum": ["monthly", "yearly"],
+      "enum": ["monthly", "yearly", null],
       "description": "Whether to group the archives by month or by year. Groups by month if not set",
       "nullable": true
     },
     "order": {
       "type": "integer",
-      "enum": [1, -1],
+      "enum": [1, -1, null],
       "description": "1 to show the oldest archives first, or -1 to show the newest first. Shows the newest first if not set",
       "nullable": true
     },
