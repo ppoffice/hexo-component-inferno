@@ -5,6 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 
 /**
  * DisqusJS comment JSX component.
@@ -54,16 +55,16 @@ class DisqusJs extends Component {
     const url = permalink || path;
     const identifier = disqusId || path;
     const js = `new DisqusJS({
-            shortname: '${shortname}',
-            apikey: ${JSON.stringify(apiKey)},
-            ${siteTitle ? `siteName: ${JSON.stringify(siteTitle)},` : ''}
-            ${identifier ? `identifier: ${JSON.stringify(identifier)},` : ''}
-            ${url ? `url: ${JSON.stringify(url)},` : ''}
-            ${pageTitle ? `title: ${JSON.stringify(pageTitle)},` : ''}
-            ${api ? `api: ${JSON.stringify(api)},` : ''}
-            ${admin ? `admin: ${JSON.stringify(admin)},` : ''}
-            ${adminLabel ? `adminLabel: ${JSON.stringify(adminLabel)},` : ''}
-            ${nesting ? `nesting: ${JSON.stringify(nesting)},` : ''}
+            shortname: ${toJs(shortname)},
+            apikey: ${toJs(apiKey)},
+            ${siteTitle ? `siteName: ${toJs(siteTitle)},` : ''}
+            ${identifier ? `identifier: ${toJs(identifier)},` : ''}
+            ${url ? `url: ${toJs(url)},` : ''}
+            ${pageTitle ? `title: ${toJs(pageTitle)},` : ''}
+            ${api ? `api: ${toJs(api)},` : ''}
+            ${admin ? `admin: ${toJs(admin)},` : ''}
+            ${adminLabel ? `adminLabel: ${toJs(adminLabel)},` : ''}
+            ${nesting ? `nesting: ${toJs(nesting)},` : ''}
         });`;
     return (
       <>

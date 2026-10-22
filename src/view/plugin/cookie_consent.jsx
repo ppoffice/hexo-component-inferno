@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * A JSX component for alerting users about the use of cookies.
@@ -36,18 +37,18 @@ class CookieConsent extends Component {
 
     const js = `window.addEventListener("load", () => {
       window.cookieconsent.initialise({
-        type: ${JSON.stringify(type)},
-        theme: ${JSON.stringify(theme)},
-        static: ${JSON.stringify(this.props.static)},
-        position: ${JSON.stringify(position)},
+        type: ${toJs(type)},
+        theme: ${toJs(theme)},
+        static: ${toJs(this.props.static)},
+        position: ${toJs(position)},
         content: {
-          message: ${JSON.stringify(message)},
-          dismiss: ${JSON.stringify(dismiss)},
-          allow: ${JSON.stringify(allow)},
-          deny: ${JSON.stringify(deny)},
-          link: ${JSON.stringify(link)},
-          policy: ${JSON.stringify(policy)},
-          href: ${JSON.stringify(policyLink)},
+          message: ${toJs(message)},
+          dismiss: ${toJs(dismiss)},
+          allow: ${toJs(allow)},
+          deny: ${toJs(deny)},
+          link: ${toJs(link)},
+          policy: ${toJs(policy)},
+          href: ${toJs(policyLink)},
         },
         palette: {
           popup: {

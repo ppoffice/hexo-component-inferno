@@ -15,7 +15,13 @@ beforeAll(async () => {
   await hexo.init();
   posts = await Post.insert([
     { title: 'post1', source: 'bar', slug: 'bar', updated: 1e8 + 1 },
-    { title: 'post2 <input>', source: 'baz', slug: 'baz', updated: 1e8 - 1 },
+    {
+      title: 'post2 <input>',
+      source: 'baz',
+      slug: 'baz',
+      updated: 1e8 - 1,
+      content: '<p>Tom &amp; Jerry\n  &#60;img onerror=x&#62; &#x1F600; &amp;lt;</p>',
+    },
   ]);
   pages = await Page.insert([
     { title: 'page1', source: 'bio/index.md', path: 'bio/', updated: 1e8 - 3 },
@@ -54,7 +60,8 @@ test('Export assets file from asset folder', async () => {
   expect(
     data.posts.find(
       (post) =>
-        post.title === 'post2 &lt;input&gt;' &&
+        post.title === 'post2 <input>' &&
+        post.text === 'Tom & Jerry <img onerror=x> \u{1F600} &lt;' &&
         post.link.includes('baz') &&
         Object.prototype.hasOwnProperty.call(post, 'text'),
     ),

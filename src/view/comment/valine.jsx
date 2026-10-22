@@ -5,6 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 const { deprecate } = require('../../util/deprecate');
 
 /**
@@ -68,22 +69,22 @@ class Valine extends Component {
     }
     const js = `new Valine({
             el: '#valine-thread',
-            appId: ${JSON.stringify(appId)},
-            appKey: ${JSON.stringify(appKey)},
-            ${placeholder ? `placeholder: ${JSON.stringify(placeholder)},` : ''}
-            ${avatar ? `avatar: ${JSON.stringify(avatar)},` : ''}
-            ${`avatarForce: ${JSON.stringify(avatarForce)},`}
-            ${meta ? `meta: ${JSON.stringify(meta)},` : ''}
-            ${pageSize ? `pageSize: ${JSON.stringify(pageSize)},` : ''}
-            ${lang ? `lang: ${JSON.stringify(lang)},` : ''}
-            ${`visitor: ${JSON.stringify(visitor)},`}
-            ${`highlight: ${JSON.stringify(highlight)},`}
-            ${`recordIP: ${JSON.stringify(recordIP)},`}
-            ${serverURLs ? `serverURLs: ${JSON.stringify(serverURLs)},` : ''}
-            ${emojiCDN ? `emojiCDN: ${JSON.stringify(emojiCDN)},` : ''}
-            ${emojiMaps ? `emojiMaps: ${JSON.stringify(emojiMaps)},` : ''}
-            ${`enableQQ: ${JSON.stringify(enableQQ)},`}
-            ${Array.isArray(fields) ? `requiredFields: ${JSON.stringify(fields)},` : ''}
+            appId: ${toJs(appId)},
+            appKey: ${toJs(appKey)},
+            ${placeholder ? `placeholder: ${toJs(placeholder)},` : ''}
+            ${avatar ? `avatar: ${toJs(avatar)},` : ''}
+            ${`avatarForce: ${toJs(avatarForce)},`}
+            ${meta ? `meta: ${toJs(meta)},` : ''}
+            ${pageSize ? `pageSize: ${toJs(pageSize)},` : ''}
+            ${lang ? `lang: ${toJs(lang)},` : ''}
+            ${`visitor: ${toJs(visitor)},`}
+            ${`highlight: ${toJs(highlight)},`}
+            ${`recordIP: ${toJs(recordIP)},`}
+            ${serverURLs ? `serverURLs: ${toJs(serverURLs)},` : ''}
+            ${emojiCDN ? `emojiCDN: ${toJs(emojiCDN)},` : ''}
+            ${emojiMaps ? `emojiMaps: ${toJs(emojiMaps)},` : ''}
+            ${`enableQQ: ${toJs(enableQQ)},`}
+            ${Array.isArray(fields) ? `requiredFields: ${toJs(fields)},` : ''}
         });`;
     return (
       <>

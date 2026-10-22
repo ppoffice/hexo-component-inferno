@@ -1,6 +1,28 @@
 /* global instantsearch, algoliasearch */
 // eslint-disable-next-line no-unused-vars
 function loadAlgolia(config, translation) {
+  function escapeHTML(text) {
+    return String(text).replace(/[&<>"']/g, (char) => {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char];
+    });
+  }
+
+  // Keep the <em> highlights of Algolia, and escape the rest, so that a record cannot add HTML. The
+  // excerpt is indexed from HTML, so its tags are removed.
+  function highlighted(html, stripTags) {
+    html = html
+      .replace(/<em>/gi, '[algolia-highlight]')
+      .replace(/<\/em>/gi, '[/algolia-highlight]');
+    if (stripTags) {
+      html = html.replace(/<[^>]+>/g, '');
+    }
+    return html
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\[algolia-highlight\]/g, '<em>')
+      .replace(/\[\/algolia-highlight\]/g, '</em>');
+  }
+
   const search = instantsearch({
     indexName: config.indexName,
     searchClient: algoliasearch(config.applicationId, config.apiKey),
@@ -43,21 +65,16 @@ function loadAlgolia(config, translation) {
       },
       templates: {
         empty: function (results) {
-          return translation.no_result + ': ' + results.query;
+          return escapeHTML(translation.no_result + ': ' + results.query);
         },
         item: function (hit) {
           let title = instantsearch.highlight({ attribute: 'title', hit });
           let excerpt = instantsearch.highlight({ attribute: config.excerpt, hit });
-          title = title ? title : translation.untitled;
-          excerpt = excerpt
-            .replace(new RegExp('<em>', 'ig'), '[algolia-highlight]')
-            .replace(new RegExp('</em>', 'ig'), '[/algolia-highlight]')
-            .replace(/(<([^>]+)>)/gi, '')
-            .replace(/(\[algolia-highlight\])/gi, '<em>')
-            .replace(/(\[\/algolia-highlight\])/gi, '</em>');
-          excerpt = excerpt ? excerpt : translation.empty_preview;
+          title = title ? highlighted(title, false) : escapeHTML(translation.untitled);
+          excerpt = highlighted(excerpt, true);
+          excerpt = excerpt ? excerpt : escapeHTML(translation.empty_preview);
           return `<section class="searchbox-result-section">
-                        <a class="searchbox-result-item" href="${hit.permalink}">
+                        <a class="searchbox-result-item" href="${escapeHTML(hit.permalink)}">
                             <span class="searchbox-result-content">
                                 <span class="searchbox-result-title">${title}</span>
                                 <span class="searchbox-result-preview">${excerpt}</span>

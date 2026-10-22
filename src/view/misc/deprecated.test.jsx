@@ -66,7 +66,7 @@ describe('Configuration of the deprecated components', () => {
         page={{ path: 'post/' }}
       />,
     );
-    expect(html).toContain("id: '0d67b10a60929a0d4bd9902d50d70dd9'"); // md5('post/')
+    expect(html).toContain('id: "0d67b10a60929a0d4bd9902d50d70dd9"'); // md5('post/')
   });
 
   test('Valine', () => {

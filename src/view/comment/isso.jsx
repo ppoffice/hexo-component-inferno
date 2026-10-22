@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Isso comment JSX component.
@@ -27,9 +28,9 @@ class Isso extends Component {
     // runs (e.g., again by PJAX after switching pages) instead of loading it only once.
     const js = `(function () {
       var script = document.createElement('script');
-      script.src = ${JSON.stringify(`//${url}/js/embed.min.js`)};
+      script.src = ${toJs(`//${url}/js/embed.min.js`)};
       script.async = true;
-      script.setAttribute('data-isso', ${JSON.stringify('//' + url)});
+      script.setAttribute('data-isso', ${toJs('//' + url)});
       document.head.appendChild(script);
     })();`;
     return (

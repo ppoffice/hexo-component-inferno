@@ -4,7 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
-const { appendScript } = require('../../util/script');
+const { appendScript, toJs } = require('../../util/script');
 const { isDark } = require('../../util/appearance');
 
 /**
@@ -43,9 +43,7 @@ class Utterances extends Component {
     config.crossorigin = 'anonymous';
     // Use the dark theme when the page looks dark
     const js = appendScript('#utterances-thread', 'https://utteranc.es/client.js', config, {
-      theme: `${isDark()} ? ${JSON.stringify(darkTheme || 'github-dark')} : ${JSON.stringify(
-        theme || 'github-light',
-      )}`,
+      theme: `${isDark()} ? ${toJs(darkTheme || 'github-dark')} : ${toJs(theme || 'github-light')}`,
     });
     return (
       <>

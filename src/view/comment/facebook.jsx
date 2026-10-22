@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Facebook comment JSX component.
@@ -22,7 +23,7 @@ class Facebook extends Component {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
             js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/${fbLanguage}/sdk.js#xfbml=1&version=v12.0";
+            js.src = ${toJs(`//connect.facebook.net/${fbLanguage}/sdk.js#xfbml=1&version=v12.0`)};
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));`;
     return (

@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Algolia search engine JSX component.
@@ -48,7 +49,7 @@ class Algolia extends Component {
 
     const config = { applicationId, apiKey, indexName, excerpt };
     const js = `document.addEventListener('DOMContentLoaded', function () {
-            loadAlgolia(${JSON.stringify(config)}, ${JSON.stringify(translation)});
+            loadAlgolia(${toJs(config)}, ${toJs(translation)});
         });`;
 
     return (

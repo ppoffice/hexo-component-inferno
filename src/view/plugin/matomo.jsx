@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Matomo analytics plugin JSX component.
@@ -27,9 +28,9 @@ class Matomo extends Component {
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
         (function () {
-          var u = ${JSON.stringify(baseUrl)};
+          var u = ${toJs(baseUrl)};
           _paq.push(['setTrackerUrl', u + 'matomo.php']);
-          _paq.push(['setSiteId', ${JSON.stringify(String(siteId))}]);
+          _paq.push(['setSiteId', ${toJs(String(siteId))}]);
           var g = document.createElement('script');
           g.async = true;
           g.src = u + 'matomo.js';

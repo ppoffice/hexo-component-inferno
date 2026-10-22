@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Statcounter statistics plugin JSX component.
@@ -17,9 +18,9 @@ class Statcounter extends Component {
     const { project, security } = this.props;
 
     const js = `
-      var sc_project=${JSON.stringify(project)};
+      var sc_project=${toJs(project)};
       var sc_invisible=1;
-      var sc_security=${JSON.stringify(security)};
+      var sc_security=${toJs(security)};
       var sc_https=1;
       var sc_remove_link=1;`;
     return (

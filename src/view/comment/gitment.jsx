@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 const { deprecate } = require('../../util/deprecate');
 
 /**
@@ -50,15 +51,15 @@ class Gitment extends Component {
       );
     }
     const js = `var gitment = new Gitment({
-            id: '${id}',
-            repo: '${repo}',
-            owner: '${owner}',
+            id: ${toJs(id)},
+            repo: ${toJs(repo)},
+            owner: ${toJs(owner)},
             oauth: {
-                client_id: '${clientId}',
-                client_secret: '${clientSecret}',
+                client_id: ${toJs(clientId)},
+                client_secret: ${toJs(clientSecret)},
             },
-            perPage: ${perPage},
-            maxCommentHeight: ${maxCommentHeight}
+            perPage: ${toJs(perPage)},
+            maxCommentHeight: ${toJs(maxCommentHeight)}
         })
         gitment.render('comment-container')`;
     return (

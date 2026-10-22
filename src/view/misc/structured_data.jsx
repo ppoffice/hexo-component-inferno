@@ -5,6 +5,7 @@
 const urlFn = require('url');
 const moment = require('moment');
 const { Component } = require('inferno');
+const { toJs } = require('../../util/script');
 const { stripHTML, escapeHTML } = require('hexo-util');
 
 /**
@@ -95,9 +96,7 @@ module.exports = class extends Component {
     };
 
     return (
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}></script>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJs(data) }}></script>
     );
   }
 };

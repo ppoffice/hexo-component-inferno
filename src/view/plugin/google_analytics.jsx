@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { toJs } = require('../../util/script');
 
 /**
  * Google Analytics plugin JSX component.
@@ -20,7 +21,7 @@ class GoogleAnalytics extends Component {
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
     
-        gtag('config', '${trackingId}');`;
+        gtag('config', ${toJs(trackingId)});`;
 
     return (
       <>

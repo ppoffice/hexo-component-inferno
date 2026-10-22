@@ -27,9 +27,19 @@ function loadInsight(config, translation) {
     return result;
   }
 
+  // The search content is plain text, so escape it before showing it as HTML
+  function escapeHTML(text) {
+    return text.replace(/[&<>"']/g, (char) => {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char];
+    });
+  }
+
   function findAndHighlight(text, matches, maxlen) {
-    if (!Array.isArray(matches) || !matches.length || !text) {
-      return maxlen ? text.slice(0, maxlen) : text;
+    if (!text) {
+      return text;
+    }
+    if (!Array.isArray(matches) || !matches.length) {
+      return escapeHTML(maxlen ? text.slice(0, maxlen) : text);
     }
     const testText = text.toLowerCase();
     const indices = matches
@@ -48,7 +58,7 @@ function loadInsight(config, translation) {
       });
 
     if (!indices.length) {
-      return text;
+      return escapeHTML(text);
     }
 
     let result = '';
@@ -61,17 +71,19 @@ function loadInsight(config, translation) {
 
     for (let i = 0; i < ranges.length; i++) {
       const range = ranges[i];
-      result += text.slice(last, Math.min(range[0], sumRange[0] + maxlen));
+      result += escapeHTML(text.slice(last, Math.min(range[0], sumRange[0] + maxlen)));
       if (maxlen && range[0] >= sumRange[0] + maxlen) {
         break;
       }
-      result += '<em>' + text.slice(range[0], range[1]) + '</em>';
+      result += '<em>' + escapeHTML(text.slice(range[0], range[1])) + '</em>';
       last = range[1];
       if (i === ranges.length - 1) {
         if (maxlen) {
-          result += text.slice(range[1], Math.min(text.length, sumRange[0] + maxlen + 1));
+          result += escapeHTML(
+            text.slice(range[1], Math.min(text.length, sumRange[0] + maxlen + 1)),
+          );
         } else {
-          result += text.slice(range[1]);
+          result += escapeHTML(text.slice(range[1]));
         }
       }
     }
@@ -80,12 +92,12 @@ function loadInsight(config, translation) {
   }
 
   function searchItem(icon, title, slug, preview, url) {
-    title = title != null && title !== '' ? title : translation.untitled;
+    title = title != null && title !== '' ? title : escapeHTML(translation.untitled);
     const subtitle = slug
       ? '<span class="searchbox-result-title-secondary">(' + slug + ')</span>'
       : '';
 
-    return `<a class="searchbox-result-item" href="${url}">
+    return `<a class="searchbox-result-item" href="${escapeHTML(url)}">
             <span class="searchbox-result-icon">
                 <i class="fa fa-${icon}"></i>
             </span>

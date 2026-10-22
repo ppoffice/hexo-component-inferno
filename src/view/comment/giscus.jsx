@@ -4,7 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
-const { appendScript } = require('../../util/script');
+const { appendScript, toJs } = require('../../util/script');
 const { isDark } = require('../../util/appearance');
 
 /**
@@ -114,9 +114,9 @@ class Giscus extends Component {
         );
       }
     } else {
-      dynamicConfig['data-theme'] = `${isDark()} ? ${JSON.stringify(
+      dynamicConfig['data-theme'] = `${isDark()} ? ${toJs(
         darkTheme || 'noborder_dark',
-      )} : ${JSON.stringify(theme || 'noborder_light')}`;
+      )} : ${toJs(theme || 'noborder_light')}`;
     }
     if (lang) {
       config['data-lang'] = lang;

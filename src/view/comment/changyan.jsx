@@ -5,6 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
 
 /**
  * ChangYan comment JSX component.
@@ -27,7 +28,7 @@ class ChangYan extends Component {
         </div>
       );
     }
-    const js = `window.changyan.api.config({appid: '${appId}',conf: '${conf}'});`;
+    const js = `window.changyan.api.config({appid: ${toJs(appId)},conf: ${toJs(conf)}});`;
     /* eslint-disable react/no-unknown-property */
     return (
       <>
