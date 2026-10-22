@@ -3,6 +3,7 @@ const { renderToStaticMarkup } = require('inferno-server');
 const { SchemaLoader } = require('../../core/schema');
 const Umami = require('./umami');
 const Matomo = require('./matomo');
+const WalinePageview = require('./waline_pageview');
 
 function renderToDOM(element) {
   const container = document.createElement('div');
@@ -114,5 +115,63 @@ describe('Matomo', () => {
     expect(schema.validate({ url: 'https://matomo.example.com/', site_id: 1 })).toBe(true);
     expect(schema.validate({ url: 'https://matomo.example.com/', site_id: '1' })).toBe(true);
     expect(schema.validate({ url: 'https://matomo.example.com/' })).not.toBe(true);
+  });
+});
+
+describe('Waline page view counter', () => {
+  const helper = { cdn: (name, version, file) => `/cdn/${name}@${version}/${file}` };
+  const waline = { comment: { type: 'waline', server_url: 'https://waline.example.com' } };
+
+  function render(plugin, config = waline, head = false) {
+    return renderToDOM(
+      <WalinePageview.Cacheable head={head} plugin={plugin} config={config} helper={helper} />,
+    ).querySelector('script');
+  }
+
+  test('Use the server of the Waline comments, or the configured server', () => {
+    expect(render(true).textContent).toContain('"https://waline.example.com"');
+    expect(render({ server_url: 'https://pv.example.com' }).textContent).toContain(
+      '"https://pv.example.com"',
+    );
+  });
+
+  test('Render nothing in <head>, when disabled, or without a server', () => {
+    expect(render(true, waline, true)).toBe(null);
+    expect(render(false)).toBe(null);
+    expect(render(true, { comment: { type: 'giscus' } })).toBe(null);
+  });
+
+  test('Count the current page, and again after a PJAX page switch', async () => {
+    const calls = [];
+    const loadWaline = (url) =>
+      Promise.resolve({
+        pageviewCount: (options) => {
+          calls.push(['count', url, options.serverURL, options.path]);
+          return () => calls.push(['abort']);
+        },
+      });
+    const jsUrl = '/cdn/@waline/client@3.3.0/dist/pageview.js';
+    const path = window.location.pathname;
+    const code = render(true).textContent.replace('import(', 'loadWaline(');
+    // eslint-disable-next-line no-new-func
+    new Function('loadWaline', code)(loadWaline);
+    await Promise.resolve();
+    expect(calls).toEqual([['count', jsUrl, 'https://waline.example.com', path]]);
+
+    history.pushState(null, '', '/another/');
+    document.dispatchEvent(new Event('pjax:complete'));
+    await Promise.resolve();
+    expect(calls.slice(1)).toEqual([
+      ['abort'],
+      ['count', jsUrl, 'https://waline.example.com', '/another/'],
+    ]);
+  });
+
+  test('Schema', () => {
+    const schema = getSchema('waline_pageview');
+    expect(schema.validate(true)).toBe(true);
+    expect(schema.validate({ server_url: 'https://pv.example.com' })).toBe(true);
+    expect(schema.validate('yes')).not.toBe(true);
+    expect(schema.getDefaultValue().value).toBe(false);
   });
 });

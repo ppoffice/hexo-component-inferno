@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { translate } = require('../../util/i18n');
 
 /**
  * Categories widget JSX component.
@@ -46,14 +47,30 @@ class Categories extends Component {
   }
 
   render() {
-    const { title, showCount, categories } = this.props;
+    const { title, showCount, categories, moreUrl, moreTitle } = this.props;
 
     return (
       <div class="card widget" data-type="categories">
         <div class="card-content">
           <div class="menu">
             <h3 class="menu-label">{title}</h3>
-            <ul class="menu-list">{this.renderList(categories, showCount)}</ul>
+            <ul class="menu-list">
+              {this.renderList(categories, showCount)}
+              {moreUrl ? (
+                <li>
+                  <a class="level is-mobile" href={moreUrl}>
+                    <span class="level-start">
+                      <span class="level-item">{moreTitle}</span>
+                    </span>
+                    <span class="level-end">
+                      <span class="level-item icon is-small" aria-hidden="true">
+                        <i class="fas fa-chevron-right"></i>
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              ) : null}
+            </ul>
           </div>
         </div>
       </div>
@@ -95,8 +112,9 @@ Categories.Cacheable = cacheComponent(Categories, 'widget.categories', (props) =
     order = 1,
     showCurrent = false,
     showCount = true,
+    amount,
   } = widget;
-  const { url_for, _p } = helper;
+  const { url_for, _p, __ } = helper;
 
   if (!categories || !categories.length) {
     return null;
@@ -152,10 +170,16 @@ Categories.Cacheable = cacheComponent(Categories, 'widget.categories', (props) =
     });
   }
 
+  // Only limit the top-level categories, and link to the category page when some are not shown
+  const list = hierarchicalList(0);
+  const hasMore = amount > 0 && list.length > amount;
+
   return {
     showCount,
-    categories: hierarchicalList(0),
+    categories: hasMore ? list.slice(0, amount) : list,
     title: _p('common.category', Infinity),
+    moreUrl: hasMore ? url_for('categories/') : null,
+    moreTitle: translate(__, 'widget.more', 'More'),
   };
 });
 

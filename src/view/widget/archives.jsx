@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { translate } = require('../../util/i18n');
 
 /**
  * Convert a Hexo language code into a Moment.js locale name.
@@ -42,7 +43,7 @@ function toMomentLocale(lang) {
  */
 class Archives extends Component {
   render() {
-    const { items, title, showCount } = this.props;
+    const { items, title, showCount, moreUrl, moreTitle } = this.props;
 
     return (
       <div class="card widget" data-type="archives">
@@ -64,6 +65,20 @@ class Archives extends Component {
                   </a>
                 </li>
               ))}
+              {moreUrl ? (
+                <li>
+                  <a class="level is-mobile" href={moreUrl}>
+                    <span class="level-start">
+                      <span class="level-item">{moreTitle}</span>
+                    </span>
+                    <span class="level-end">
+                      <span class="level-item icon is-small" aria-hidden="true">
+                        <i class="fas fa-chevron-right"></i>
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>
@@ -103,9 +118,9 @@ class Archives extends Component {
  */
 Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
   const { site, config, page, helper, widget } = props;
-  const { group_by = 'monthly', order = -1, showCount = true, format = null } = widget;
+  const { group_by = 'monthly', order = -1, showCount = true, format = null, amount } = widget;
 
-  const { url_for, _p } = helper;
+  const { url_for, _p, __ } = helper;
   const posts = site.posts.sort('date', order);
   if (!posts.length) {
     return null;
@@ -155,14 +170,19 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
     return url_for(url);
   };
 
+  // Link to the archive page when some of the archives are not shown
+  const hasMore = amount > 0 && data.length > amount;
+
   return {
-    items: data.map((item) => ({
+    items: (hasMore ? data.slice(0, amount) : data).map((item) => ({
       name: item.name,
       count: item.count,
       url: link(item),
     })),
     title: _p('common.archive', Infinity),
     showCount,
+    moreUrl: hasMore ? url_for(`${config.archive_dir}/`) : null,
+    moreTitle: translate(__, 'widget.more', 'More'),
   };
 });
 
