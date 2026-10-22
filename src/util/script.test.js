@@ -76,3 +76,24 @@ test('Treat a script not added by the loader as loaded', () => {
   expect(getScripts().length).toBe(1);
   expect(window.ran).toBe(1);
 });
+
+test('Add a script with attributes to an element on the next tick', () => {
+  jest.useFakeTimers();
+  document.body.innerHTML = '<div id="thread"></div>';
+  // eslint-disable-next-line no-new-func
+  new Function(loadScripts.appendScript('#thread', '/client.js', { repo: 'user/repo' }))();
+  expect(document.querySelector('#thread script')).toBe(null);
+  jest.runAllTimers();
+  jest.useRealTimers();
+  const script = document.querySelector('#thread script');
+  expect(script.getAttribute('src')).toBe('/client.js');
+  expect(script.getAttribute('repo')).toBe('user/repo');
+  expect(script.async).toBe(true);
+});
+
+test('Do nothing without the element', () => {
+  document.body.innerHTML = '';
+  // eslint-disable-next-line no-new-func
+  new Function(loadScripts.appendScript('#thread', '/client.js', {}))();
+  expect(document.querySelectorAll('script').length).toBe(0);
+});

@@ -4,6 +4,8 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { appendScript } = require('../../util/script');
+const { isDark } = require('../../util/appearance');
 
 /**
  * Giscus comment JSX component.
@@ -21,6 +23,7 @@ const { cacheComponent } = require('../../util/cache');
  *     emitMetadata={0}
  *     inputPosition="******"
  *     theme="******"
+ *     darkTheme="******"
  *     lang="******"
  *     lazy="******" />
  */
@@ -38,6 +41,7 @@ class Giscus extends Component {
       emitMetadata,
       inputPosition,
       theme,
+      darkTheme,
       customThemeCss,
       lang,
       lazy,
@@ -59,7 +63,7 @@ class Giscus extends Component {
         </div>
       );
     }
-    const config = { repo };
+    const config = {};
     config['data-repo'] = repo;
     config['data-repo-id'] = repoId;
     config['data-category-id'] = categoryId;
@@ -72,6 +76,9 @@ class Giscus extends Component {
       config['data-mapping'] = mapping;
     } else {
       config['data-mapping'] = 'pathname';
+    }
+    if (term) {
+      config['data-term'] = term;
     }
     if (strict) {
       config['data-strict'] = 1;
@@ -93,23 +100,23 @@ class Giscus extends Component {
     } else {
       config['data-input-position'] = 'top';
     }
-    if (theme) {
-      if (theme === 'custom') {
-        if (customThemeCss) {
-          config['data-theme'] = customThemeCss;
-        } else {
-          return (
-            <div class="notification is-danger">
-              You set <code>theme</code> to <code>custom</code>, but did not apply a{' '}
-              <code>customThemeCss</code> for Giscus. Please set it in <code>_config.yml</code>.
-            </div>
-          );
-        }
+    // Use the dark theme when the page looks dark, unless the theme is custom
+    const dynamicConfig = {};
+    if (theme === 'custom') {
+      if (customThemeCss) {
+        config['data-theme'] = customThemeCss;
       } else {
-        config['data-theme'] = theme;
+        return (
+          <div class="notification is-danger">
+            You set <code>theme</code> to <code>custom</code>, but did not apply a{' '}
+            <code>customThemeCss</code> for Giscus. Please set it in <code>_config.yml</code>.
+          </div>
+        );
       }
     } else {
-      config['data-theme'] = 'noborder_light';
+      dynamicConfig['data-theme'] = `${isDark()} ? ${JSON.stringify(
+        darkTheme || 'noborder_dark',
+      )} : ${JSON.stringify(theme || 'noborder_light')}`;
     }
     if (lang) {
       config['data-lang'] = lang;
@@ -119,12 +126,15 @@ class Giscus extends Component {
     if (lazy) {
       config['data-loading'] = 'lazy';
     }
+    config.crossorigin = 'anonymous';
+    // Giscus puts its iframe into the element with the giscus class, so add its script to <head> to
+    // keep the number of scripts in the comment section the same for PJAX
+    const js = appendScript('head', 'https://giscus.app/client.js', config, dynamicConfig);
     return (
-      <script
-        src="https://giscus.app/client.js"
-        {...config}
-        crossorigin="anonymous"
-        async={true}></script>
+      <>
+        <div id="giscus-thread" class="giscus"></div>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+      </>
     );
   }
 }
@@ -149,6 +159,7 @@ class Giscus extends Component {
  *         emitMetadata: {false}
  *         inputPosition: "******"
  *         theme: "******"
+ *         darkTheme: "******"
  *         lang: "******"
  *         lazy: "******"
  *     }} />
@@ -166,6 +177,7 @@ Giscus.Cacheable = cacheComponent(Giscus, 'comment.giscus', (props) => {
     emitMetadata,
     inputPosition,
     theme,
+    darkTheme,
     customThemeCss,
     lang,
     lazy,
@@ -183,6 +195,7 @@ Giscus.Cacheable = cacheComponent(Giscus, 'comment.giscus', (props) => {
     emitMetadata,
     inputPosition,
     theme,
+    darkTheme,
     customThemeCss,
     lang,
     lazy,

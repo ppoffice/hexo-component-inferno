@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/comment/artalk.json",
+  "description": "Artalk comment plugin configurations\nhttps://artalk.js.org/guide/frontend/config.html",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "artalk"
+    },
+    "server": {
+      "type": "string",
+      "description": "URL of your Artalk server"
+    },
+    "site": {
+      "type": "string",
+      "description": "Name of the site on the Artalk server",
+      "nullable": true
+    },
+    "page_key": {
+      "type": "string",
+      "description": "Unique identifier of the page. Uses the path of the page if not set",
+      "nullable": true
+    },
+    "locale": {
+      "type": "string",
+      "description": "Language of Artalk, e.g., en, zh-CN, or auto",
+      "nullable": true
+    },
+    "dark_mode": {
+      "type": ["boolean", "string"],
+      "description": "Dark mode: true, false, or 'auto' to follow the system color scheme. Follows the appearance of the theme (the data-appearance attribute of <html>) if not set",
+      "nullable": true
+    }
+  },
+  "required": ["type", "server"]
+}

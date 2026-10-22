@@ -19,7 +19,7 @@
     },
     "theme": {
       "type": "string",
-      "description": "Utterances look and feel",
+      "description": "Utterances look and feel when the page looks light",
       "enum": [
         "github-light",
         "github-dark",
@@ -29,6 +29,20 @@
         "photon-dark"
       ],
       "default": "github-light",
+      "nullable": true
+    },
+    "dark_theme": {
+      "type": "string",
+      "description": "Utterances look and feel when the page looks dark, e.g., with the dark or auto appearance of the theme",
+      "enum": [
+        "github-light",
+        "github-dark",
+        "github-dark-orange",
+        "icy-dark",
+        "dark-blue",
+        "photon-dark"
+      ],
+      "default": "github-dark",
       "nullable": true
     }
   },

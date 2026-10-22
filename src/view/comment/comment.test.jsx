@@ -8,6 +8,12 @@ const Valine = require('./valine');
 const ChangYan = require('./changyan');
 const Isso = require('./isso');
 const Waline = require('./waline');
+const Giscus = require('./giscus');
+const Utterances = require('./utterances');
+const Beaudar = require('./beaudar');
+const Artalk = require('./artalk');
+const Cusdis = require('./cusdis');
+const { SchemaLoader } = require('../../core/schema');
 
 /**
  * Render a comment component, check that it does not block rendering, and run its inline script.
@@ -221,6 +227,7 @@ describe('Waline options', () => {
       path: window.location.pathname,
       lang: 'en',
       emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo'],
+      dark: 'html[data-appearance="dark"]',
       meta: ['nick', 'mail', 'link'],
       requiredMeta: [],
       login: 'enable',
@@ -283,5 +290,377 @@ describe('Waline options', () => {
     );
     expect(container.querySelector('.notification.is-danger')).not.toBe(null);
     expect(container.querySelector('script')).toBe(null);
+  });
+});
+
+describe('Waline dark mode', () => {
+  afterEach(() => document.documentElement.removeAttribute('data-appearance'));
+
+  async function getDark(appearance, props = {}) {
+    if (appearance) {
+      document.documentElement.setAttribute('data-appearance', appearance);
+    }
+    delete window.__walineInstance;
+    await renderWaline(
+      <Waline serverURL="https://waline.example.com" jsUrl="/waline.js" {...props} />,
+    )();
+    return calls[1][1].dark;
+  }
+
+  test('Follow the appearance of the page if not set', async () => {
+    expect(await getDark(null)).toBe('html[data-appearance="dark"]');
+    expect(await getDark('dark')).toBe('html[data-appearance="dark"]');
+    calls = [];
+    expect(await getDark('auto')).toBe('auto');
+  });
+
+  test('Keep the configured value', async () => {
+    expect(await getDark('auto', { dark: false })).toBe(false);
+    calls = [];
+    expect(await getDark('auto', { dark: '.dark' })).toBe('.dark');
+  });
+});
+
+/**
+ * Render a comment component that adds its client script to a thread element, run its inline script
+ * with the given appearance, and get the client script from the thread element.
+ */
+function renderClientScript(element, thread, appearance, prefersDark = false) {
+  if (appearance) {
+    document.documentElement.setAttribute('data-appearance', appearance);
+  }
+  window.matchMedia = (query) => ({ matches: query.includes('dark') && prefersDark });
+  jest.useFakeTimers();
+  renderAndRun(element);
+  // The client script is added after the inline script has finished
+  expect(document.querySelector(`${thread} > script[src]`)).toBe(null);
+  jest.runAllTimers();
+  jest.useRealTimers();
+  const script = document.querySelector(`${thread} > script[src]`);
+  document.head.innerHTML = '';
+  document.body.innerHTML = '';
+  document.documentElement.removeAttribute('data-appearance');
+  delete window.matchMedia;
+  return script;
+}
+
+describe('Giscus', () => {
+  const props = { repo: 'user/repo', repoId: 'R_1', categoryId: 'C_1' };
+  const theme = (element, ...args) =>
+    renderClientScript(element, 'head', ...args).getAttribute('data-theme');
+
+  test('Render the giscus element, and add the client script with its attributes to <head>', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Giscus {...props} />);
+    expect(container.querySelector('#giscus-thread.giscus')).not.toBe(null);
+
+    const script = renderClientScript(
+      <Giscus {...props} mapping="specific" term="Welcome" />,
+      'head',
+    );
+    expect(script.getAttribute('src')).toBe('https://giscus.app/client.js');
+    expect(script.getAttribute('data-repo')).toBe('user/repo');
+    expect(script.getAttribute('data-repo-id')).toBe('R_1');
+    expect(script.getAttribute('data-category-id')).toBe('C_1');
+    expect(script.getAttribute('data-mapping')).toBe('specific');
+    expect(script.getAttribute('data-term')).toBe('Welcome');
+    expect(script.getAttribute('crossorigin')).toBe('anonymous');
+    expect(script.async).toBe(true);
+  });
+
+  test('Choose the theme by the appearance of the page', () => {
+    expect(theme(<Giscus {...props} />)).toBe('noborder_light');
+    expect(theme(<Giscus {...props} />, 'dark')).toBe('noborder_dark');
+    expect(theme(<Giscus {...props} />, 'auto', false)).toBe('noborder_light');
+    expect(theme(<Giscus {...props} />, 'auto', true)).toBe('noborder_dark');
+    expect(theme(<Giscus {...props} theme="light" darkTheme="dark_dimmed" />, 'dark')).toBe(
+      'dark_dimmed',
+    );
+  });
+
+  test('Always use the custom theme', () => {
+    expect(theme(<Giscus {...props} theme="custom" customThemeCss="/giscus.css" />, 'dark')).toBe(
+      '/giscus.css',
+    );
+  });
+});
+
+describe('Utterances', () => {
+  const props = { repo: 'user/repo', issueTerm: 'pathname' };
+
+  test('Add the client script with its attributes to the thread element', () => {
+    const script = renderClientScript(<Utterances {...props} />, '#utterances-thread');
+    expect(script.getAttribute('src')).toBe('https://utteranc.es/client.js');
+    expect(script.getAttribute('repo')).toBe('user/repo');
+    expect(script.getAttribute('issue-term')).toBe('pathname');
+    expect(script.getAttribute('crossorigin')).toBe('anonymous');
+  });
+
+  test('Choose the theme by the appearance of the page', () => {
+    const theme = (element, ...args) =>
+      renderClientScript(element, '#utterances-thread', ...args).getAttribute('theme');
+    expect(theme(<Utterances {...props} />)).toBe('github-light');
+    expect(theme(<Utterances {...props} />, 'dark')).toBe('github-dark');
+    expect(
+      theme(<Utterances {...props} theme="github-light" darkTheme="icy-dark" />, 'auto', true),
+    ).toBe('icy-dark');
+  });
+});
+
+describe('Beaudar', () => {
+  const props = { repo: 'user/repo', branch: 'main', issueTerm: 'pathname', label: 'comment' };
+
+  test('Add the client script with its attributes to the thread element', () => {
+    const script = renderClientScript(<Beaudar {...props} />, '#beaudar-thread');
+    expect(script.getAttribute('src')).toBe('https://beaudar.lipk.org/client.js');
+    expect(script.getAttribute('repo')).toBe('user/repo');
+    expect(script.getAttribute('branch')).toBe('main');
+    expect(script.getAttribute('issue-term')).toBe('pathname');
+    expect(script.getAttribute('label')).toBe('comment');
+    expect(script.getAttribute('crossorigin')).toBe('anonymous');
+  });
+
+  test('Choose the theme by the appearance of the page', () => {
+    const theme = (element, ...args) =>
+      renderClientScript(element, '#beaudar-thread', ...args).getAttribute('theme');
+    expect(theme(<Beaudar {...props} />)).toBe('github-light');
+    expect(theme(<Beaudar {...props} />, 'dark')).toBe('github-dark');
+    expect(theme(<Beaudar {...props} darkTheme="icy-dark" />, 'auto', true)).toBe('icy-dark');
+  });
+
+  test('Show an error without the repository', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Beaudar issueTerm="pathname" />);
+    expect(container.querySelector('.notification.is-danger')).not.toBe(null);
+  });
+});
+
+describe('Artalk', () => {
+  const props = {
+    server: 'https://artalk.example.com',
+    jsUrl: '/artalk.js',
+    cssUrl: '/artalk.css',
+  };
+  const Artalk_ = {
+    init: (options) => {
+      calls.push(['init', options]);
+      return { destroy: () => calls.push(['destroy']) };
+    },
+  };
+
+  afterEach(() => {
+    delete window.__artalkInstance;
+    document.documentElement.removeAttribute('data-appearance');
+  });
+
+  test('Load Artalk and initialize it, and destroy the previous instance', () => {
+    const element = <Artalk {...props} site="Blog" pageTitle="Post" locale="en" />;
+    renderAndRun(element);
+    expect(calls).toEqual([]);
+    expect(loadAddedScripts({ Artalk: Artalk_ })).toEqual(['/artalk.js']);
+    expect(calls).toEqual([
+      [
+        'init',
+        {
+          el: '#artalk-thread',
+          server: 'https://artalk.example.com',
+          site: 'Blog',
+          pageTitle: 'Post',
+          locale: 'en',
+          darkMode: false,
+        },
+      ],
+    ]);
+    // Run again, e.g., by PJAX
+    renderAndRun(element);
+    expect(calls.map((call) => call[0])).toEqual(['init', 'destroy', 'init']);
+  });
+
+  test('Follow the appearance of the page if dark_mode is not set', () => {
+    const darkMode = (appearance, extra = {}) => {
+      calls = [];
+      document.documentElement.setAttribute('data-appearance', appearance);
+      window.Artalk = Artalk_;
+      renderAndRun(<Artalk {...props} {...extra} />);
+      loadAddedScripts({ Artalk: Artalk_ });
+      return calls.find((call) => call[0] === 'init')[1].darkMode;
+    };
+    expect(darkMode('dark')).toBe(true);
+    expect(darkMode('auto')).toBe('auto');
+    expect(darkMode('dark', { darkMode: false })).toBe(false);
+  });
+
+  test('Show an error without the server', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Artalk jsUrl="/artalk.js" />);
+    expect(container.querySelector('.notification.is-danger')).not.toBe(null);
+  });
+});
+
+describe('Cusdis', () => {
+  const props = { appId: 'app', pageId: '/post/', pageUrl: 'https://example.com/post/' };
+
+  afterEach(() => {
+    delete window.renderCusdis;
+    document.documentElement.removeAttribute('data-appearance');
+  });
+
+  test('Load the Cusdis script, which renders the thread element', () => {
+    renderAndRun(<Cusdis {...props} lang="zh-cn" />);
+    const thread = document.getElementById('cusdis_thread');
+    expect(thread.getAttribute('data-host')).toBe('https://cusdis.com');
+    expect(thread.getAttribute('data-app-id')).toBe('app');
+    expect(thread.getAttribute('data-page-id')).toBe('/post/');
+    expect(thread.getAttribute('data-page-url')).toBe('https://example.com/post/');
+    expect(thread.getAttribute('data-theme')).toBe('light');
+    expect(loadAddedScripts()).toEqual([
+      'https://cusdis.com/js/widget/lang/zh-cn.js',
+      'https://cusdis.com/js/cusdis.es.js',
+    ]);
+  });
+
+  test('Render the thread element directly when the script is already loaded', () => {
+    window.renderCusdis = (element) => calls.push(element.id);
+    renderAndRun(<Cusdis {...props} host="https://cusdis.example.com" />);
+    expect(calls).toEqual(['cusdis_thread']);
+    expect(document.head.querySelectorAll('script').length).toBe(0);
+  });
+
+  test('Follow the appearance of the page if theme is not set', () => {
+    const theme = (appearance, extra = {}) => {
+      document.body.innerHTML = '';
+      document.documentElement.setAttribute('data-appearance', appearance);
+      renderAndRun(<Cusdis {...props} {...extra} />);
+      return document.getElementById('cusdis_thread').getAttribute('data-theme');
+    };
+    expect(theme('dark')).toBe('dark');
+    expect(theme('auto')).toBe('auto');
+    expect(theme('auto', { theme: 'light' })).toBe('light');
+  });
+});
+
+test('Schemas of the new comment plugins', () => {
+  const validate = (name, config) => {
+    const def = require(`../../schema/comment/${name}.json`);
+    return SchemaLoader.load(def).getSchema(def.$id).validate(config);
+  };
+  expect(validate('artalk', { type: 'artalk', server: 'https://artalk.example.com' })).toBe(true);
+  expect(validate('artalk', { type: 'artalk' })).not.toBe(true);
+  expect(validate('cusdis', { type: 'cusdis', app_id: 'app' })).toBe(true);
+  expect(validate('cusdis', { type: 'cusdis', app_id: 'app', theme: 'blue' })).not.toBe(true);
+  expect(validate('beaudar', { type: 'beaudar', repo: 'user/repo', issue_term: 'pathname' })).toBe(
+    true,
+  );
+  expect(validate('beaudar', { type: 'beaudar', repo: 'user/repo' })).not.toBe(true);
+});
+
+describe('Configuration of the comment plugins', () => {
+  const helper = {
+    cdn: (name, version, file) => `/cdn/${name}@${version}/${file}`,
+    url_for: (url) => `/blog/${url}`,
+  };
+  const page = { path: 'post/', permalink: 'https://example.com/blog/post/', title: 'Post' };
+
+  function renderCacheable(Component, comment) {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(
+      <Component.Cacheable comment={comment} helper={helper} page={page} config={{}} />,
+    );
+    return container;
+  }
+
+  function getError(Component, props) {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<Component {...props} />);
+    const error = container.querySelector('.notification.is-danger');
+    return error ? error.textContent : null;
+  }
+
+  test('Giscus', () => {
+    const container = renderCacheable(Giscus, {
+      repo: 'user/repo',
+      repoId: 'R_1',
+      category: 'General',
+      categoryId: 'C_1',
+      mapping: 'title',
+      strict: true,
+      reactionsEnabled: true,
+      emitMetadata: true,
+      inputPosition: 'bottom',
+      theme: 'light',
+      darkTheme: 'dark',
+      lang: 'zh-CN',
+      lazy: true,
+    });
+    const js = container.querySelector('script').textContent;
+    for (const value of [
+      '"data-category":"General"',
+      '"data-mapping":"title"',
+      '"data-strict":1',
+      '"data-reactions-enabled":1',
+      '"data-emit-metadata":1',
+      '"data-input-position":"bottom"',
+      '"data-lang":"zh-CN"',
+      '"data-loading":"lazy"',
+      '"dark" : "light"',
+    ]) {
+      expect(js).toContain(value);
+    }
+
+    const props = { repo: 'user/repo', repoId: 'R_1', categoryId: 'C_1' };
+    expect(getError(Giscus, { repo: 'user/repo' })).toContain('repoId');
+    expect(getError(Giscus, { ...props, mapping: 'number' })).toContain('term');
+    expect(getError(Giscus, { ...props, theme: 'custom' })).toContain('customThemeCss');
+  });
+
+  test('Utterances and Beaudar', () => {
+    for (const [Component, thread] of [
+      [Utterances, '#utterances-thread'],
+      [Beaudar, '#beaudar-thread'],
+    ]) {
+      const comment = {
+        repo: 'user/repo',
+        issue_number: 1,
+        label: 'comment',
+        dark_theme: 'icy-dark',
+      };
+      const js = renderCacheable(Component, comment).querySelector('script').textContent;
+      expect(js).toContain(`document.querySelector("${thread}")`);
+      expect(js).toContain('"issue-number":1');
+      expect(js).toContain('"label":"comment"');
+      expect(js).toContain('"icy-dark"');
+      expect(getError(Component, { repo: 'user/repo' })).toContain('issue_term');
+    }
+  });
+
+  test('Artalk', () => {
+    const container = renderCacheable(Artalk, {
+      server: 'https://artalk.example.com',
+      site: 'Blog',
+      page_key: '/post/',
+      locale: 'en',
+      dark_mode: 'auto',
+    });
+    const js = container.querySelector('script').textContent;
+    expect(js).toContain('"/cdn/artalk@2.9.1/dist/Artalk.js"');
+    expect(js).toContain('pageKey: "/post/"');
+    expect(js).toContain('pageTitle: "Post"');
+    expect(js).toContain('darkMode: "auto"');
+    expect(container.querySelector('link').getAttribute('href')).toBe(
+      '/cdn/artalk@2.9.1/dist/Artalk.css',
+    );
+  });
+
+  test('Cusdis', () => {
+    const thread = renderCacheable(Cusdis, {
+      app_id: 'app',
+      host: 'https://cusdis.example.com/',
+      theme: 'dark',
+    }).querySelector('#cusdis_thread');
+    expect(thread.getAttribute('data-host')).toBe('https://cusdis.example.com');
+    expect(thread.getAttribute('data-page-id')).toBe('/blog/post/');
+    expect(thread.getAttribute('data-page-url')).toBe('https://example.com/blog/post/');
+    expect(thread.getAttribute('data-page-title')).toBe('Post');
+    expect(getError(Cusdis, {})).toContain('app_id');
   });
 });
