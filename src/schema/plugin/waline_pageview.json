@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/plugin/waline_pageview.json",
-  "description": "Waline page view counter, true to use the server of the Waline comments, which can also store the views in LeanCloud. Do not also enable the pageview option of the Waline comments, which would count the views twice\nhttps://waline.js.org/en/guide/features/pageview.html",
+  "description": "Waline page view counter, true to use the server of the Waline comments. Do not also enable the pageview option of the Waline comments, which would count the views twice\nhttps://waline.js.org/en/guide/features/pageview.html",
   "type": ["boolean", "object"],
   "properties": {
     "server_url": {

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/share/addthis.json",
-  "description": "Enable AddThis share buttons\nhttps://www.addthis.com/",
+  "description": "Enable AddThis share buttons\nDEPRECATED: AddThis shut down on May 31, 2023. Use AddToAny or ShareThis instead.",
   "type": "object",
   "properties": {
     "type": {

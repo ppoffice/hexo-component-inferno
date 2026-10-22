@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/comment/valine.json",
-  "description": "Valine comment plugin configurations\nWARNING: Valine saves comments, including the commenters' email addresses, in a LeanCloud class that anyone with your public app ID and key can read. Consider Waline or another comment system instead.",
+  "description": "Valine comment plugin configurations\nDEPRECATED: LeanCloud, where Valine stores the comments, shuts down on January 12, 2027. Use Waline, Twikoo or another comment system instead.\nWARNING: Valine saves comments, including the commenters' email addresses, in a LeanCloud class that anyone with your public app ID and key can read. Consider Waline or another comment system instead.",
   "type": "object",
   "properties": {
     "type": {
