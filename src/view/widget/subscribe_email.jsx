@@ -4,10 +4,13 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { deprecate } = require('../../util/deprecate');
 
 /**
  * Google FeedBurner widget JSX component.
  *
+ * @deprecated Google FeedBurner stopped email subscriptions in July 2021. Use the follow.it widget
+ *     instead.
  * @see https://feedburner.google.com/
  * @example
  * <SubscribeEmail
@@ -18,6 +21,10 @@ const { cacheComponent } = require('../../util/cache');
  */
 class SubscribeEmail extends Component {
   render() {
+    deprecate(
+      'widget.subscribe_email',
+      'Google FeedBurner stopped email subscriptions in July 2021. Use the follow.it widget instead.',
+    );
     const { title, description, feedburnerId, buttonTitle } = this.props;
 
     return (

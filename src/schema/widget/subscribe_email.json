@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/widget/subscribe_email.json",
-  "description": "Google FeedBurner email subscription widget configurations",
+  "description": "Google FeedBurner email subscription widget configurations\nDEPRECATED: Google FeedBurner stopped email subscriptions in July 2021. Use the follow.it widget instead.",
   "type": "object",
   "properties": {
     "type": {

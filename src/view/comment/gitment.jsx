@@ -7,11 +7,13 @@ const crypto = require('crypto');
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { deprecate } = require('../../util/deprecate');
 
 /**
  * Gitment comment JSX component.
  *
- * @deprecated
+ * @deprecated Gitment is no longer maintained, and the GitHub sign-in proxy it uses no longer works. Use
+ *     Giscus, Utterances or Gitalk instead.
  * @see https://github.com/imsun/gitment
  * @example
  * <Gitment
@@ -25,6 +27,10 @@ const loadScripts = require('../../util/script');
  */
 class Gitment extends Component {
   render() {
+    deprecate(
+      'comment.gitment',
+      'Gitment is no longer maintained, and the GitHub sign-in proxy it uses no longer works. Use Giscus, Utterances or Gitalk instead.',
+    );
     const {
       id,
       repo,

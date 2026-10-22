@@ -5,10 +5,13 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
+const { deprecate } = require('../../util/deprecate');
 
 /**
  * Valine comment JSX component.
  *
+ * @deprecated LeanCloud, where Valine stores the comments, shuts down on January 12, 2027. Use Waline,
+ *     Twikoo or another comment system instead.
  * @see https://valine.js.org/quickstart.html
  * @example
  * <Valine
@@ -32,6 +35,10 @@ const loadScripts = require('../../util/script');
  */
 class Valine extends Component {
   render() {
+    deprecate(
+      'comment.valine',
+      'LeanCloud, where Valine stores the comments, shuts down on January 12, 2027. Use Waline, Twikoo or another comment system instead.',
+    );
     const {
       appId,
       appKey,

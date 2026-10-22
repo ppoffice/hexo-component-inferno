@@ -118,6 +118,7 @@ classes.
 | `util/script`     | Builds inline scripts that load external scripts without blocking the page and work with PJAX.                    |
 | `util/appearance` | Builds inline expressions that follow the light, dark, or auto appearance of the page (`<html data-appearance>`). |
 | `util/i18n`       | Translates a key with a fallback when the theme has no translation.                                               |
+| `util/deprecate`  | Warns once when a deprecated component is rendered.                                                               |
 
 ## Components
 
@@ -131,6 +132,16 @@ classes.
 | `plugin`  | Baidu Analytics, Bing Webmaster, Busuanzi, CNZZ, cookie consent, gallery, Google Analytics, Hotjar, KaTeX, MathJax, Matomo, outdated browser warning, progress bar, StatCounter, Twitter conversion tracking, Umami, Waline page views |
 | `misc`    | Article licensing, meta tags, Open Graph, paginator, structured data, web app                                                                                                                                                          |
 | `common`  | Article media (a thumbnail with a title and date)                                                                                                                                                                                      |
+
+The components below are deprecated because their services have shut down or are shutting down. They print
+a warning when they are rendered, and will be removed in the next major version.
+
+| Component                | Reason                                                                         | Alternatives               |
+| ------------------------ | ------------------------------------------------------------------------------ | -------------------------- |
+| `share/addthis`          | AddThis shut down on May 31, 2023.                                             | AddToAny, ShareThis        |
+| `comment/gitment`        | Gitment is no longer maintained, and its GitHub sign-in proxy no longer works. | Giscus, Utterances, Gitalk |
+| `comment/valine`         | LeanCloud, where Valine stores the comments, shuts down on January 12, 2027.   | Waline, Twikoo             |
+| `widget/subscribe_email` | Google FeedBurner stopped email subscriptions in July 2021.                    | follow.it                  |
 
 The [API documentation](https://ppoffice.github.io/hexo-component-inferno/) lists the props of every
 component and the options of every module.
@@ -149,6 +160,8 @@ npm run docs          # generate the API documentation in doc/
 
 Tests sit next to the source files (`*.test.js` / `*.test.jsx`) and run against the compiled files in
 `lib/`, so run `npm run build` after changing `src/`.
+
+The tests use Hexo 8, which needs Node.js 20.19 or later. CI also tests Node.js 14 with Hexo 7.
 
 Releases are published to npm by GitHub Actions when a GitHub release is published.
 

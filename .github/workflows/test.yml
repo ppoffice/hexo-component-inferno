@@ -20,6 +20,10 @@ jobs:
           key: npm-cache
           restore-keys: npm-cache
       - run: npm install
+      # hexo is a peer dependency (^7.1.1 || ^8.0.0). The dev dependency installs Hexo 8, which
+      # requires Node.js 20.19 or later, so test the oldest Node.js with Hexo 7.
+      - if: matrix.node-version == 14
+        run: npm install --no-save hexo@^7.1.1
       - run: npm run build
       - run: npm run test
 

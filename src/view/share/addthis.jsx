@@ -4,16 +4,22 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { deprecate } = require('../../util/deprecate');
 
 /**
  * AddThis share buttons JSX component.
  *
+ * @deprecated AddThis shut down on May 31, 2023. Use AddToAny or ShareThis instead.
  * @see https://www.addthis.com/dashboard
  * @example
  * <AddThis installUrl="******" />
  */
 class AddThis extends Component {
   render() {
+    deprecate(
+      'share.addthis',
+      'AddThis shut down on May 31, 2023. Use AddToAny or ShareThis instead.',
+    );
     const { installUrl } = this.props;
     if (!installUrl) {
       return (
