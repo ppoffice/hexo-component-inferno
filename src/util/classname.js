@@ -19,7 +19,7 @@ module.exports = function (classname) {
   if (Array.isArray(classname)) {
     return classname.join(' ');
   }
-  if (typeof classname === 'object') {
+  if (classname !== null && typeof classname === 'object') {
     return Object.keys(classname)
       .filter((key) => !!classname[key])
       .join(' ');

@@ -74,6 +74,11 @@ function loadScripts(urls, code, attrs = {}) {
         script.addEventListener('load', function () {
           this.setAttribute('data-loaded', 'true');
         });
+        // Remove a script that fails to load, so that the next run, e.g., after a PJAX page switch,
+        // adds it again instead of waiting for it
+        script.addEventListener('error', function () {
+          this.remove();
+        });
         document.head.appendChild(script);
       }
       script.addEventListener('load', function () {

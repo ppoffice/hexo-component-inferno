@@ -105,3 +105,13 @@ test('Convert values to JavaScript that cannot end the inline script', () => {
   // eslint-disable-next-line no-new-func
   expect(new Function(`return ${code}`)()).toEqual(value);
 });
+
+test('Add a script that failed to load again on the next run', () => {
+  run('/a.js');
+  const script = getScripts()[0];
+  script.dispatchEvent(new Event('error'));
+  expect(getScripts().length).toBe(0);
+  run('/a.js');
+  expect(getScripts().length).toBe(1);
+  expect(getScripts()[0]).not.toBe(script);
+});

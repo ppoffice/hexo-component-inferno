@@ -516,3 +516,51 @@ describe('Schema class tests', () => {
     }).toThrow();
   });
 });
+
+describe('Fixes from the code review', () => {
+  test('Keep quotes and colons in the comments of the YAML', () => {
+    const value = new DefaultValue(
+      {
+        mode: new DefaultValue('auto', "Set to 'auto'\nNote: don't use it"),
+        list: new DefaultValue([new DefaultValue('a', "Item 'a': first")]),
+        'key: with colon': new DefaultValue(1, 'A "quoted" key'),
+      },
+      null,
+    );
+    const yaml = value.toYaml();
+    expect(yaml).toContain("# Set to 'auto'\n");
+    expect(yaml).toContain("# Note: don't use it\n");
+    expect(yaml).toContain("# Item 'a': first\n");
+    expect(yaml).toContain('# A "quoted" key\n');
+    expect(yaml).not.toContain(MAGIC);
+  });
+
+  test('Do not change the default values of the schemas', () => {
+    const shared = { $id: '/shared.json', type: 'object', default: { x: 1 } };
+    const root = {
+      $id: '/root.json',
+      type: 'object',
+      properties: {
+        p: {
+          $ref: '/shared.json',
+          type: 'object',
+          properties: { y: { type: 'string', default: 'Y' } },
+        },
+        q: { $ref: '/shared.json' },
+      },
+    };
+    const loader = new SchemaLoader();
+    loader.addSchema(shared);
+    loader.addSchema(root);
+    const value = loader.getSchema('/root.json').getDefaultValue();
+    value.flatten();
+    expect(shared.default).toEqual({ x: 1 });
+    expect(JSON.parse(JSON.stringify(value.toCommented())).q).toEqual({ x: 1 });
+  });
+
+  test('Do not change the directories given to SchemaLoader.load', () => {
+    const dirs = [];
+    SchemaLoader.load({ $id: '/empty.json', type: 'object' }, dirs);
+    expect(dirs).toEqual([]);
+  });
+});
