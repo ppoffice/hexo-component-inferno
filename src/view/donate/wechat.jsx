@@ -57,7 +57,7 @@ Wechat.Cacheable = cacheComponent(Wechat, 'donate.wechat', (props) => {
   const { donate, helper } = props;
 
   return {
-    qrcode: helper.url_for(donate.qrcode),
+    qrcode: donate.qrcode ? helper.url_for(donate.qrcode) : null,
     title: helper.__('donate.' + donate.type),
   };
 });

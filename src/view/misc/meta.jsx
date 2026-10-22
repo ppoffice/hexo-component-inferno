@@ -11,6 +11,11 @@ function trim(str) {
     .replace(/^'(.*)'$/, '$1');
 }
 
+// Remove the backslashes that escape ";" and "="
+function unescape(str) {
+  return str.replace(/\\(.)/g, '$1');
+}
+
 function split(str, sep) {
   const result = [];
   let matched = null;
@@ -41,11 +46,12 @@ module.exports = class extends Component {
       .map((entry) => {
         const props = split(entry, /(?:[^\\;]+|\\.)+/g)
           .map((property) => {
-            const entry = split(property, /(?:[^\\=]+|\\.)+/g);
-            if (entry.length < 2) {
+            // Split at the first "=" that is not escaped, so that the value can contain "="
+            const entry = /^((?:[^\\=]|\\.)*)=(.*)$/s.exec(property);
+            if (!entry) {
               return null;
             }
-            return { [trim(entry[0])]: trim(entry[1]) };
+            return { [unescape(trim(entry[1]))]: unescape(trim(entry[2])) };
           })
           .filter((property) => {
             return property !== null;

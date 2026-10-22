@@ -37,6 +37,12 @@ module.exports = function (hexo) {
     if (!manifest.start_url) {
       manifest.start_url = url_for('/index.html');
     }
+    if (Array.isArray(manifest.icons)) {
+      // Resolve the icons against the root of the site, like start_url
+      manifest.icons = manifest.icons.map((icon) =>
+        icon && icon.src ? Object.assign({}, icon, { src: url_for(icon.src) }) : icon,
+      );
+    }
 
     return {
       path: '/manifest.json',

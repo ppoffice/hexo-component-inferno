@@ -54,7 +54,7 @@ Patreon.Cacheable = cacheComponent(Patreon, 'donate.petreon', (props) => {
   const { donate, helper } = props;
 
   return {
-    url: helper.url_for(donate.url),
+    url: donate.url ? helper.url_for(donate.url) : null,
     title: helper.__('donate.' + donate.type),
   };
 });

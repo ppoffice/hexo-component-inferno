@@ -37,7 +37,31 @@ test('Generate manifest.json according to theme configuration', async () => {
   const generator = hexo.extend.generator.get('manifest').bind(hexo);
   const result = await generator(locals);
   expect(result.path).toEqual('/manifest.json');
-  expect(JSON.parse(result.data)).toEqual(manifest);
+  expect(JSON.parse(result.data)).toEqual({
+    ...manifest,
+    icons: [
+      { ...manifest.icons[0], src: '/1.png' },
+      { ...manifest.icons[1], src: '/2.png' },
+    ],
+  });
+});
+
+test('Resolve the icons against the root of the site', async () => {
+  const root = hexo.config.root;
+  hexo.config.root = '/blog/';
+  hexo.theme.config.head = {
+    manifest: {
+      icons: [{ src: '/img/icon.png', sizes: '192x192' }, { src: 'https://cdn/icon.png' }],
+    },
+  };
+  const generator = hexo.extend.generator.get('manifest').bind(hexo);
+  const data = JSON.parse((await generator(hexo.locals.toObject())).data);
+  hexo.config.root = root;
+  expect(data.start_url).toBe('/blog/index.html');
+  expect(data.icons.map((icon) => icon.src)).toEqual([
+    '/blog/img/icon.png',
+    'https://cdn/icon.png',
+  ]);
 });
 
 test('Generate manifest.json when theme configuration is empty', async () => {

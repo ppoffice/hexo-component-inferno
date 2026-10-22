@@ -54,7 +54,7 @@ BuyMeACoffee.Cacheable = cacheComponent(BuyMeACoffee, 'donate.buymeacoffee', (pr
   const { donate, helper } = props;
 
   return {
-    url: helper.url_for(donate.url),
+    url: donate.url ? helper.url_for(donate.url) : null,
     title: helper.__('donate.' + donate.type),
   };
 });

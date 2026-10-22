@@ -2,7 +2,7 @@
  * Insight search content.json generator.
  * @module hexo/generator/insight
  */
-const util = require('hexo-util');
+const { toPlainText } = require('../../util/html');
 
 /**
  * Insight search content.json generator.
@@ -13,29 +13,10 @@ module.exports = function (hexo) {
   hexo.extend.generator.register('insight', function (locals) {
     const url_for = hexo.extend.helper.get('url_for').bind(this);
     // content.json holds plain text, which the search script escapes when it shows it
-    const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
-    function decodeEntities(str) {
-      return str.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (match, entity) => {
-        if (entity[0] === '#') {
-          const code =
-            entity[1] === 'x' || entity[1] === 'X'
-              ? parseInt(entity.slice(2), 16)
-              : parseInt(entity.slice(1), 10);
-          return code <= 0x10ffff ? String.fromCodePoint(code) : match;
-        }
-        const char = ENTITIES[entity.toLowerCase()];
-        return char === undefined ? match : char;
-      });
-    }
-    function plain(str) {
-      return decodeEntities(util.stripHTML(str || ''))
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
     function mapPost(post) {
       return {
         title: (post.title || '').trim(),
-        text: plain(post.content),
+        text: toPlainText(post.content),
         link: url_for(post.path),
       };
     }
