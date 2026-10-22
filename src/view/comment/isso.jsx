@@ -24,13 +24,15 @@ class Isso extends Component {
         </div>
       );
     }
+    // The URL can be given with or without the protocol
+    const host = url.replace(/^(https?:)?\/\//i, '').replace(/\/+$/, '');
     // Isso renders the thread as soon as its script runs, so add a new script every time this code
     // runs (e.g., again by PJAX after switching pages) instead of loading it only once.
     const js = `(function () {
       var script = document.createElement('script');
-      script.src = ${toJs(`//${url}/js/embed.min.js`)};
+      script.src = ${toJs(`//${host}/js/embed.min.js`)};
       script.async = true;
-      script.setAttribute('data-isso', ${toJs('//' + url)});
+      script.setAttribute('data-isso', ${toJs('//' + host)});
       document.head.appendChild(script);
     })();`;
     return (

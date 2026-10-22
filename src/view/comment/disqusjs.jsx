@@ -44,7 +44,7 @@ class DisqusJs extends Component {
       jsUrl,
       cssUrl,
     } = this.props;
-    if (!shortname) {
+    if (!shortname || !apiKey) {
       return (
         <div class="notification is-danger">
           You forgot to set the <code>shortname</code> or <code>api_key</code> for Disqus. Please

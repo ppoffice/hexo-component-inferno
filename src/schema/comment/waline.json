@@ -14,7 +14,7 @@
     },
     "path": {
       "type": "string",
-      "description": "Article path id."
+      "description": "Article path id. A path, such as /posts/hello/, or a JavaScript expression, such as window.location.pathname, which is the default."
     },
     "lang": {
       "type": "string",
