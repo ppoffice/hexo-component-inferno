@@ -108,3 +108,54 @@ test('Web app icons are resolved against the root of the site', () => {
     ),
   ).toEqual(['/blog/big.png', '/blog/big.png']);
 });
+
+test('Open Graph tags of an article', () => {
+  const og = render(
+    <OpenGraph
+      type="article"
+      title="Title"
+      url="https://example.com/post/"
+      siteName="Site"
+      author="Author"
+      date={new Date(Date.UTC(2024, 0, 1))}
+      updated={new Date(Date.UTC(2024, 0, 2))}
+      images={['https://cdn.example.com/a.png', 'b.png']}
+      keywords={[{ name: 'tag' }, 'keyword', '']}
+      twitterCard="summary_large_image"
+      twitterId="user"
+      twitterSite="@site"
+      googlePlus="https://plus.example.com/"
+      facebookAdmins="admin"
+      facebookAppId="app"
+    />,
+  );
+  const content = (property) =>
+    Array.from(og.querySelectorAll(`meta[property="${property}"]`)).map((meta) =>
+      meta.getAttribute('content'),
+    );
+  expect(content('og:image')).toEqual([
+    'https://cdn.example.com/a.png',
+    'https://example.com/post/b.png',
+  ]);
+  expect(content('article:published_time')).toEqual(['2024-01-01T00:00:00.000Z']);
+  expect(content('article:modified_time')).toEqual(['2024-01-02T00:00:00.000Z']);
+  expect(content('article:author')).toEqual(['Author']);
+  expect(content('article:tag')).toEqual(['tag', 'keyword']);
+  expect(content('twitter:card')).toEqual(['summary_large_image']);
+  expect(content('twitter:image:src')).toEqual(['https://cdn.example.com/a.png']);
+  expect(content('twitter:creator')).toEqual(['@user']);
+  expect(content('twitter:site')).toEqual(['@site']);
+  expect(content('fb:admins')).toEqual(['admin']);
+  expect(content('fb:app_id')).toEqual(['app']);
+  expect(og.querySelector('link[rel="publisher"]').getAttribute('href')).toBe(
+    'https://plus.example.com/',
+  );
+  // A single keyword as a string, and a relative image for Twitter
+  const single = render(
+    <OpenGraph url="https://example.com/post/" title="T" keywords="one" images="c.png" />,
+  );
+  expect(single.querySelector('meta[property="article:tag"]').getAttribute('content')).toBe('one');
+  expect(single.querySelector('meta[property="twitter:image:src"]').getAttribute('content')).toBe(
+    'https://example.com/post/c.png',
+  );
+});
