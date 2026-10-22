@@ -1,6 +1,5 @@
-/**
- * @jest-environment node
- */
+// Runs in the node environment of the default Jest project (see jest.config.json): Babel puts its
+// helpers before a @jest-environment docblock in the compiled file.
 const path = require('path');
 const Hexo = require('hexo');
 const { renderToStaticMarkup } = require('inferno-server');

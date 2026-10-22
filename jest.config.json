@@ -3,13 +3,38 @@
     {
       "displayName": "default",
       "testMatch": ["<rootDir>/lib/**/*.test.js"],
-      "testPathIgnorePatterns": ["<rootDir>/lib/view/"],
-      "testEnvironment": "node"
+      "testPathIgnorePatterns": ["<rootDir>/lib/view/(?!widget/widgets\\.test\\.js$)"],
+      "testEnvironment": "node",
+      "transform": {
+        "/node_modules/(strip-ansi|ansi-regex)/.+\\.js$": [
+          "babel-jest",
+          {
+            "babelrc": false,
+            "configFile": false,
+            "presets": ["@babel/preset-env"]
+          }
+        ],
+        "\\.[jt]sx?$": "babel-jest"
+      },
+      "transformIgnorePatterns": ["/node_modules/(?!(.*/node_modules/)?(strip-ansi|ansi-regex)/)"]
     },
     {
       "displayName": "inferno",
       "testMatch": ["<rootDir>/lib/view/**/*.test.js"],
-      "testEnvironment": "jsdom"
+      "testEnvironment": "jsdom",
+      "transform": {
+        "/node_modules/(strip-ansi|ansi-regex)/.+\\.js$": [
+          "babel-jest",
+          {
+            "babelrc": false,
+            "configFile": false,
+            "presets": ["@babel/preset-env"]
+          }
+        ],
+        "\\.[jt]sx?$": "babel-jest"
+      },
+      "transformIgnorePatterns": ["/node_modules/(?!(.*/node_modules/)?(strip-ansi|ansi-regex)/)"],
+      "testPathIgnorePatterns": ["<rootDir>/lib/view/widget/widgets\\.test\\.js$"]
     }
   ]
 }

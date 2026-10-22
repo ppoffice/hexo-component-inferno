@@ -23,6 +23,25 @@ jobs:
       - run: npm run build
       - run: npm run test
 
+  # hexo is a peer dependency (^7.1.1 || ^8.0.0), but the dev dependency installs Hexo 7
+  test-hexo-8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          # Hexo 8 requires Node.js 20.19 or later
+          node-version: latest
+      - uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: npm-cache-hexo-8
+          restore-keys: npm-cache-hexo-8
+      - run: npm install
+      - run: npm install --no-save hexo@^8.0.0
+      - run: npm run build
+      - run: npm run test
+
   coverage:
     runs-on: ubuntu-latest
     steps:
