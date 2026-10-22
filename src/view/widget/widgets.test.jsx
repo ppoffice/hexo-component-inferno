@@ -124,3 +124,61 @@ describe('Tags', () => {
     expect(html).not.toContain('More');
   });
 });
+
+describe('Widget options in snake case, as in the schemas', () => {
+  test('Archives: show_count, group_by and order', () => {
+    expect(render(Archives, { type: 'archives', show_count: false })).not.toContain(
+      'class="level-item tag"',
+    );
+    // The old camel case still works
+    expect(render(Archives, { type: 'archives', showCount: false })).not.toContain(
+      'class="level-item tag"',
+    );
+    expect(getLinks(render(Archives, { type: 'archives', group_by: 'yearly', order: 1 }))).toEqual([
+      '/archives/2024/',
+    ]);
+  });
+
+  test('Categories: show_count, order_by, order and depth', () => {
+    expect(render(Categories, { type: 'categories', show_count: false })).not.toContain(
+      'class="level-item tag"',
+    );
+    const links = (widget) => getLinks(render(Categories, { type: 'categories', ...widget }));
+    expect(links({})).toContain('/categories/parent/child/');
+    expect(links({ depth: 1 })).not.toContain('/categories/parent/child/');
+    expect(links({ order_by: 'name', order: -1 })).toEqual([
+      '/categories/parent/',
+      '/categories/parent/child/',
+      '/categories/other-2/',
+      '/categories/other-1/',
+    ]);
+  });
+
+  test('Schemas declare the options', () => {
+    const { SchemaLoader } = require('../../core/schema');
+    const validate = (name, config) => {
+      const def = require(`../../schema/widget/${name}.json`);
+      return SchemaLoader.load(def).getSchema(def.$id).validate(config);
+    };
+    expect(
+      validate('archives', {
+        type: 'archives',
+        group_by: 'yearly',
+        order: 1,
+        format: 'YYYY',
+        show_count: false,
+      }),
+    ).toBe(true);
+    expect(validate('archives', { type: 'archives', group_by: 'daily' })).not.toBe(true);
+    expect(
+      validate('categories', {
+        type: 'categories',
+        order_by: 'length',
+        order: -1,
+        depth: 1,
+        show_current: true,
+      }),
+    ).toBe(true);
+    expect(validate('recent_posts', { type: 'recent_posts', limit: 3 })).toBe(true);
+  });
+});

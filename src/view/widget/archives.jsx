@@ -7,6 +7,14 @@ const { cacheComponent } = require('../../util/cache');
 const { translate } = require('../../util/i18n');
 
 /**
+ * Get the first value that is set, i.e., neither null nor undefined.
+ * @private
+ */
+function firstSet(...values) {
+  return values.find((value) => value !== null && typeof value !== 'undefined');
+}
+
+/**
  * Convert a Hexo language code into a Moment.js locale name.
  * <p>
  * Same as Hexo's internal <code>toMomentLocale</code>, copied here so that the component does not
@@ -118,7 +126,9 @@ class Archives extends Component {
  */
 Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
   const { site, config, page, helper, widget } = props;
-  const { group_by = 'monthly', order = -1, showCount = true, format = null, amount } = widget;
+  const { group_by = 'monthly', order = -1, format = null, amount } = widget;
+  // show_count, like the tags widget, or showCount, which this widget used to read
+  const showCount = firstSet(widget.show_count, widget.showCount, true);
 
   const { url_for, _p, __ } = helper;
   const posts = site.posts.sort('date', order);
