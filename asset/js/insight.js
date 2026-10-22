@@ -34,6 +34,10 @@ function loadInsight(config, translation) {
     });
   }
 
+  function escapeRegExp(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   function findAndHighlight(text, matches, maxlen) {
     if (!text) {
       return text;
@@ -41,14 +45,15 @@ function loadInsight(config, translation) {
     if (!Array.isArray(matches) || !matches.length) {
       return escapeHTML(maxlen ? text.slice(0, maxlen) : text);
     }
-    const testText = text.toLowerCase();
     const indices = matches
       .map((match) => {
-        const index = testText.indexOf(match.toLowerCase());
-        if (!match || index === -1) {
+        // Match the original text case-insensitively, as the lowercase of some characters, such as
+        // "İ", is longer, and its indices would not fit the original text
+        const found = match ? new RegExp(escapeRegExp(match), 'i').exec(text) : null;
+        if (!found) {
           return null;
         }
-        return [index, index + match.length];
+        return [found.index, found.index + found[0].length];
       })
       .filter((match) => {
         return match !== null;
@@ -58,7 +63,7 @@ function loadInsight(config, translation) {
       });
 
     if (!indices.length) {
-      return escapeHTML(text);
+      return escapeHTML(maxlen ? text.slice(0, maxlen) : text);
     }
 
     let result = '';
@@ -71,7 +76,9 @@ function loadInsight(config, translation) {
 
     for (let i = 0; i < ranges.length; i++) {
       const range = ranges[i];
-      result += escapeHTML(text.slice(last, Math.min(range[0], sumRange[0] + maxlen)));
+      result += escapeHTML(
+        text.slice(last, maxlen ? Math.min(range[0], sumRange[0] + maxlen) : range[0]),
+      );
       if (maxlen && range[0] >= sumRange[0] + maxlen) {
         break;
       }
@@ -200,15 +207,22 @@ function loadInsight(config, translation) {
   function weight(keywords, obj, fields, weights) {
     let value = 0;
     parseKeywords(keywords).forEach((keyword) => {
-      const pattern = new RegExp(keyword, 'img'); // Global, Multi-line, Case-insensitive
       fields.forEach((field, index) => {
         if (Object.prototype.hasOwnProperty.call(obj, field)) {
-          const matches = obj[field].match(pattern);
-          value += matches ? matches.length * weights[index] : 0;
+          value += countMatches(obj[field].toLowerCase(), keyword) * weights[index];
         }
       });
     });
     return value;
+  }
+
+  // Count the occurrences of a lowercase keyword, which is plain text, not a regular expression
+  function countMatches(text, keyword) {
+    let count = 0;
+    for (let i = text.indexOf(keyword); i !== -1; i = text.indexOf(keyword, i + keyword.length)) {
+      count++;
+    }
+    return count;
   }
 
   function weightFactory(keywords) {
@@ -228,38 +242,30 @@ function loadInsight(config, translation) {
     };
   }
 
+  // Weigh each matching item once, instead of in every comparison of the sort
+  function topItems(items, filter, weigh) {
+    return items
+      .filter(filter)
+      .map((item) => {
+        return { item, weight: weigh(item) };
+      })
+      .sort((a, b) => {
+        return b.weight - a.weight;
+      })
+      .slice(0, 5)
+      .map((result) => {
+        return result.item;
+      });
+  }
+
   function search(json, keywords) {
     const weights = weightFactory(keywords);
     const filters = filterFactory(keywords);
-    const posts = json.posts;
-    const pages = json.pages;
-    const tags = json.tags;
-    const categories = json.categories;
     return {
-      posts: posts
-        .filter(filters.post)
-        .sort((a, b) => {
-          return weights.post(b) - weights.post(a);
-        })
-        .slice(0, 5),
-      pages: pages
-        .filter(filters.page)
-        .sort((a, b) => {
-          return weights.page(b) - weights.page(a);
-        })
-        .slice(0, 5),
-      categories: categories
-        .filter(filters.category)
-        .sort((a, b) => {
-          return weights.category(b) - weights.category(a);
-        })
-        .slice(0, 5),
-      tags: tags
-        .filter(filters.tag)
-        .sort((a, b) => {
-          return weights.tag(b) - weights.tag(a);
-        })
-        .slice(0, 5),
+      posts: topItems(json.posts, filters.post, weights.post),
+      pages: topItems(json.pages, filters.page, weights.page),
+      categories: topItems(json.categories, filters.category, weights.category),
+      tags: topItems(json.tags, filters.tag, weights.tag),
     };
   }
 
