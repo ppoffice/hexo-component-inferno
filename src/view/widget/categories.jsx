@@ -114,7 +114,9 @@ class Categories extends Component {
  */
 Categories.Cacheable = cacheComponent(Categories, 'widget.categories', (props) => {
   const { page, helper, widget = {} } = props;
-  const { categories = props.site.categories, order = 1, amount } = widget;
+  const { categories = props.site.categories, amount } = widget;
+  // Options left empty in the config are null, which also take the defaults
+  const order = firstSet(widget.order, 1);
   // Snake case, like the tags widget, or camel case, which this widget used to read
   const orderBy = firstSet(widget.order_by, widget.orderBy, 'name');
   const showCurrent = firstSet(widget.show_current, widget.showCurrent, false);

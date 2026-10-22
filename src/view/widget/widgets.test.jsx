@@ -182,3 +182,38 @@ describe('Widget options in snake case, as in the schemas', () => {
     expect(validate('recent_posts', { type: 'recent_posts', limit: 3 })).toBe(true);
   });
 });
+
+describe('Options left empty in the config', () => {
+  const RecentPosts = require('./recent_posts');
+
+  test('Archives and categories take the defaults for null', () => {
+    expect(getLinks(render(Archives, { type: 'archives', group_by: null, order: null }))).toEqual(
+      getLinks(render(Archives, { type: 'archives' })),
+    );
+    expect(getLinks(render(Categories, { type: 'categories', order: null }))).toEqual(
+      getLinks(render(Categories, { type: 'categories' })),
+    );
+  });
+
+  test('Tags show their counts for null', () => {
+    expect(render(Tags, { type: 'tags', show_count: null, order_by: null })).toContain(
+      'class="tag"',
+    );
+  });
+
+  test('Recent posts show 5 posts for null', () => {
+    const recent = {
+      ...helper,
+      date: (date) => date.toISOString(),
+      date_xml: (date) => date.toISOString(),
+    };
+    const html = renderToStaticMarkup(
+      <RecentPosts.Cacheable
+        site={site}
+        helper={recent}
+        widget={{ type: 'recent_posts', limit: null }}
+      />,
+    );
+    expect((html.match(/<article/g) || []).length).toBe(5);
+  });
+});

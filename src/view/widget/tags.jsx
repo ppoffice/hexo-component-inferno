@@ -83,7 +83,10 @@ class Tags extends Component {
  */
 Tags.Cacheable = cacheComponent(Tags, 'widget.tags', (props) => {
   const { helper, widget = {} } = props;
-  const { order_by = 'name', amount, show_count = true } = widget;
+  const { amount } = widget;
+  // Options left empty in the config are null, which also take the defaults
+  const order_by = widget.order_by || 'name';
+  const show_count = widget.show_count !== false;
   let tags = props.tags || props.site.tags;
   const { url_for, _p, __ } = helper;
 

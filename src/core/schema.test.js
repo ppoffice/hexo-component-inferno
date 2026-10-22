@@ -564,3 +564,68 @@ describe('Fixes from the code review', () => {
     expect(dirs).toEqual([]);
   });
 });
+
+describe('Schemas of the components', () => {
+  const fs = require('fs');
+  const path = require('path');
+
+  function listSchemas(dir) {
+    return fs
+      .readdirSync(dir, { withFileTypes: true })
+      .flatMap((entry) =>
+        entry.isDirectory()
+          ? listSchemas(path.join(dir, entry.name))
+          : [path.join(dir, entry.name)],
+      );
+  }
+
+  function unwrap(value) {
+    if (value instanceof DefaultValue) {
+      return unwrap(value.value);
+    }
+    if (Array.isArray(value)) {
+      return value.map(unwrap);
+    }
+    if (value && typeof value === 'object') {
+      return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, unwrap(item)]));
+    }
+    return value;
+  }
+
+  const files = listSchemas(path.join(__dirname, '../schema'));
+
+  test('Options that can be left empty accept null, including those with a list of values', () => {
+    const missing = [];
+    const check = (node, where) => {
+      if (Array.isArray(node)) {
+        node.forEach((item, i) => check(item, `${where}/${i}`));
+      } else if (node && typeof node === 'object') {
+        if (node.nullable === true && Array.isArray(node.enum) && !node.enum.includes(null)) {
+          missing.push(where);
+        }
+        Object.keys(node).forEach((key) => check(node[key], `${where}/${key}`));
+      }
+    };
+    files.forEach((file) => check(require(file), path.relative(__dirname, file)));
+    expect(missing).toEqual([]);
+  });
+
+  test('The generated default config of each schema is valid', () => {
+    const invalid = [];
+    for (const file of files) {
+      const def = require(file);
+      const schema = SchemaLoader.load(def).getSchema(def.$id);
+      let config;
+      try {
+        config = unwrap(schema.getDefaultValue());
+      } catch (e) {
+        // Schemas such as DisqusJS's cannot generate a default value on their own
+        continue;
+      }
+      if (schema.validate(config) !== true) {
+        invalid.push(path.relative(__dirname, file));
+      }
+    }
+    expect(invalid).toEqual([]);
+  });
+});

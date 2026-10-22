@@ -20,7 +20,7 @@
     },
     "order": {
       "type": "integer",
-      "enum": [1, -1],
+      "enum": [1, -1, null],
       "description": "1 for ascending order, or -1 for descending order. Ascending if not set",
       "nullable": true
     },

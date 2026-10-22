@@ -69,7 +69,8 @@ class RecentPosts extends Component {
  */
 RecentPosts.Cacheable = cacheComponent(RecentPosts, 'widget.recentposts', (props) => {
   const { site, helper, widget } = props;
-  const { limit = 5 } = widget;
+  // A limit left empty in the config is null, which would show no posts
+  const limit = widget.limit > 0 ? widget.limit : 5;
   const { url_for, __, date_xml, date } = helper;
   if (!site.posts.length) {
     return null;
