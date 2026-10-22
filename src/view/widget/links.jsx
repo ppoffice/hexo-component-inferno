@@ -86,7 +86,7 @@ class Links extends Component {
  */
 Links.Cacheable = cacheComponent(Links, 'widget.links', (props) => {
   const { helper, widget } = props;
-  if (!Object.keys(widget.links).length) {
+  if (!widget.links || !Object.keys(widget.links).length) {
     return null;
   }
   return {

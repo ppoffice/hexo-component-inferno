@@ -7,6 +7,14 @@ const { cacheComponent } = require('../../util/cache');
 const { translate } = require('../../util/i18n');
 
 /**
+ * Get the first value that is set, i.e., neither null nor undefined.
+ * @private
+ */
+function firstSet(...values) {
+  return values.find((value) => value !== null && typeof value !== 'undefined');
+}
+
+/**
  * Categories widget JSX component.
  *
  * @example
@@ -106,24 +114,19 @@ class Categories extends Component {
  */
 Categories.Cacheable = cacheComponent(Categories, 'widget.categories', (props) => {
   const { page, helper, widget = {} } = props;
-  const {
-    categories = props.site.categories,
-    orderBy = 'name',
-    order = 1,
-    showCurrent = false,
-    showCount = true,
-    amount,
-  } = widget;
+  const { categories = props.site.categories, order = 1, amount } = widget;
+  // Snake case, like the tags widget, or camel case, which this widget used to read
+  const orderBy = firstSet(widget.order_by, widget.orderBy, 'name');
+  const showCurrent = firstSet(widget.show_current, widget.showCurrent, false);
+  const showCount = firstSet(widget.show_count, widget.showCount, true);
   const { url_for, _p, __ } = helper;
 
   if (!categories || !categories.length) {
     return null;
   }
 
-  let depth = 0;
-  try {
-    depth = parseInt(props.depth, 10);
-  } catch (e) {}
+  // 0 or no depth shows all levels
+  const depth = parseInt(firstSet(widget.depth, props.depth), 10) || 0;
 
   function prepareQuery(parent) {
     const query = {};

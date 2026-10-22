@@ -12,6 +12,15 @@ const yaml = require('../util/yaml');
 const MAGIC = 'c823d4d4';
 
 /**
+ * Deep copy a value of a JSON schema definition, so that changing a default value does not change the
+ * definition, which other schemas may refer to.
+ * @private
+ */
+function copy(value) {
+  return value === undefined ? value : JSON.parse(JSON.stringify(value));
+}
+
+/**
  * Default value for the primitive types.
  * @access private
  */
@@ -223,8 +232,28 @@ class DefaultValue {
    * @returns {string} The formatted YAML string.
    */
   toYaml() {
-    const regex = new RegExp("^(\\s*)(?:-\\s*\\')?" + MAGIC + ".*?:\\s*\\'?(.*?)\\'*$", 'mg');
-    return yaml.stringify(this.toCommented()).replace(regex, '$1# $2'); // restore comments
+    // Comments are written as properties or array elements, whose values the YAML writer may quote.
+    // Read them back with the YAML parser, rather than removing the quotes by hand.
+    const property = new RegExp(`^(\\s*)(['"]?)${MAGIC}.*?\\2: (.*)$`);
+    const element = new RegExp(`^(\\s*)- (.*${MAGIC}.*)$`);
+    const comment = (indent, text) =>
+      `${indent}# ${text === null || text === undefined ? '' : text}`;
+    return yaml
+      .stringify(this.toCommented())
+      .split('\n')
+      .map((line) => {
+        let match = property.exec(line);
+        if (match) {
+          return comment(match[1], yaml.parse(match[3]));
+        }
+        match = element.exec(line);
+        if (match) {
+          const text = String(yaml.parse(match[2]));
+          return comment(match[1], text.slice(text.indexOf(': ') + 2));
+        }
+        return line;
+      })
+      .join('\n');
   }
 }
 
@@ -399,17 +428,17 @@ class Schema {
       def = this.def;
     }
     if (hasOwnProperty(def, 'const')) {
-      return new DefaultValue(def.const, def.description);
+      return new DefaultValue(copy(def.const), def.description);
     }
     if (hasOwnProperty(def, 'default')) {
-      return new DefaultValue(def.default, def.description);
+      return new DefaultValue(copy(def.default), def.description);
     }
     if (
       hasOwnProperty(def, 'examples') &&
       typeOf(def.examples) === 'array' &&
       def.examples.length
     ) {
-      return new DefaultValue(def.examples[0], def.description);
+      return new DefaultValue(copy(def.examples[0]), def.description);
     }
     if (hasOwnProperty(def, 'type') && def.type) {
       return this.getTypedDefaultValue(def);
@@ -491,10 +520,8 @@ class SchemaLoader {
  * @throws {Error} Referred schema not found in any of the resolve directories.
  */
 SchemaLoader.load = (rootSchemaDef, resolveDirs = []) => {
-  if (typeOf(resolveDirs) !== 'array') {
-    resolveDirs = [resolveDirs];
-  }
-  resolveDirs.push(path.join(__dirname, '../schema/'));
+  // A new array, so that the directories of the caller are not changed
+  resolveDirs = [].concat(resolveDirs, path.join(__dirname, '../schema/'));
 
   const loader = new SchemaLoader();
   loader.addSchema(rootSchemaDef);

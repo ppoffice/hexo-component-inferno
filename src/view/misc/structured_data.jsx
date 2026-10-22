@@ -6,7 +6,7 @@ const urlFn = require('url');
 const moment = require('moment');
 const { Component } = require('inferno');
 const { toJs } = require('../../util/script');
-const { stripHTML, escapeHTML } = require('hexo-util');
+const { toPlainText } = require('../../util/html');
 
 /**
  * A JSX component that renders simple Google structured data.
@@ -30,12 +30,10 @@ module.exports = class extends Component {
     let { description, images, date, updated, publisherLogo } = this.props;
 
     if (description) {
-      description = escapeHTML(stripHTML(description).substring(0, 200).trim()).replace(/\n/g, ' ');
+      description = toPlainText(description).substring(0, 200).trim();
     }
 
-    if (!Array.isArray(images)) {
-      images = [images];
-    }
+    images = [].concat(images || []).filter(Boolean);
     images = images
       .map((path) => {
         if (!urlFn.parse(path).host) {
@@ -45,13 +43,7 @@ module.exports = class extends Component {
         }
         return path;
       })
-      .filter(
-        (url) =>
-          url.endsWith('.jpg') ||
-          url.endsWith('.png') ||
-          url.endsWith('.gif') ||
-          url.endsWith('.webp'),
-      );
+      .filter((url) => /\.(jpe?g|png|gif|webp|avif|svg)$/i.test(urlFn.parse(url).pathname || ''));
 
     if (typeof publisherLogo === 'string' && !urlFn.parse(publisherLogo).host) {
       publisherLogo = urlFn.resolve(url, publisherLogo);

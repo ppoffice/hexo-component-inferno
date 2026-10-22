@@ -55,7 +55,7 @@ Afdian.Cacheable = cacheComponent(Afdian, 'donate.afdian', (props) => {
 
   return {
     title: helper.__('donate.' + donate.type),
-    url: helper.url_for(donate.url),
+    url: donate.url ? helper.url_for(donate.url) : null,
   };
 });
 

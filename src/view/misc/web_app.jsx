@@ -75,19 +75,27 @@ class WebApp extends Component {
  *     helper={{ url_for: function() {...} }} />
  */
 WebApp.Cacheable = cacheComponent(WebApp, 'misc.webapp', (props) => {
-  const { name, themeColor, favicon, icons, helper } = props;
+  const { name, themeColor, favicon, helper } = props;
+  const { url_for } = helper;
+  // Resolve the icons against the root of the site, like the manifest
+  const icons = Array.isArray(props.icons)
+    ? props.icons.map((icon) => (icon && icon.src ? { ...icon, src: url_for(icon.src) } : icon))
+    : props.icons;
 
   let tileIcon = null;
   if (Array.isArray(icons)) {
-    tileIcon = icons.find((icon) => icon.sizes.toLowerCase().indexOf('144x144') > -1);
+    tileIcon = icons.find(
+      (icon) =>
+        icon && typeof icon.sizes === 'string' && icon.sizes.toLowerCase().indexOf('144x144') > -1,
+    );
     if (tileIcon) {
       tileIcon = tileIcon.src;
     } else if (icons.length) {
-      tileIcon = icons[0].src;
+      tileIcon = (icons[0] || {}).src;
     }
   }
-  if (!tileIcon) {
-    tileIcon = favicon;
+  if (!tileIcon && favicon) {
+    tileIcon = url_for(favicon);
   }
 
   return {
@@ -95,7 +103,7 @@ WebApp.Cacheable = cacheComponent(WebApp, 'misc.webapp', (props) => {
     icons,
     tileIcon,
     themeColor,
-    manifest: helper.url_for('/manifest.json'),
+    manifest: url_for('/manifest.json'),
   };
 });
 

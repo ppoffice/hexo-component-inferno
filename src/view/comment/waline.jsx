@@ -38,7 +38,7 @@ class Waline extends Component {
   render() {
     const {
       serverURL,
-      path = 'window.location.pathname',
+      path,
       lang = 'zh-CN',
       locale,
       emoji = ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo'],
@@ -48,10 +48,10 @@ class Waline extends Component {
       login = 'enable',
       wordLimit = 0,
       pageSize = 10,
-      imageUploader = false,
-      highlighter = false,
-      texRenderer = false,
-      search = false,
+      imageUploader,
+      highlighter,
+      texRenderer,
+      search,
       pageview = false,
       comment = false,
       copyright = true,
@@ -72,6 +72,11 @@ class Waline extends Component {
       dark === null || typeof dark === 'undefined' || dark === ''
         ? `${getAppearance()} === 'auto' ? 'auto' : 'html[data-appearance="dark"]'`
         : toJs(dark);
+    // A path, such as /posts/hello/, or a JavaScript expression, such as window.location.pathname
+    let pathCode = path || 'window.location.pathname';
+    if (pathCode.startsWith('/')) {
+      pathCode = toJs(pathCode);
+    }
     // Use a classic script with a dynamic import instead of a module script, so that PJAX, which only
     // runs classic scripts, initializes Waline again after switching pages. The previous instance,
     // whose element PJAX has replaced, is destroyed first.
@@ -82,7 +87,7 @@ class Waline extends Component {
         window.__walineInstance = Waline.init({
             el: '#waline-thread',
             serverURL: ${toJs(serverURL)},
-            path: ${path},
+            path: ${pathCode},
             ${lang ? `lang: ${toJs(lang)},` : ''}
             ${locale ? `locale: ${toJs(locale)},` : ''}
             ${emoji ? `emoji: ${toJs(emoji)},` : ''}
@@ -132,10 +137,10 @@ class Waline extends Component {
  *         login: false,
  *         word_limit: 0,
  *         page_size: 10,
- *         image_uploader: true,
- *         highlighter: true,
+ *         image_uploader: false,
+ *         highlighter: false,
  *         tex_renderer: false,
- *         search: true,
+ *         search: false,
  *         pageview: false,
  *         comment: false,
  *         copyright: true,
@@ -157,10 +162,12 @@ Waline.Cacheable = cacheComponent(Waline, 'comment.waline', (props) => {
     login: comment.login,
     wordLimit: comment.word_limit,
     pageSize: comment.page_size,
-    imageUploader: comment.image_uploader,
-    highlighter: comment.highlighter,
-    texRenderer: comment.tex_renderer,
-    search: comment.search,
+    // These options of the theme config disable the features when they are true, which Waline does
+    // when its options are false
+    imageUploader: comment.image_uploader === true ? false : undefined,
+    highlighter: comment.highlighter === true ? false : undefined,
+    texRenderer: comment.tex_renderer === true ? false : undefined,
+    search: comment.search === true ? false : undefined,
     pageview: comment.pageview,
     comment: comment.comment,
     copyright: comment.copyright,

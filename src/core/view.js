@@ -64,7 +64,7 @@ _require.resolve = _resolve;
  * Must be used before {@link module:core/view.require} or {@link module:core/view.resolve}.
  *
  * @static
- * @param {string} hexo Hexo instance.
+ * @param {Hexo} hexo The Hexo instance.
  */
 function init(hexo) {
   themeDir = hexo.theme_dir;

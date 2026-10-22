@@ -153,3 +153,25 @@ test('Configs in page/post front-matter override all other config sources', asyn
     });
   }
 });
+
+test('Do not merge the properties that Hexo adds to posts into the config', async () => {
+  const Locals = hexo._generateLocals();
+  const page = Object.assign({}, basePageConfig, {
+    __post: true,
+    layout: 'post',
+    prev: { title: 'Previous' },
+    next: { title: 'Next' },
+    canonical_path: 'post/index.html',
+  });
+  const locals = await hexo.extend.filter.exec(
+    'template_locals',
+    new Locals('post/index.html', page),
+    {
+      context: hexo,
+    },
+  );
+  expect(locals.config.prev).toBeUndefined();
+  expect(locals.config.next).toBeUndefined();
+  expect(locals.config.canonical_path).toBeUndefined();
+  expect(locals.config.int).toBe(10000);
+});

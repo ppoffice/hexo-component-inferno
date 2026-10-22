@@ -8,7 +8,8 @@
 const urlFn = require('url');
 const moment = require('moment');
 const { Component } = require('inferno');
-const { encodeURL, stripHTML, escapeHTML } = require('hexo-util');
+const { encodeURL } = require('hexo-util');
+const { toPlainText } = require('../../util/html');
 const localeMap = {
   en: 'en_US',
   de: 'de_DE',
@@ -25,7 +26,6 @@ const localeMap = {
   tr: 'tr_TR',
   vi: 'vi_VN',
 };
-const localeRegex = new RegExp(Object.keys(localeMap).join('|'), 'i');
 
 /**
  * A JSX component that renders Open Graph tags.
@@ -74,7 +74,8 @@ module.exports = class extends Component {
     const htmlTags = [];
 
     if (description) {
-      description = escapeHTML(stripHTML(description).substring(0, 200).trim()).replace(/\n/g, ' ');
+      // Plain text, which Inferno escapes in the attribute
+      description = toPlainText(description).substring(0, 200).trim();
       htmlTags.push(<meta name="description" content={description} />);
     }
 
@@ -89,8 +90,9 @@ module.exports = class extends Component {
 
     if (language) {
       if (language.length === 2) {
-        language = language.replace(localeRegex, (str) => localeMap[str]);
-        htmlTags.push(<meta property="og:locale" content={language} />);
+        if (localeMap[language.toLowerCase()]) {
+          htmlTags.push(<meta property="og:locale" content={localeMap[language.toLowerCase()]} />);
+        }
       } else if (language.length === 5) {
         const territory = language.slice(-2);
         const territoryRegex = new RegExp(territory.concat('$'));
@@ -99,9 +101,7 @@ module.exports = class extends Component {
       }
     }
 
-    if (!Array.isArray(images)) {
-      images = [images];
-    }
+    images = [].concat(images || []).filter(Boolean);
     images
       .map((path) => {
         if (!urlFn.parse(path).host) {

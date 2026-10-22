@@ -46,7 +46,7 @@ class Gitalk extends Component {
       perPage = 10,
       proxy,
       flipMoveOptions,
-      enableHotKey,
+      enableHotKey = true,
       language,
       jsUrl,
       cssUrl,
@@ -74,7 +74,7 @@ class Gitalk extends Component {
             pagerDirection: ${toJs(pagerDirection)},
             ${proxy ? `proxy: ${toJs(proxy)},` : ''}
             ${flipMoveOptions ? `flipMoveOptions: ${toJs(flipMoveOptions)},` : ''}
-            enableHotKey: ${enableHotKey ? !!enableHotKey : true},
+            enableHotKey: ${!!enableHotKey},
             ${language ? `language: ${toJs(language)},` : ''}
         })
         gitalk.render('comment-container')`;

@@ -12,7 +12,6 @@
     "type": {
       "type": "string",
       "description": "Page type (og:type) (optional)\nYou should leave this blank for most of the time",
-      "default": "blog",
       "nullable": true
     },
     "url": {

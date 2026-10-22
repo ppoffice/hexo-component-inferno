@@ -33,6 +33,11 @@
       "default": "pathname",
       "nullable": true
     },
+    "term": {
+      "type": ["string", "number"],
+      "description": "The search term of the discussion when mapping is specific, or the discussion number when mapping is number",
+      "nullable": true
+    },
     "strict": {
       "type": "boolean",
       "description": "Avoid mismatches due to GitHub's fuzzy searching method when there are multiple discussions with similar titles",

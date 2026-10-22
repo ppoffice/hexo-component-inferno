@@ -35,7 +35,7 @@ class OutdatedBrowser extends Component {
         <div id="outdated">
           <h6>Your browser is out-of-date!</h6>
           <p>
-            Update your browser to view this website correctly.&npsb;
+            Update your browser to view this website correctly.&nbsp;
             <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">
               Update my browser now{' '}
             </a>

@@ -5,6 +5,23 @@
 const semver = require('semver');
 
 /**
+ * Convert the version of a configuration to a semantic version. A version written in a YAML file can
+ * be a number, such as 4.1, or have fewer than three parts.
+ *
+ * @private
+ * @param {string|number} version The version of a configuration.
+ * @returns {string} The semantic version.
+ * @throws {Error} The version is not a version number.
+ */
+function normalizeVersion(version) {
+  const valid = semver.valid(String(version)) || semver.valid(semver.coerce(String(version)));
+  if (!valid) {
+    throw new Error(`${version} is not a valid configuration version`);
+  }
+  return valid;
+}
+
+/**
  * Configuration migration base class.
  * <p>
  * Classes that extend this class will specify the target version for the configuration
@@ -74,7 +91,7 @@ class Migrator {
       }
       if (!semver.valid(migration.version)) {
         throw new Error(
-          `${migration.version} is not a valid version in ${migration.constructor.name}}`,
+          `${migration.version} is not a valid version in ${migration.constructor.name}`,
         );
       }
       this.versions.push(migration.version);
@@ -104,7 +121,7 @@ class Migrator {
    * @returns {boolean} true if the given version is the latest version.
    */
   isOudated(version) {
-    return this.getLatestVersion() && semver.lt(version, this.getLatestVersion());
+    return this.getLatestVersion() && semver.lt(normalizeVersion(version), this.getLatestVersion());
   }
 
   /**
@@ -118,7 +135,7 @@ class Migrator {
    * @returns {Object} The upgrade configuration object.
    */
   migrate(config, toVersion = null, callback = null) {
-    const fVer = config.version;
+    const fVer = normalizeVersion(config.version);
     const tVer = toVersion || this.getLatestVersion();
     // find all migrations whose version is larger than fromVer, smaller or equal to toVer
     // and run migrations on the config one by one.
@@ -127,9 +144,11 @@ class Migrator {
       .sort(semver.compare)
       .reduce((cfg, ver) => {
         const migration = this.migrations[ver.toString()];
+        // Upgrades can change the version of the given object, so get it before
+        const fromVersion = cfg.version;
         const result = migration.migrate(cfg);
         if (typeof callback === 'function') {
-          callback(cfg.version, migration.version);
+          callback(fromVersion, migration.version);
         }
         return result;
       }, config);

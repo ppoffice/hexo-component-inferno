@@ -21,6 +21,14 @@ const { toJs } = loadScripts;
 class Twikoo extends Component {
   render() {
     const { envId, region, lang, jsUrl } = this.props;
+    if (!envId) {
+      return (
+        <div class="notification is-danger">
+          You forgot to set the <code>env_id</code> for Twikoo. Please set it in{' '}
+          <code>_config.yml</code>.
+        </div>
+      );
+    }
     const js = `twikoo.init({
             envId: ${toJs(envId)},
             ${region ? `region: ${toJs(region)},` : ''}

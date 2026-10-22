@@ -75,3 +75,17 @@ test('Add /category/* routes and add parents array to the locals', async () => {
   expect(result[5].data.parents[1].name).toBe('bar');
   expect(result[5].data.parents[1].path).toBe('categories/baz/bar/');
 });
+
+test('Paginate the categories by per_page of the site config by default', async () => {
+  const { per_page, category_generator } = hexo.config;
+  hexo.config.per_page = 2;
+  delete hexo.config.category_generator;
+  try {
+    const generator = hexo.extend.generator.get('category').bind(hexo);
+    const result = await generator(hexo.locals.toObject());
+    expect(result.map((route) => route.path)).toContain('categories/foo/page/2/');
+  } finally {
+    hexo.config.per_page = per_page;
+    hexo.config.category_generator = category_generator;
+  }
+});

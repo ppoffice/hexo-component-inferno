@@ -16,7 +16,14 @@ module.exports = function (hexo) {
   hexo.extend.generator.register('category', function (locals) {
     const config = this.config;
     const paginationDir = config.pagination_dir || 'page';
-    const perPage = (config.category_generator ? config.category_generator.per_page : null) || 0;
+    // Like hexo-generator-category, use per_page of the site config without a category_generator one
+    const generatorConfig = config.category_generator || {};
+    let perPage = 10;
+    if (typeof generatorConfig.per_page === 'number') {
+      perPage = generatorConfig.per_page;
+    } else if (typeof config.per_page === 'number') {
+      perPage = config.per_page;
+    }
     const orderBy =
       (config.category_generator ? config.category_generator.order_by : null) || '-date';
 

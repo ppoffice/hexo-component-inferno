@@ -58,7 +58,7 @@ Alipay.Cacheable = cacheComponent(Alipay, 'donate.alipay', (props) => {
 
   return {
     title: helper.__('donate.' + donate.type),
-    qrcode: helper.url_for(donate.qrcode),
+    qrcode: donate.qrcode ? helper.url_for(donate.qrcode) : null,
   };
 });
 

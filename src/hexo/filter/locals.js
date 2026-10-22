@@ -35,9 +35,12 @@ const yaml = require('js-yaml');
  * @param {Hexo} hexo The Hexo instance.
  */
 module.exports = (hexo) => {
+  // Properties that Hexo sets on pages, rather than the front matter, such as the previous and next
+  // posts that the post generator adds
+  const GENERATED_KEYS = ['prev', 'next', 'canonical_path'];
   const RESERVED_KEYS = {
-    post: Object.keys(hexo.model('Post').schema.paths),
-    page: Object.keys(hexo.model('Page').schema.paths),
+    post: Object.keys(hexo.model('Post').schema.paths).concat(GENERATED_KEYS),
+    page: Object.keys(hexo.model('Page').schema.paths).concat(GENERATED_KEYS),
   };
 
   function loadLayoutConfig(layout) {

@@ -14,6 +14,7 @@ const Beaudar = require('./beaudar');
 const Artalk = require('./artalk');
 const Cusdis = require('./cusdis');
 const Disqus = require('./disqus');
+const Facebook = require('./facebook');
 const { SchemaLoader } = require('../../core/schema');
 
 /**
@@ -233,10 +234,6 @@ describe('Waline options', () => {
       requiredMeta: [],
       login: 'enable',
       pageSize: 10,
-      imageUploader: false,
-      highlighter: false,
-      texRenderer: false,
-      search: false,
       pageview: false,
       comment: false,
       copyright: true,
@@ -278,10 +275,41 @@ describe('Waline options', () => {
       login: 'force',
       wordLimit: 100,
       pageSize: 20,
+      imageUploader: false,
+      highlighter: false,
+      texRenderer: false,
+      search: false,
       pageview: true,
       comment: true,
       copyright: false,
     });
+  });
+
+  test('Keep the features that are not disabled', async () => {
+    const options = await getInitOptions({
+      server_url: 'https://waline.example.com',
+      image_uploader: false,
+      highlighter: false,
+      tex_renderer: false,
+      search: false,
+    });
+    expect(Object.keys(options)).not.toContain('imageUploader');
+    expect(Object.keys(options)).not.toContain('highlighter');
+    expect(Object.keys(options)).not.toContain('texRenderer');
+    expect(Object.keys(options)).not.toContain('search');
+  });
+
+  test('Use a path or a JavaScript expression', async () => {
+    const options = await getInitOptions({
+      server_url: 'https://waline.example.com',
+      path: '/posts/hello/',
+    });
+    expect(options.path).toBe('/posts/hello/');
+    calls = [];
+    expect(
+      (await getInitOptions({ server_url: 'https://waline.example.com', path: "'/a/' + 'b/'" }))
+        .path,
+    ).toBe('/a/b/');
   });
 
   test('Show an error without the server URL', () => {
@@ -702,5 +730,63 @@ describe('Page values in the inline scripts', () => {
     // eslint-disable-next-line no-new-func
     expect(() => new Function(scripts[0].textContent)).not.toThrow();
     expect(scripts[0].textContent).toContain(kept);
+  });
+});
+
+describe('Options and missing settings', () => {
+  const helper = { cdn: (name, version, file) => `/cdn/${name}@${version}/${file}` };
+  const gitalk = { repo: 'r', owner: 'o', admin: ['o'], client_id: 'i', client_secret: 's' };
+
+  function render(element) {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(element);
+    return container;
+  }
+
+  test('Gitalk hotkeys are enabled unless disabled', () => {
+    const page = { path: 'post/' };
+    const script = (comment) =>
+      render(<Gitalk.Cacheable comment={comment} helper={helper} page={page} />).querySelector(
+        'script',
+      ).textContent;
+    expect(script(gitalk)).toContain('enableHotKey: true');
+    expect(script({ ...gitalk, enable_hotkey: false })).toContain('enableHotKey: false');
+  });
+
+  test('Isso URL with or without the protocol', () => {
+    for (const url of ['isso.example.com', 'https://isso.example.com/', '//isso.example.com']) {
+      renderAndRun(<Isso url={url} />);
+    }
+    Array.from(document.head.querySelectorAll('script')).forEach((script) => {
+      expect(script.getAttribute('src')).toBe('//isso.example.com/js/embed.min.js');
+      expect(script.getAttribute('data-isso')).toBe('//isso.example.com');
+    });
+  });
+
+  test('Show an error without the Twikoo environment ID or the DisqusJS API key', () => {
+    expect(render(<Twikoo jsUrl="/twikoo.js" />).querySelector('.is-danger')).not.toBe(null);
+    expect(
+      render(<DisqusJs shortname="name" jsUrl="/disqusjs.js" />).querySelector('.is-danger'),
+    ).not.toBe(null);
+  });
+
+  test('Facebook renders the new comments box after a PJAX page switch', () => {
+    const element = (
+      <Facebook.Cacheable config={{ language: 'en' }} page={{ permalink: '/post/' }} />
+    );
+    renderAndRun(element);
+    window.FB = { XFBML: { parse: () => calls.push('parse') } };
+    renderAndRun(element);
+    delete window.FB;
+    expect(document.querySelectorAll('#facebook-jssdk').length).toBe(1);
+    expect(calls).toEqual(['parse']);
+  });
+
+  test('Giscus term in the schema', () => {
+    const def = require('../../schema/comment/giscus.json');
+    const schema = SchemaLoader.load(def).getSchema(def.$id);
+    const config = { type: 'giscus', repo: 'a/b', repoId: 'r', categoryId: 'c', mapping: 'number' };
+    expect(schema.validate({ ...config, term: 42 })).toBe(true);
+    expect(schema.validate({ ...config, term: 'term' })).toBe(true);
   });
 });

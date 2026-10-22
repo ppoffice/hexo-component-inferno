@@ -8,3 +8,7 @@ test('Correctly create the class name string', () => {
     return classname(false);
   }).toThrow();
 });
+
+test('Throw a clear error for null', () => {
+  expect(() => classname(null)).toThrow('Cannot process class name null');
+});

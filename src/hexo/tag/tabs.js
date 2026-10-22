@@ -4,6 +4,16 @@
  */
 
 /**
+ * Split a tag option at its first colon, so that the value can contain colons, as in
+ * <code>'title:Step 1: Install'</code>.
+ * @private
+ */
+function splitOption(option) {
+  const index = option.indexOf(':');
+  return index === -1 ? [option] : [option.slice(0, index), option.slice(index + 1)];
+}
+
+/**
  * Register custom Hexo tag {% tabs %}.
  * <p>
  * This tag is rendered as a Bulma tabs component.
@@ -156,11 +166,13 @@ module.exports = function (hexo) {
     return options;
   }
 
+  let tabCount = 0;
+
   function processTag(options, content) {
     let classes = '';
 
     for (const option of options) {
-      const [key, value] = option.split(':');
+      const [key, value] = splitOption(option);
       switch (key) {
         case 'align':
           classes += ` is-${value}`;
@@ -186,13 +198,14 @@ module.exports = function (hexo) {
     while ((match = pattern.exec(content)) !== null) {
       const [, tabOptions, tabContent] = match;
 
-      let id = 'tab-' + Date.now() + ((Math.random() * 1000) | 0);
+      // A counter, as random numbers in the same millisecond could be the same
+      let id = 'tab-' + Date.now() + '-' + tabCount++;
       let icon = '';
       let title = '';
       let active = false;
 
       for (const option of splitTabOptions(tabOptions)) {
-        const [key, value] = option.split(':');
+        const [key, value] = splitOption(option);
         switch (key) {
           case 'id':
             id = value;
@@ -237,7 +250,12 @@ module.exports = function (hexo) {
             return;
           }
 
-          const id = '#' + CSS.escape(location.hash.substring(1));
+          let hash = location.hash.substring(1);
+          try {
+            // Non-ASCII IDs are percent-encoded in the URL
+            hash = decodeURIComponent(hash);
+          } catch (e) {}
+          const id = '#' + CSS.escape(hash);
           const $tabMenu = document.querySelector(\`.tabs a[href="\${id}"]\`);
           if (!$tabMenu) {
             return;
@@ -257,7 +275,12 @@ module.exports = function (hexo) {
               $activeTab.classList.remove('is-hidden');
           }
       }
-      switchTab();
+      // The script is in <head>, so wait for the tabs to switch to the tab in the URL
+      if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', switchTab);
+      } else {
+          switchTab();
+      }
       window.addEventListener('hashchange', switchTab, false);
   })();
   </script>`;
