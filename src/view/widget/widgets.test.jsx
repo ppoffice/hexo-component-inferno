@@ -217,3 +217,29 @@ describe('Options left empty in the config', () => {
     expect((html.match(/<article/g) || []).length).toBe(5);
   });
 });
+
+describe('ArticleMedia', () => {
+  const ArticleMedia = require('../common/article_media');
+  const props = {
+    url: '/post/',
+    title: 'Post',
+    date: 'Jan 1',
+    dateXml: '2024-01-01',
+    categories: [
+      { name: 'A', url: '/a/' },
+      { name: 'B', url: '/b/' },
+    ],
+  };
+
+  test('Load the thumbnail lazily', () => {
+    expect(renderToStaticMarkup(<ArticleMedia {...props} thumbnail="/t.png" />)).toContain(
+      '<a class="image" href="/post/"><img src="/t.png" alt="Post" loading="lazy" decoding="async"></a>',
+    );
+  });
+
+  test('Render no thumbnail without one', () => {
+    const html = renderToStaticMarkup(<ArticleMedia {...props} thumbnail={null} />);
+    expect(html).not.toContain('<img');
+    expect(html).toContain('<p class="categories"><a href="/a/">A</a> / <a href="/b/">B</a></p>');
+  });
+});
