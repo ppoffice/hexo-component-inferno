@@ -6,6 +6,9 @@ const { Component } = require('inferno');
 
 /**
  * A simple article overview JSX component.
+ * <p>
+ * Its thumbnail is only loaded when it is about to be scrolled to: the component lists posts in
+ * the archives and in the sidebar, which is below the content on mobile.
  *
  * @name ArticleMedia
  * @example
@@ -36,7 +39,7 @@ module.exports = class extends Component {
         {thumbnail ? (
           <figure class="media-left">
             <a class="image" href={url}>
-              <img src={thumbnail} alt={title} />
+              <img src={thumbnail} alt={title} loading="lazy" decoding="async" />
             </a>
           </figure>
         ) : null}
