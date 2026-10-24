@@ -5,12 +5,14 @@ const $ = require('jquery');
 const { createElement } = require('inferno-create-element');
 const { renderToString } = require('inferno-server');
 const script = require('../../util/searchbox');
+const createInsightSearch = require('../../util/insight-search');
 const Insight = require('./insight');
 const Algolia = require('./algolia');
 const GoogleCSE = require('./google_cse');
 
 window.$ = $;
 window.jQuery = $;
+window.searchInsight = createInsightSearch();
 // eslint-disable-next-line no-new-func
 const install = () => new Function(script)();
 install();
@@ -316,6 +318,10 @@ test.each([
     // eslint-disable-next-line no-new-func
     new Function(scripts[installer].textContent)();
     expect(typeof window.loadSearchbox).toBe('function');
+    if (Component === Insight) {
+      expect(typeof window.searchInsight).toBe('function');
+      expect(scripts.filter((element) => element.src)).toHaveLength(1);
+    }
   },
 );
 

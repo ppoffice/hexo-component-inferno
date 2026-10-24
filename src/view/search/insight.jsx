@@ -6,6 +6,7 @@ const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const { toJs } = require('../../util/script');
 const searchbox = require('../../util/searchbox');
+const createInsightSearch = require('../../util/insight-search');
 
 /**
  * Algolia search engine JSX component.
@@ -51,7 +52,11 @@ class Insight extends Component {
             <div class="searchbox-body"></div>
           </div>
         </div>
-        <script data-pjax dangerouslySetInnerHTML={{ __html: searchbox }}></script>
+        <script
+          data-pjax
+          dangerouslySetInnerHTML={{
+            __html: `${searchbox}\nwindow.searchInsight = (${createInsightSearch.toString()})();`,
+          }}></script>
         <script data-pjax src={jsUrl} defer={true}></script>
         <script data-pjax dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
