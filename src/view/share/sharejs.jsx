@@ -4,22 +4,50 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const { deprecate } = require('../../util/deprecate');
+const AddToAny = require('./addtoany');
 
 /**
  * Share.js share buttons JSX component.
  *
- * @see https://github.com/overtrue/share.js
  * @example
- * <ShareJs cssUrl="/path/to/share.css" jsUrl="/path/to/social-share.js" />
+ * <ShareJs />
  */
 class ShareJs extends Component {
   render() {
-    const { cssUrl, jsUrl } = this.props;
+    deprecate(
+      'share.sharejs',
+      'Uses Web Share + AddToAny; custom asset URLs are ignored.',
+    );
+    const js = `(function () {
+      document.querySelectorAll('.hexo-component-share').forEach(function (container) {
+        var button = container.querySelector('button');
+        var status = container.querySelector('[role="status"]');
+        button.hidden = typeof navigator.share !== 'function';
+        button.onclick = async function () {
+          status.hidden = true;
+          try {
+            await navigator.share({ title: document.title, url: window.location.href });
+          } catch (error) {
+            if (error && error.name === 'AbortError') return;
+            status.hidden = false;
+            container.querySelector('.a2a_dd').focus();
+          }
+        };
+      });
+    })();`;
     return (
       <>
-        <link rel="stylesheet" href={cssUrl} />
-        <div class="social-share"></div>
-        <script src={jsUrl}></script>
+        <div class="hexo-component-share">
+          <button type="button" class="button mb-2" hidden={true}>
+            Share
+          </button>
+          <p role="status" hidden={true}>
+            Please use the share buttons below.
+          </p>
+          <AddToAny />
+        </div>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
     );
   }
@@ -33,15 +61,8 @@ class ShareJs extends Component {
  *
  * @see module:util/cache.cacheComponent
  * @example
- * <ShareJs.Cacheable helper={{ cdn: function() {...} }} />
+ * <ShareJs.Cacheable />
  */
-ShareJs.Cacheable = cacheComponent(ShareJs, 'share.sharejs', (props) => {
-  const { helper } = props;
-
-  return {
-    cssUrl: helper.cdn('social-share.js', '1.0.16', 'dist/css/share.min.css'),
-    jsUrl: helper.cdn('social-share.js', '1.0.16', 'dist/js/social-share.min.js'),
-  };
-});
+ShareJs.Cacheable = cacheComponent(ShareJs, 'share.sharejs', () => ({}));
 
 module.exports = ShareJs;

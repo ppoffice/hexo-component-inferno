@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/share/sharejs.json",
-  "description": "Enable Share.js share buttons\nhttps://github.com/overtrue/share.js/",
+  "description": "Web Share buttons with AddToAny fallback",
   "type": "object",
   "properties": {
     "type": {
