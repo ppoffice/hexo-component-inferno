@@ -1,77 +1,93 @@
+/* eslint-env browser */
 /**
- * Outdated browser detection plugin JSX component.
+ * Theme capability warning, without a third-party browser SDK or user-agent sniffing.
  * @module view/plugin/outdated_browser
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 
-/**
- * Outdated browser detection plugin JSX component.
- *
- * @see https://github.com/outdatedbrowser/outdated-browser
- * @example
- * <OutdatedBrowser
- *     head={true}
- *     cssUrl="/path/to/outdatedbrowser.css"
- *     jsUrl="/path/to/outdatedbrowser.js" />
- */
+// Keep this code ES5: it must also run in the browsers it warns about. Each invocation
+// binds only its own notice, including after a page replacement; no global listeners.
+/* eslint-disable no-var -- This function is serialized into an old-browser inline script. */
+function checkBrowser(requiredFeatures) {
+  var notice = document.getElementById('outdated');
+  if (!notice) return;
+  function supports(property, value) {
+    if (window.CSS && typeof window.CSS.supports === 'function') {
+      return property === 'selector'
+        ? window.CSS.supports('selector(' + value + ')')
+        : window.CSS.supports(property, value);
+    }
+    if (property === 'selector') {
+      try {
+        document.querySelector(value);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    var style = document.createElement('div').style;
+    style.setProperty(property, value);
+    return style.getPropertyValue(property) !== '';
+  }
+  var compatible = true;
+  for (var i = 0; i < requiredFeatures.length; i++) {
+    if (!supports(requiredFeatures[i][0], requiredFeatures[i][1])) {
+      compatible = false;
+      break;
+    }
+  }
+  notice.style.display = compatible ? 'none' : 'block';
+  document.getElementById('btnCloseUpdateBrowser').onclick = function () {
+    notice.style.display = 'none';
+  };
+}
+/* eslint-enable no-var */
+
+/** Non-blocking warning. Requirements are CSS property/value pairs, or ['selector', selector]. */
 class OutdatedBrowser extends Component {
   render() {
-    const { head, jsUrl, cssUrl } = this.props;
-
-    const js = `window.addEventListener("load", function () {
-            outdatedBrowser({
-                bgColor: '#f25648',
-                color: '#ffffff',
-                lowerThan: 'object-fit' // display on IE11 or below
-            });
-        });`;
-
-    if (head) {
-      return <link rel="stylesheet" href={cssUrl} />;
-    }
+    const { head, requiredFeatures = [['display', 'flex']] } = this.props;
+    if (head) return null;
+    const js =
+      '(' +
+      checkBrowser.toString() +
+      ')(' +
+      JSON.stringify(requiredFeatures).replace(/</g, '\\u003c') +
+      ');';
     return (
       <>
-        <div id="outdated">
-          <h6>Your browser is out-of-date!</h6>
-          <p>
-            Update your browser to view this website correctly.&nbsp;
-            <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">
-              Update my browser now{' '}
+        <div
+          id="outdated"
+          role="status"
+          style="display:none;background:#fff3cd;color:#332701;padding:16px;margin:0;text-align:center;font:16px/1.5 sans-serif;">
+          <strong style="color:#332701;">Your browser may not display this theme correctly.</strong>
+          <p style="color:#332701;margin:8px 0;">
+            Some essential layout or color features are unavailable. You can continue reading or{' '}
+            <a
+              id="btnUpdateBrowser"
+              href="https://browsehappy.com/"
+              style="color:#004085;text-decoration:underline;">
+              update your browser
             </a>
+            .
           </p>
-          <p class="last">
-            <a href="#" id="btnCloseUpdateBrowser" title="Close">
-              &times;
-            </a>
-          </p>
+          <button
+            type="button"
+            id="btnCloseUpdateBrowser"
+            style="background:#fff;color:#332701;border:1px solid #332701;padding:4px 12px;cursor:pointer;">
+            Dismiss
+          </button>
         </div>
-        <script src={jsUrl} defer={true}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
     );
   }
 }
 
-/**
- * Cacheable outdated browser detection plugin JSX component.
- * <p>
- * This class is supposed to be used in combination with the <code>locals</code> hexo filter
- * ({@link module:hexo/filter/locals}).
- *
- * @see module:util/cache.cacheComponent
- * @example
- * <OutdatedBrowser.Cacheable
- *     head={true}
- *     helper={{ cdn: function() {...} }} />
- */
 OutdatedBrowser.Cacheable = cacheComponent(OutdatedBrowser, 'plugin.outdatedbrowser', (props) => {
-  const { head, helper } = props;
-  return {
-    head,
-    cssUrl: helper.cdn('outdatedbrowser', '1.1.5', 'outdatedbrowser/outdatedbrowser.min.css'),
-    jsUrl: helper.cdn('outdatedbrowser', '1.1.5', 'outdatedbrowser/outdatedbrowser.min.js'),
-  };
+  const { head, requiredFeatures } = props;
+  return { head, requiredFeatures };
 });
 
 module.exports = OutdatedBrowser;
