@@ -4,7 +4,9 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
-const { toJs } = require('../../util/script');
+const loadScripts = require('../../util/script');
+const { toJs } = loadScripts;
+const { consentRuntime } = require('../../util/consent');
 
 /**
  * A JSX component for alerting users about the use of cookies.
@@ -35,12 +37,20 @@ class CookieConsent extends Component {
     const { type, theme, position, policyLink } = this.props;
     const { message, dismiss, allow, deny, link, policy } = text;
 
-    const js = `window.addEventListener("load", () => {
+    const gated = type === 'opt-in' || type === 'opt-out';
+    const js = `${gated ? consentRuntime(type) : ''}
+      if (!window.hexoComponentCookieConsentPopup) {
+      window.hexoComponentCookieConsentPopup = true;
       window.cookieconsent.initialise({
         type: ${toJs(type)},
         theme: ${toJs(theme)},
         static: ${toJs(this.props.static)},
         position: ${toJs(position)},
+        ${gated ? `
+        revokeBtn: '<button type="button" class="cc-revoke {{classes}}">{{policy}}</button>',
+        onStatusChange: function (status) { window.hexoComponentConsent.setStatus(status); },
+        onRevokeChoice: function () { this.setStatus('deny'); },
+        ` : ''}
         content: {
           message: ${toJs(message)},
           dismiss: ${toJs(dismiss)},
@@ -59,16 +69,18 @@ class CookieConsent extends Component {
             background: "#4b81e8"
           },
         },
+      }, function (popup) {
+        window.hexoComponentCookieConsentPopup = popup;
+        ${gated ? 'window.hexoComponentConsent.setPopup(popup);' : ''}
       });
-    });`;
+      }`;
 
     if (head) {
       return <link rel="stylesheet" href={cssUrl} />;
     }
     return (
       <>
-        <script src={jsUrl} defer={true}></script>
-        <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
       </>
     );
   }
