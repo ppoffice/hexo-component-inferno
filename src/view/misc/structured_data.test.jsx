@@ -124,7 +124,6 @@ test('Open Graph tags of an article', () => {
       twitterCard="summary_large_image"
       twitterId="user"
       twitterSite="@site"
-      googlePlus="https://plus.example.com/"
       facebookAdmins="admin"
       facebookAppId="app"
     />,
@@ -147,9 +146,7 @@ test('Open Graph tags of an article', () => {
   expect(content('twitter:site')).toEqual(['@site']);
   expect(content('fb:admins')).toEqual(['admin']);
   expect(content('fb:app_id')).toEqual(['app']);
-  expect(og.querySelector('link[rel="publisher"]').getAttribute('href')).toBe(
-    'https://plus.example.com/',
-  );
+  expect(og.querySelector('link[rel="publisher"]')).toBe(null);
   // A single keyword as a string, and a relative image for Twitter
   const single = render(
     <OpenGraph url="https://example.com/post/" title="T" keywords="one" images="c.png" />,

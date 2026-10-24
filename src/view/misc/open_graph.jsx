@@ -10,6 +10,7 @@ const moment = require('moment');
 const { Component } = require('inferno');
 const { encodeURL } = require('hexo-util');
 const { toPlainText } = require('../../util/html');
+const { deprecate } = require('../../util/deprecate');
 const localeMap = {
   en: 'en_US',
   de: 'de_DE',
@@ -49,7 +50,6 @@ const localeMap = {
  *     twitterId="Twitter ID"
  *     twitterCard="summary"
  *     twitterSite="Twitter Site"
- *     googlePlus="/path/to/google/plus"
  *     facebookAdmins="Facebook admin ID"
  *     facebookAppId="Facebook APP ID" />
  */
@@ -170,7 +170,10 @@ module.exports = class extends Component {
     }
 
     if (googlePlus) {
-      htmlTags.push(<link rel="publisher" href={googlePlus} />);
+      deprecate(
+        'head.open_graph.google_plus',
+        'Ignored; remove google_plus from your configuration.',
+      );
     }
 
     if (facebookAdmins) {

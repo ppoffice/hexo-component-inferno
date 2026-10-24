@@ -59,7 +59,8 @@
     },
     "google_plus": {
       "type": "string",
-      "description": "Google+ profile link (deprecated)",
+      "description": "Google+ profile link (deprecated; ignored)",
+      "deprecated": true,
       "nullable": true
     },
     "fb_admins": {
