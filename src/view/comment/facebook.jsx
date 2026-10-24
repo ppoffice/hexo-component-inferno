@@ -17,17 +17,19 @@ const { toJs } = require('../../util/script');
  */
 class Facebook extends Component {
   render() {
-    const { language, permalink } = this.props;
-    const fbLanguage = language.split('-').join('_');
+    const { language = 'en', permalink } = this.props;
+    const fbLanguage = language === 'en' ? 'en_US' : language.split('-').join('_');
     const js = `(function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             // After a PJAX page switch, the SDK is loaded, so render the new comments box with it
-            if (d.getElementById(id)) {
-                if (window.FB) FB.XFBML.parse();
+            if (window.FB) {
+                window.FB.XFBML.parse();
                 return;
             }
+            if (d.getElementById(id)) return;
             js = d.createElement(s); js.id = id;
-            js.src = ${toJs(`//connect.facebook.net/${fbLanguage}/sdk.js#xfbml=1&version=v12.0`)};
+            js.async = true;
+            js.src = ${toJs(`https://connect.facebook.net/${fbLanguage}/sdk.js#xfbml=1&version=v26.0`)};
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));`;
     return (

@@ -778,6 +778,33 @@ describe('Options and missing settings', () => {
     ).not.toBe(null);
   });
 
+  test('Facebook loads the current SDK once, including navigation while it is loading', () => {
+    const element = (
+      <Facebook.Cacheable config={{ language: 'en' }} page={{ permalink: '/post/' }} />
+    );
+    renderAndRun(element);
+    renderAndRun(element);
+    const scripts = document.querySelectorAll('#facebook-jssdk');
+    expect(scripts.length).toBe(1);
+    expect(scripts[0].src).toBe('https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v26.0');
+    expect(scripts[0].async).toBe(true);
+  });
+
+  test('Facebook preserves the page language and canonical URL', () => {
+    renderAndRun(
+      <Facebook.Cacheable
+        config={{ language: 'en' }}
+        page={{ lang: 'zh-CN', permalink: 'https://example.com/post/' }}
+      />,
+    );
+    expect(document.getElementById('facebook-jssdk').src).toBe(
+      'https://connect.facebook.net/zh_CN/sdk.js#xfbml=1&version=v26.0',
+    );
+    expect(document.querySelector('.fb-comments').getAttribute('data-href')).toBe(
+      'https://example.com/post/',
+    );
+  });
+
   test('Facebook renders the new comments box after a PJAX page switch', () => {
     const element = (
       <Facebook.Cacheable config={{ language: 'en' }} page={{ permalink: '/post/' }} />
@@ -788,6 +815,17 @@ describe('Options and missing settings', () => {
     delete window.FB;
     expect(document.querySelectorAll('#facebook-jssdk').length).toBe(1);
     expect(calls).toEqual(['parse']);
+  });
+
+  test('Facebook reuses an SDK loaded by another integration', () => {
+    window.FB = { XFBML: { parse: () => calls.push('parse') } };
+    try {
+      renderAndRun(<Facebook permalink="/post/" />);
+      expect(document.querySelector('#facebook-jssdk')).toBe(null);
+      expect(calls).toEqual(['parse']);
+    } finally {
+      delete window.FB;
+    }
   });
 
   test('Giscus term in the schema', () => {
