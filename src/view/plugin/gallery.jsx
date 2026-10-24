@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const gallery = require('../../util/gallery');
 
 /**
  * Light Gallery and Justified Gallery plugins JSX component.
@@ -34,17 +35,10 @@ class Gallery extends Component {
       );
     }
 
-    const js = `window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });`;
+    const js = `${gallery}\nwindow.HexoGallery.init(document, {
+        lightGallery: true,
+        justifiedGallery: true
+    });`;
 
     return (
       <>
