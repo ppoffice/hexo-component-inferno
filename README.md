@@ -128,7 +128,7 @@ classes.
 | `search`  | Algolia, Baidu, Google CSE, Insight                                                                                                                                                                                                    |
 | `share`   | AddThis, AddToAny, Baidu Share, Share.js, ShareThis                                                                                                                                                                                    |
 | `donate`  | Afdian, Alipay, Buy Me a Coffee, Patreon, PayPal, WeChat                                                                                                                                                                               |
-| `widget`  | AdSense, archives, categories, follow.it, GitHub contribution calendar, links, recent posts, email subscription, tags, table of contents                                                                                                                             |
+| `widget`  | AdSense, archives, categories, follow.it, GitHub contribution calendar, links, profile, recent posts, email subscription, tags, table of contents                                                                                                                    |
 | `plugin`  | Baidu Analytics, Bing Webmaster, Busuanzi, CNZZ, cookie consent, gallery, Google Analytics, Hotjar, KaTeX, MathJax, Matomo, outdated browser warning, progress bar, StatCounter, Twitter conversion tracking, Umami, Waline page views |
 | `misc`    | Article licensing, meta tags, Open Graph, paginator, structured data, web app                                                                                                                                                          |
 | `common`  | Article media (a thumbnail with a title and date)                                                                                                                                                                                      |
@@ -147,70 +147,6 @@ The [API documentation](https://ppoffice.github.io/hexo-component-inferno/) list
 component and the options of every module.
 
 ## Development
-
-### Shared Gallery runtime (4.3.0, unreleased)
-
-`require('hexo-component-inferno/lib/util/gallery')` exports a self-contained inline installer string,
-like `util/searchbox`. Insert it in a script before your content initialization code. The standalone
-Gallery component already includes it; themes must also install it when Gallery is disabled, if they
-want the basic image links and alt-text captions. Installation alone loads nothing and changes no DOM.
-
-```jsx
-const gallery = require('hexo-component-inferno/lib/util/gallery');
-
-<script data-pjax dangerouslySetInnerHTML={{ __html: gallery }} />;
-```
-
-The installer exposes one method:
-
-```js
-// Basic enhancement only, including when Gallery is disabled:
-window.HexoGallery.init();
-// Explicitly opt into SDKs already loaded by Gallery (this never downloads them):
-window.HexoGallery.init(document, { lightGallery: true, justifiedGallery: true });
-// Or enhance a specific content element, without requiring an .article class:
-window.HexoGallery.init(document.querySelector('main'), { lightGallery: true });
-```
-
-For a document root, image links/captions and lightGallery target `.article`; justifiedGallery targets
-all `.justified-gallery` elements. An element root scopes all work to that element. Linked images and
-`.not-gallery-item` images are left alone. Captions are text, not HTML; visual styling stays in the
-theme. Reinstalling and repeated init are safe. The latest flags for each root are retried on DOM ready,
-window load and subsequent script load events, so missing SDKs can arrive later, including after PJAX.
-Explicit `init` calls can also retry. Omitted flags disable new plugin initialization, not previously
-created instances. After replacing content, call `init` again with the new page's flags; do not retain
-an enabled configuration for a disabled page.
-
-On the same root, replacing, adding or reordering items refreshes enabled SDKs. Existing external
-instances are reused when their items already match. For lightGallery 1.10.0 (which has no refresh
-method), the runtime removes its old `click.lgcustom` handlers, updates the instance's `$items` and
-calls its `init` once; settings and the instance are retained. Justified Gallery 3.8.1 refreshes its
-entries through its existing plugin entry point, retaining the controller. These are version-specific
-adapters for the pinned SDKs, not a general plugin lifecycle. Before a JG refresh, its previous width
-timer is cleared because 3.8.1 starts another timer on every init. Disabling flags does not perform
-this refresh or destroy instances; basic image enhancement still runs.
-JG snapshots include filtered-out DOM items and capture the order after SDK randomize/sort. On first
-adopting an external controller, its existing filtered entries are compared with DOM entries not
-marked `jg-filtered`, without reevaluating the user's filter or randomizing an unchanged gallery.
-Snapshots also remember the SDK's entries array reference: an official external update such as
-`justifiedGallery('norewind')` is adopted when its entries match the current visible DOM. A changed
-reference alone does not hide additional DOM items that the SDK has not processed yet.
-
-The component's optional SDK and init scripts intentionally do not carry `data-pjax`: enabling a
-plugin must not change a consuming theme's global PJAX matching-node count. Themes keep their shared
-installer/main scripts unconditional, load optional SDK resources through their existing plugin
-loader, and call `init` with the current page's flags. SDK load retries never restore an old flag set.
-
-Themes should install this runtime before their main script, replace their duplicate Gallery code
-with `init(document, { lightGallery: enabled, justifiedGallery: enabled })`, and keep the existing
-Gallery component responsible for the SDK/CSS URLs. jQuery must load before the third-party SDKs;
-basic image enhancement itself does not require jQuery. No additional runtime asset request is needed.
-
-**Version requirement:** this new entry point requires 4.3.0 and is not in the published 4.2.2 package.
-This checkout identifies as the unreleased 4.3.0 development line; use this built workspace checkout
-during development. A consuming theme must require 4.3.0 or later before shipping. Do not remove the
-theme's old implementation while claiming compatibility with published 4.2.2. Coordinate the library
-release and theme dependency change together; this change does not publish or tag a release.
 
 ```sh
 npm install
