@@ -5,14 +5,11 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const { translate } = require('../../util/i18n');
-
-/**
- * Get the first value that is set, i.e., neither null nor undefined.
- * @private
- */
-function firstSet(...values) {
-  return values.find((value) => value !== null && typeof value !== 'undefined');
-}
+const {
+  resolveCategoryOptions,
+  resolveCategoryDepth,
+  prepareCategories,
+} = require('../../util/categories');
 
 /**
  * Categories widget JSX component.
@@ -115,73 +112,24 @@ class Categories extends Component {
 Categories.Cacheable = cacheComponent(Categories, 'widget.categories', (props) => {
   const { page, helper, widget = {} } = props;
   const { categories = props.site.categories, amount } = widget;
-  // Options left empty in the config are null, which also take the defaults
-  const order = firstSet(widget.order, 1);
-  // Snake case, like the tags widget, or camel case, which this widget used to read
-  const orderBy = firstSet(widget.order_by, widget.orderBy, 'name');
-  const showCurrent = firstSet(widget.show_current, widget.showCurrent, false);
-  const showCount = firstSet(widget.show_count, widget.showCount, true);
+  const { order, orderBy, showCurrent, showCount } = resolveCategoryOptions(widget);
   const { url_for, _p, __ } = helper;
 
   if (!categories || !categories.length) {
     return null;
   }
 
-  // 0 or no depth shows all levels
-  const depth = parseInt(firstSet(widget.depth, props.depth), 10) || 0;
-
-  function prepareQuery(parent) {
-    const query = {};
-
-    if (parent) {
-      query.parent = parent;
-    } else {
-      query.parent = { $exists: false };
-    }
-
-    return categories
-      .find(query)
-      .sort(orderBy, order)
-      .filter((cat) => cat.length);
-  }
-
-  function hierarchicalList(level, parent) {
-    return prepareQuery(parent).map((cat, i) => {
-      let children = [];
-      if (!depth || level + 1 < depth) {
-        children = hierarchicalList(level + 1, cat._id);
-      }
-
-      let isCurrent = false;
-      if (showCurrent && page) {
-        for (let j = 0; j < cat.length; j++) {
-          const post = cat.posts.data[j];
-          if (post && post._id === page._id) {
-            isCurrent = true;
-            break;
-          }
-        }
-        // special case: category page
-        isCurrent = isCurrent || (page.base && page.base.startsWith(cat.path));
-      }
-
-      return {
-        children,
-        isCurrent,
-        name: cat.name,
-        count: cat.length,
-        url: url_for(cat.path),
-      };
-    });
-  }
-
-  // Only limit the top-level categories, and link to the category page when some are not shown
-  const list = hierarchicalList(0);
-  const hasMore = amount > 0 && list.length > amount;
+  const depth = resolveCategoryDepth(widget.depth, props.depth);
+  const { categories: list, hasMore } = prepareCategories(
+    categories,
+    { order, orderBy, showCurrent, depth, amount },
+    page,
+    url_for,
+  );
 
   return {
     showCount,
-    categories: hasMore ? list.slice(0, amount) : list,
+    categories: list,
     title: _p('common.category', Infinity),
     moreUrl: hasMore ? url_for('categories/') : null,
     moreTitle: translate(__, 'widget.more', 'More'),
