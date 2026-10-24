@@ -9,7 +9,7 @@ function installGallery(window) {
 
   const document = window.document;
   const requests = new Map();
-  const justifiedItems = new WeakMap();
+  const layouts = new Map();
   const lightboxes = new Map();
 
   function destroyLightbox(container) {
@@ -127,52 +127,64 @@ function installGallery(window) {
     // Do not capture an incomplete article while HTML is still being parsed.
     if (document.readyState === 'loading') return;
     containers.forEach((container) => lightbox(container, options.lightGallery));
-    const $ = window.jQuery || window.$;
-    if (!$ || !$.fn) return;
-    if (options.justifiedGallery && typeof $.fn.justifiedGallery === 'function') {
+    if (options.justifiedGallery && typeof window.JustifiedGallery === 'function') {
       const galleries = Array.from(root.querySelectorAll('.justified-gallery'));
       if (root !== document && root.matches('.justified-gallery')) galleries.unshift(root);
       galleries.forEach((gallery) => {
-        const $gallery = $(gallery);
-        $gallery.find('> p > .gallery-item').unwrap();
-        const controller = $gallery.data('jg.controller');
-        if (controller) {
-          const items = controller.getAllEntries();
-          const previous = justifiedItems.get(controller);
-          // External controllers expose filtered entries, not the full DOM collection. Adopt an
-          // unchanged controller without rerunning its filter/randomize, then track all DOM items.
-          let unchanged;
-          if (previous && previous.entries === controller.entries) {
-            unchanged = sameItems(previous.items, items);
-          } else {
-            // updateEntries replaces this array, including official 'norewind' updates. Only
-            // accept that update when it also accounts for the current visible DOM membership.
-            const visible = items.filter((item) => !item.classList.contains('jg-filtered'));
-            unchanged = sameItems(controller.entries, visible);
-          }
-          if (unchanged) {
-            justifiedItems.set(controller, { items, entries: controller.entries });
-            return;
-          }
+        const paragraphs = new Set(
+          Array.from(
+            gallery.querySelectorAll(':scope > p > .gallery-item'),
+            (link) => link.parentNode,
+          ),
+        );
+        paragraphs.forEach((paragraph) => {
+          paragraph.replaceWith(...paragraph.childNodes);
+        });
+        gallery.querySelectorAll(':scope > .gallery-item > .caption').forEach((caption) => {
+          caption.classList.add('jg-caption');
+        });
+        let state = layouts.get(gallery);
+        const items = () =>
+          Array.from(gallery.children).filter(
+            (item) =>
+              !item.classList.contains('jg-spinner') &&
+              (item.matches(state.instance.settings.selector) || item.matches('div')),
+          );
+        if (state) {
+          if (sameItems(state.items, items())) return;
+          // init refreshes entries but starts another width watcher; stop and rewind first.
+          state.instance.widthWatcher.stop();
+          state.instance.stopImgAnalyzerStarter();
+          state.instance.rewind();
+        } else {
+          // The SDK reuses .jg-caption and safely creates captions for pre-existing links.
+          state = { instance: new window.JustifiedGallery(gallery) };
+          layouts.set(gallery, state);
         }
-        // 3.8.1's entry point refreshes changed entries on the same controller.
-        // Its init starts a width timer without clearing the old one.
-        if (controller) window.clearInterval(controller.checkWidthIntervalId);
-        $gallery.justifiedGallery();
-        const updated = $gallery.data('jg.controller');
-        // Randomize/sort can change DOM order during refresh. Remember the resulting full order.
-        justifiedItems.set(updated, { items: updated.getAllEntries(), entries: updated.entries });
+        state.instance.init();
+        state.items = items();
       });
     }
   }
 
   function prune() {
+    layouts.forEach((state, gallery) => {
+      if (!gallery.isConnected) destroyLayout(gallery);
+    });
     lightboxes.forEach((state, container) => {
       if (!container.isConnected) destroyLightbox(container);
     });
     requests.forEach((options, root) => {
       if (root !== document && !root.isConnected) requests.delete(root);
     });
+  }
+
+  function destroyLayout(gallery) {
+    const { instance } = layouts.get(gallery);
+    // The SDK's destroy does not stop an active loading spinner.
+    instance.stopLoadingSpinnerAnimation();
+    instance.destroy();
+    layouts.delete(gallery);
   }
 
   function retry() {
@@ -205,12 +217,15 @@ function installGallery(window) {
       requests.set(root, enabled);
       apply(root, enabled);
     },
-    /** Destroy lightboxes and pending retries before a content root is replaced (e.g. PJAX). */
+    /** Destroy lightboxes, layouts and pending retries before content is replaced (e.g. PJAX). */
     destroy: function (root) {
       root = root || document;
       lightboxes.forEach((state, container) => {
         if (root === document || root === container || root.contains(container))
           destroyLightbox(container);
+      });
+      layouts.forEach((state, gallery) => {
+        if (root === document || root === gallery || root.contains(gallery)) destroyLayout(gallery);
       });
       requests.forEach((options, target) => {
         if (root === document || root === target || root.contains(target)) requests.delete(target);
@@ -222,6 +237,7 @@ function installGallery(window) {
     document.addEventListener('DOMContentLoaded', retry, { once: true });
   }
   if (document.readyState !== 'complete') window.addEventListener('load', retry, { once: true });
+  document.addEventListener('hexo:gallery:ready', retry);
   // Deferred scripts may arrive after init, including on the first enabled page reached by PJAX.
   // Retry the latest requests, rather than capturing a previous page's enabled configuration.
   document.addEventListener(

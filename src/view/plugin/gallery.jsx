@@ -19,8 +19,8 @@ const gallery = require('../../util/gallery');
  *         cssUrl: '/path/to/lightgallery-bundle.min.css'
  *     }}
  *     justifiedGallery={{
- *         jsUrl: '/path/to/justifiedGallery.js',
- *         cssUrl: '/path/to/justifiedGallery.css'
+ *         jsUrl: '/path/to/justified-gallery.js',
+ *         cssUrl: '/path/to/justified-gallery.css'
  *     }} />
  */
 class Gallery extends Component {
@@ -48,8 +48,14 @@ window.HexoGallery.init(document, {
         {plugins.map((plugin) => (
           <script key={plugin.name} src={plugin.jsUrl} defer={true}></script>
         ))}
-        <script src={justifiedGallery.jsUrl} defer={true}></script>
         <script dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script
+          type="module"
+          dangerouslySetInnerHTML={{
+            __html: `import { JustifiedGallery } from ${JSON.stringify(justifiedGallery.jsUrl).replace(/</g, '\\u003c')};
+window.JustifiedGallery = JustifiedGallery;
+document.dispatchEvent(new Event('hexo:gallery:ready'));`,
+          }}></script>
       </>
     );
   }
@@ -90,8 +96,8 @@ Gallery.Cacheable = cacheComponent(Gallery, 'plugin.gallery', (props) => {
       ],
     },
     justifiedGallery: {
-      jsUrl: helper.cdn('justifiedGallery', '3.8.1', 'dist/js/jquery.justifiedGallery.min.js'),
-      cssUrl: helper.cdn('justifiedGallery', '3.8.1', 'dist/css/justifiedGallery.min.css'),
+      jsUrl: helper.cdn('justified-gallery', '4.0.2', 'dist/justified-gallery.js'),
+      cssUrl: helper.cdn('justified-gallery', '4.0.2', 'dist/assets/justified-gallery.css'),
     },
   };
 });

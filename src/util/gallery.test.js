@@ -36,13 +36,14 @@ function plugins(window) {
       destroy: jest.fn(),
     };
   };
-  $.fn.justifiedGallery = function () {
-    this.each((i, element) => {
-      justified(element);
-      const getAllEntries = () => $(element).children('a, div:not(.jg-spinner)').toArray();
-      $(element).data('jg.controller', { entries: getAllEntries(), getAllEntries });
-    });
-    return this;
+  window.JustifiedGallery = function (element) {
+    this.settings = { selector: 'a' };
+    this.init = () => justified(element);
+    this.widthWatcher = { stop: jest.fn() };
+    this.stopImgAnalyzerStarter = jest.fn();
+    this.stopLoadingSpinnerAnimation = jest.fn();
+    this.rewind = jest.fn();
+    this.destroy = jest.fn();
   };
   window.jQuery = $;
   window.$ = $;
@@ -59,7 +60,7 @@ afterEach(() => {
   if (dom) dom.window.close();
 });
 
-test('Basic enhancement works without jQuery or Icarus and creates captions as text', () => {
+test('Basic enhancement works without jQuery or theme code and creates captions as text', () => {
   const window = setup(`<article class="article">
     <img src='/image.png?x="&amp;y=1' alt="&lt;img src=x onerror=alert(1)&gt; &amp; caption">
     <img src="/empty.png"><img alt="Missing source">
@@ -163,7 +164,7 @@ test('destroy cancels delayed SDK initialization before replacing an enabled pag
   expect(window.lightGallery).not.toHaveBeenCalled();
 });
 
-test('An explicit content container is scoped and need not have an Icarus class', () => {
+test('An explicit content container is scoped and need not have a theme-specific class', () => {
   const window = setup('<main><img src="/one.png"></main><aside><img src="/two.png"></aside>');
   const main = window.document.querySelector('main');
   const { light } = plugins(window);
@@ -212,13 +213,13 @@ test('SDKs arriving separately after load can retry without rebinding the other 
   const { document, HexoGallery } = window;
   HexoGallery.init(document, enabled);
   window.dispatchEvent(new window.Event('load'));
-  const { $, light, justified } = plugins(window);
-  const justifiedPlugin = $.fn.justifiedGallery;
-  delete $.fn.justifiedGallery;
+  const { light, justified } = plugins(window);
+  const justifiedPlugin = window.JustifiedGallery;
+  delete window.JustifiedGallery;
   scriptLoaded(window);
   expect(light).toHaveBeenCalledTimes(1);
   expect(justified).not.toHaveBeenCalled();
-  $.fn.justifiedGallery = justifiedPlugin;
+  window.JustifiedGallery = justifiedPlugin;
   HexoGallery.init(document, enabled);
   scriptLoaded(window);
   expect(light).toHaveBeenCalledTimes(1);
@@ -284,9 +285,9 @@ test.each([false, true])(
     // The old page's component and theme main both opt in before dependencies finish loading.
     window.eval(template.content.querySelector('script:not([src])').textContent);
     HexoGallery.init(document, enabled);
-    const { $, light, justified } = plugins(window);
-    const justifiedPlugin = $.fn.justifiedGallery;
-    delete $.fn.justifiedGallery;
+    const { light, justified } = plugins(window);
+    const justifiedPlugin = window.JustifiedGallery;
+    delete window.JustifiedGallery;
     if (partial) scriptLoaded(window);
     expect(light).toHaveBeenCalledTimes(partial ? 1 : 0);
 
@@ -295,7 +296,7 @@ test.each([false, true])(
       '<article class="article"><div class="justified-gallery"><p><img src="/new" alt="New"></p></div></article>';
     window.eval(installer);
     HexoGallery.init(document, { lightGallery: false, justifiedGallery: false });
-    $.fn.justifiedGallery = justifiedPlugin;
+    window.JustifiedGallery = justifiedPlugin;
     // These are retries registered on the previous page, not fresh enabled init requests.
     scriptLoaded(window);
     document.dispatchEvent(new window.Event('DOMContentLoaded'));
@@ -342,6 +343,18 @@ test('Justified Gallery can initialize its root element independently of lightGa
   expect(root.querySelector(':scope > .gallery-item')).not.toBe(null);
 });
 
+test('Justified Gallery unwraps each Markdown paragraph once even with multiple images', () => {
+  const window = setup(
+    '<article class="article"><div class="justified-gallery"><p><img src="/one"><img src="/two"></p></div></article>',
+  );
+  const { justified } = plugins(window);
+  window.HexoGallery.init(window.document, { justifiedGallery: true });
+  const gallery = window.document.querySelector('.justified-gallery');
+  expect(gallery.querySelectorAll(':scope > .gallery-item')).toHaveLength(2);
+  expect(gallery.querySelector('p')).toBe(null);
+  expect(justified).toHaveBeenCalledTimes(1);
+});
+
 test.each(['loading', 'interactive', 'complete'])(
   'The standalone component initializes at readyState %s without waiting for a past load event',
   (readyState) => {
@@ -370,10 +383,6 @@ test('The compiled standalone HTML supports real deferred load ordering and PJAX
   const errors = [];
   const jquerySource = require('fs').readFileSync(require.resolve('jquery'), 'utf8');
   const lightSource = require('fs').readFileSync(require.resolve('lightgallery'), 'utf8');
-  const justifiedSource = require('fs').readFileSync(
-    require.resolve('justifiedGallery/dist/js/jquery.justifiedGallery.min.js'),
-    'utf8',
-  );
   class Dependencies extends ResourceLoader {
     fetch(url) {
       if (url.endsWith('/jquery.js')) return Promise.resolve(Buffer.from(jquerySource));
@@ -382,14 +391,6 @@ test('The compiled standalone HTML supports real deferred load ordering and PJAX
           Buffer.from(
             lightSource +
               ';(function () { var original = lightGallery; window.lightGallery = function (element, options) { window.lightCalls = (window.lightCalls || 0) + 1; return original(element, options); }; })();',
-          ),
-        );
-      }
-      if (url.endsWith('/justified.js')) {
-        return Promise.resolve(
-          Buffer.from(
-            justifiedSource +
-              ';(function () { var original = jQuery.fn.justifiedGallery; jQuery.fn.justifiedGallery = function () { window.justifiedCalls = (window.justifiedCalls || 0) + this.length; return original.apply(this, arguments); }; })();',
           ),
         );
       }
@@ -418,7 +419,12 @@ test('The compiled standalone HTML supports real deferred load ordering and PJAX
   const { window } = dom;
   expect(errors).toEqual([]);
   expect(window.lightCalls).toBe(1);
-  expect(window.justifiedCalls).toBe(1);
+  // jsdom does not execute module scripts; exercise the module-completion notification explicitly.
+  const lightGallery = window.lightGallery;
+  const { justified } = plugins(window);
+  window.lightGallery = lightGallery;
+  window.document.dispatchEvent(new window.Event('hexo:gallery:ready'));
+  expect(justified).toHaveBeenCalledTimes(1);
   expect(window.document.querySelectorAll('.caption')).toHaveLength(1);
   window.document.body.innerHTML =
     '<article class="article"><img src="/next" alt="Next"></article>';
