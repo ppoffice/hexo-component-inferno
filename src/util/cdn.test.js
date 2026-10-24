@@ -1,5 +1,46 @@
 const { resolveCdn, resolveFontCdn, resolveIconCdn } = require('./cdn');
 
+test.each([
+  ['algoliasearch', '5.60.0', 'lite/builds/browser.umd.js'],
+  ['instantsearch.js', '4.120.0', 'instantsearch.production.min.js'],
+])(
+  'Algolia bundle %s preserves the selected provider host and path layout',
+  (name, version, file) => {
+    const expected = `https://cdnjs.loli.net/ajax/libs/${name}/${version}/${file}`;
+    expect(resolveCdn({ cdn: 'loli' }, name, version, `dist/${file}`)).toBe(expected);
+    expect(resolveCdn({ cdn: 'cdnjs' }, name, version, `dist/${file}`)).toBe(
+      `https://cdnjs.cloudflare.com/ajax/libs/${name}/${version}/${file}`,
+    );
+    expect(
+      resolveCdn(
+        { cdn: 'loli', cdn_overrides: { [name]: 'jsdelivr' } },
+        name,
+        version,
+        `dist/${file}`,
+      ),
+    ).toBe(`https://cdn.jsdelivr.net/npm/${name}@${version}/dist/${file}`);
+    expect(resolveCdn({ cdn_overrides: { [name]: 'loli' } }, name, version, `dist/${file}`)).toBe(
+      expected,
+    );
+    expect(
+      resolveCdn(
+        { cdn: 'loli', cdn_overrides: { [name]: 'unpkg' } },
+        name,
+        version,
+        `dist/${file}`,
+      ),
+    ).toBe(`https://unpkg.com/${name}@${version}/dist/${file}`);
+    expect(
+      resolveCdn(
+        { cdn: '[cdnjs]https://custom/${package}/${version}/${filename}' },
+        name,
+        version,
+        `dist/${file}`,
+      ),
+    ).toBe(`https://custom/${name}/${version}/${file}`);
+  },
+);
+
 test.each(['jsdelivr', 'unpkg', 'cdnjs', 'loli'])(
   'DisqusJS 3 browser assets use the %s path layout',
   (cdn) => {

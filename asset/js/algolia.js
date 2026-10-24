@@ -1,12 +1,11 @@
-/* global instantsearch, algoliasearch */
+/* global instantsearch */
 // eslint-disable-next-line no-unused-vars
 function loadAlgolia(config, translation) {
   const $main = $('.searchbox');
   let search = null;
   const controller = window.loadSearchbox($main, {
     onDestroy: () => {
-      // 4.3.1 mounts widgets before its first search, which can throw before started becomes true.
-      // Its dispose() requires the index helper; a merely constructed instance has none.
+      // Widget initialization can fail before start completes. Dispose only initialized indices.
       if (search && search.mainIndex.getHelper()) search.dispose();
     },
   });
@@ -34,16 +33,15 @@ function loadAlgolia(config, translation) {
 
   search = instantsearch({
     indexName: config.indexName,
-    searchClient: algoliasearch(config.applicationId, config.apiKey),
+    searchClient: window['algoliasearch/lite'].liteClient(config.applicationId, config.apiKey),
+    // Preserve search-only behavior; do not enable automatic Insights tracking after upgrading.
+    insights: false,
   });
 
   search.addWidgets([
     instantsearch.widgets.configure({
       attributesToSnippet: [config.excerpt],
     }),
-  ]);
-
-  search.addWidget(
     instantsearch.widgets.searchBox({
       container: '#algolia-input',
       // Disposing removes the widget DOM, but callers may still hold its old input node.
@@ -60,15 +58,9 @@ function loadAlgolia(config, translation) {
         input: 'searchbox-input',
       },
     }),
-  );
-
-  search.addWidget(
     instantsearch.widgets.poweredBy({
       container: '#algolia-poweredby',
     }),
-  );
-
-  search.addWidget(
     instantsearch.widgets.hits({
       container: '.searchbox-body',
       escapeHTML: false,
@@ -97,9 +89,6 @@ function loadAlgolia(config, translation) {
         },
       },
     }),
-  );
-
-  search.addWidget(
     instantsearch.widgets.pagination({
       container: '.searchbox-footer',
       cssClasses: {
@@ -110,7 +99,7 @@ function loadAlgolia(config, translation) {
         disabledItem: 'disabled',
       },
     }),
-  );
+  ]);
 
   search.start();
 

@@ -35,11 +35,9 @@ function key(key, extra = {}, target = document.body) {
 
 function algoliaLoader(sdk, client = jest.fn()) {
   const source = fs.readFileSync(path.join(__dirname, '../../../asset/js/algolia.js'), 'utf8');
+  window['algoliasearch/lite'] = { liteClient: client };
   // eslint-disable-next-line no-new-func
-  return new Function('instantsearch', 'algoliasearch', `${source}; return loadAlgolia;`)(
-    sdk,
-    client,
-  );
+  return new Function('instantsearch', `${source}; return loadAlgolia;`)(sdk);
 }
 
 function algoliaSdk(failure) {
@@ -55,12 +53,14 @@ function algoliaSdk(failure) {
     let helper = null;
     let input, onInput, queryHook;
     const search = {
+      options,
       started: false,
       mainHelper: null,
       mainIndex: { getHelper: () => helper },
-      addWidgets: jest.fn(),
-      addWidget: jest.fn((widget) => {
-        if (widget.queryHook) queryHook = widget.queryHook;
+      addWidgets: jest.fn((widgets) => {
+        widgets.forEach((widget) => {
+          if (widget.queryHook) queryHook = widget.queryHook;
+        });
       }),
       start: jest.fn(() => {
         failAt('start');
@@ -101,10 +101,10 @@ function algoliaSdk(failure) {
   sdk.widgets = Object.fromEntries(
     ['configure', 'searchBox', 'poweredBy', 'hits', 'pagination'].map((name) => [
       name,
-      (options) => {
+      jest.fn((options) => {
         failAt('widget');
         return options;
-      },
+      }),
     ]),
   );
   return { sdk, instances };
@@ -372,6 +372,55 @@ test('Algolia reinitialization disposes the previous instantsearch instance', ()
   expect(instances[1].start).toHaveBeenCalledTimes(1);
   key('/');
   expect(document.activeElement).toBe(document.querySelector('input'));
+});
+
+test('Algolia uses the v5 lite UMD API and keeps index, excerpt and search-only behavior', () => {
+  const { sdk, instances } = algoliaSdk();
+  const searchClient = { search: jest.fn() };
+  const client = jest.fn(() => searchClient);
+  algoliaLoader(sdk, client)(
+    { applicationId: 'app', apiKey: 'search-key', indexName: 'posts', excerpt: 'content' },
+    { hint: 'Find posts' },
+  );
+  expect(client).toHaveBeenCalledWith('app', 'search-key');
+  expect(instances[0].options).toEqual({
+    indexName: 'posts',
+    searchClient,
+    insights: false,
+  });
+  expect(sdk.widgets.configure).toHaveBeenCalledWith({ attributesToSnippet: ['content'] });
+  expect(sdk.widgets.searchBox).toHaveBeenCalledWith(
+    expect.objectContaining({
+      placeholder: 'Find posts',
+      showReset: false,
+      showSubmit: false,
+    }),
+  );
+  expect(instances[0].addWidgets.mock.calls[0][0]).toHaveLength(5);
+});
+
+test('Algolia component pins compatible browser UMD assets without changing its field mapping', () => {
+  const cdn = jest.fn((name, version, file) => `https://cdn.test/${name}@${version}/${file}`);
+  const cacheable = Algolia.Cacheable;
+  const element = cacheable({
+    config: { algolia: { applicationID: 'app', apiKey: 'search-key', indexName: 'posts' } },
+    helper: { cdn, __: (key) => key, url_for: (url) => url },
+    search: {},
+  });
+  expect(cdn).toHaveBeenCalledWith('algoliasearch', '5.60.0', 'dist/lite/builds/browser.umd.js');
+  expect(cdn).toHaveBeenCalledWith(
+    'instantsearch.js',
+    '4.120.0',
+    'dist/instantsearch.production.min.js',
+  );
+  expect(element.props).toEqual(
+    expect.objectContaining({
+      applicationId: 'app',
+      apiKey: 'search-key',
+      indexName: 'posts',
+      excerpt: 'excerpt',
+    }),
+  );
 });
 
 test.each([
