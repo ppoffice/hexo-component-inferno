@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "/widget/github_calendar.json",
+  "description": "Responsive GitHub contribution calendar. Data is loaded from the third-party github-contributions-api.jogruber.de service; no GitHub token is needed",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "github_calendar"
+    },
+    "username": {
+      "type": "string",
+      "description": "GitHub username. Leave empty to hide this widget",
+      "pattern": "^$|^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$",
+      "nullable": true
+    },
+    "title": {
+      "type": "string",
+      "description": "Widget title. Leave empty to use the translated default",
+      "nullable": true
+    },
+    "color": {
+      "type": "string",
+      "description": "Optional six-digit hex color, for example '#40c463'. Leave empty to use the theme's calendar palette",
+      "pattern": "^$|^#?[a-fA-F0-9]{6}$",
+      "nullable": true
+    }
+  },
+  "required": ["type"]
+}

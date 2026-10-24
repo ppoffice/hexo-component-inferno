@@ -1,0 +1,41 @@
+.github-calendar-chart {
+  --github-calendar-color: var(--github-calendar-default-color, #40c463);
+  --github-calendar-empty: color-mix(in srgb, currentColor 12%, transparent);
+  min-height: 116px;
+}
+
+.github-calendar-chart .github-calendar-link {
+  display: block;
+  color: inherit;
+}
+
+.github-calendar-chart svg {
+  display: block;
+  max-width: 100%;
+}
+
+.github-calendar-chart text {
+  fill: currentColor;
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.github-calendar-chart rect {
+  fill: var(--github-calendar-empty);
+}
+
+.github-calendar-chart .github-calendar-level-1 {
+  fill: color-mix(in srgb, var(--github-calendar-color) 25%, var(--github-calendar-empty));
+}
+
+.github-calendar-chart .github-calendar-level-2 {
+  fill: color-mix(in srgb, var(--github-calendar-color) 50%, var(--github-calendar-empty));
+}
+
+.github-calendar-chart .github-calendar-level-3 {
+  fill: color-mix(in srgb, var(--github-calendar-color) 75%, var(--github-calendar-empty));
+}
+
+.github-calendar-chart .github-calendar-level-4 {
+  fill: var(--github-calendar-color);
+}

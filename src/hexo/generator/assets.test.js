@@ -17,7 +17,12 @@ test("Export files from asset/ folder that are not in theme's source folder", as
   const locals = hexo.locals.toObject();
   const generator = hexo.extend.generator.get('static_assets').bind(hexo);
   const result = await generator(locals);
-  ['/js/algolia.js', '/js/google_cse.js'].forEach((file) => {
+  [
+    '/js/algolia.js',
+    '/js/google_cse.js',
+    '/js/github-calendar.js',
+    '/css/github-calendar.css',
+  ].forEach((file) => {
     expect(result.find((route) => route.path === file)).not.toBeUndefined();
     expect(result.find((route) => route.path === file).data).toBe(
       readFileSync(join(assetsDir, file), { encoding: 'utf-8' }),
