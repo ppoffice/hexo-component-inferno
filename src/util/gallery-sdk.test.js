@@ -3,11 +3,8 @@ const { JSDOM } = require('jsdom');
 const jquery = require('jquery');
 const installer = require('./gallery');
 
-// Exact existing CDN versions, installed as test-only dependencies; no test-time network requests.
-const lightSource = fs.readFileSync(
-  require.resolve('lightgallery/dist/js/lightgallery-all.min.js'),
-  'utf8',
-);
+// Exact CDN versions, installed as test dependencies; no test-time network requests.
+const lightSource = fs.readFileSync(require.resolve('lightgallery'), 'utf8');
 const justifiedSource = fs.readFileSync(
   require.resolve('justifiedGallery/dist/js/jquery.justifiedGallery.min.js'),
   'utf8',
@@ -19,8 +16,11 @@ function setup(content = '<img src="/old.png" alt="Old">') {
   dom = new JSDOM(`<article class="article">${content}</article>`, {
     url: 'https://example.com/',
     runScripts: 'outside-only',
+    pretendToBeVisual: true,
   });
   const { window } = dom;
+  window.matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
+  window.scrollTo = () => {};
   Object.defineProperty(window.document, 'readyState', { configurable: true, value: 'complete' });
   const $ = jquery(window);
   window.jQuery = $;
@@ -32,12 +32,15 @@ function setup(content = '<img src="/old.png" alt="Old">') {
 }
 
 function expectOneOpen($, root, link) {
-  const open = jest.fn();
-  $(root).on('onBeforeOpen.lg', open);
-  const { MouseEvent } = root.ownerDocument.defaultView;
+  const { MouseEvent, document } = root.ownerDocument.defaultView;
   link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-  expect(open).toHaveBeenCalledTimes(1);
-  $(root).off('onBeforeOpen.lg', open);
+  expect(document.querySelectorAll('.lg-container.lg-show')).toHaveLength(1);
+}
+
+async function destroy(window, root) {
+  window.HexoGallery.destroy(root);
+  // lightGallery keeps its documented 100 ms close delay with transitions disabled.
+  await new Promise((resolve) => window.setTimeout(resolve, 120));
 }
 
 afterEach(() => {
@@ -49,58 +52,55 @@ test.each(['', '<img src="/old.png" alt="Old">'])(
   (initial) => {
     const { window, $, root } = setup(initial);
     window.HexoGallery.init(root, enabled);
-    const instance = $(root).data('lightGallery');
-    const oldItems = Array.from(instance.$items);
+    const oldItems = Array.from(root.querySelectorAll('a'));
     root.innerHTML = '<img src="/new.png" alt="New">';
     window.HexoGallery.init(root, enabled);
     window.eval(installer);
     window.HexoGallery.init(root, enabled);
     const link = root.querySelector('.gallery-item');
-    expect(Array.from($(root).data('lightGallery').$items)).toEqual([link]);
-    oldItems.forEach((item) => expect($._data(item, 'events')).toBeUndefined());
+    oldItems.forEach((item) => {
+      item.click();
+      expect(window.document.querySelector('.lg-container.lg-show')).toBe(null);
+    });
     expect(root.querySelectorAll('.caption')).toHaveLength(1);
     expectOneOpen($, root, link);
   },
 );
 
-test('Real pre-existing lightGallery keeps exactly one click binding and refreshes changed items', () => {
+test('Real lightGallery keeps one delegated click binding and refreshes changed items', async () => {
   const { window, $, root } = setup(
     '<a class="gallery-item" href="/old.png"><img src="/old.png"></a>',
   );
-  $(root).lightGallery({ selector: '.gallery-item' });
-  const instance = $(root).data('lightGallery');
   const retained = root.querySelector('a');
   window.HexoGallery.init(root, enabled);
   window.eval(installer);
   window.HexoGallery.init(root, enabled);
-  expect($(root).data('lightGallery')).toBe(instance);
-  // Inspect native jQuery's actual event list, not a count of calls to the SDK entry point.
-  expect(
-    $._data(retained, 'events').click.filter((event) => event.namespace === 'lgcustom'),
-  ).toHaveLength(1);
   expectOneOpen($, root, retained);
+  await destroy(window, root);
   root.insertAdjacentHTML('beforeend', '<img src="/new.png" alt="New">');
   window.HexoGallery.init(root, enabled);
   window.HexoGallery.init(root, enabled);
   const links = Array.from(root.querySelectorAll('.gallery-item'));
-  expect(Array.from(instance.$items)).toEqual(links);
-  links.forEach((link) => {
-    expect(
-      $._data(link, 'events').click.filter((event) => event.namespace === 'lgcustom'),
-    ).toHaveLength(1);
+  for (const link of links) {
     expectOneOpen($, root, link);
-  });
+    await destroy(window, root);
+    window.HexoGallery.init(root, enabled);
+  }
 });
 
-test('Real lightGallery unbinds removed links while retaining one handler on reordered survivors', () => {
+test('Real lightGallery handles reordered survivors and unbinds on destroy', async () => {
   const { window, $, root } = setup('<img src="/one"><img src="/two"><img src="/three">');
   window.HexoGallery.init(root, enabled);
   const links = Array.from(root.querySelectorAll('a'));
   root.replaceChildren(links[2], links[0]);
   window.HexoGallery.init(root, enabled);
-  expect(Array.from($(root).data('lightGallery').$items)).toEqual([links[2], links[0]]);
-  expect($._data(links[1], 'events')).toBeUndefined();
+  links[1].click();
+  expect(window.document.querySelector('.lg-container.lg-show')).toBe(null);
   expectOneOpen($, root, links[2]);
+  await destroy(window, root);
+  expect(window.document.querySelector('.lg-container')).toBe(null);
+  expect(window.document.documentElement.classList.contains('lg-on')).toBe(false);
+  window.HexoGallery.init(root, enabled);
   expectOneOpen($, root, links[0]);
 });
 
@@ -284,34 +284,31 @@ test.each([false, true])('Real JG accepts SDK updates (%s)', (unprocessed) => {
 
 test('Real delayed SDK arrival binds the latest contents of a retained root', () => {
   const { window, $, root } = setup();
-  const light = $.fn.lightGallery;
-  delete $.fn.lightGallery;
+  const light = window.lightGallery;
+  delete window.lightGallery;
   window.HexoGallery.init(root, enabled);
   root.innerHTML = '<img src="/late.png">';
-  $.fn.lightGallery = light;
+  window.lightGallery = light;
   const script = window.document.createElement('script');
   window.document.body.appendChild(script);
   script.dispatchEvent(new window.Event('load'));
   window.HexoGallery.init(root, enabled);
-  expect(Array.from($(root).data('lightGallery').$items)).toEqual([root.querySelector('a')]);
   expectOneOpen($, root, root.querySelector('a'));
 });
 
-test('Disabled flags do not refresh real instances until the latest request enables them', () => {
+test('Disabled flags destroy real lightboxes until the latest request enables them', async () => {
   const { window, $, root } = setup();
   window.HexoGallery.init(window.document, enabled);
-  const instance = $(root).data('lightGallery');
-  const oldItems = Array.from(instance.$items);
+  expectOneOpen($, root, root.querySelector('a'));
   root.innerHTML = '<img src="/new.png" alt="New">';
   window.HexoGallery.init(window.document);
+  await new Promise((resolve) => window.setTimeout(resolve, 120));
   const script = window.document.createElement('script');
   window.document.body.appendChild(script);
   script.dispatchEvent(new window.Event('load'));
   window.dispatchEvent(new window.Event('load'));
-  expect($(root).data('lightGallery')).toBe(instance);
-  expect(Array.from(instance.$items)).toEqual(oldItems);
+  expect(window.document.querySelector('.lg-container')).toBe(null);
   expect(root.querySelectorAll('.caption')).toHaveLength(1);
   window.HexoGallery.init(window.document, enabled);
-  expect(Array.from($(root).data('lightGallery').$items)).toEqual([root.querySelector('a')]);
   expectOneOpen($, root, root.querySelector('a'));
 });

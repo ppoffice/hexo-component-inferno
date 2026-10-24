@@ -27,16 +27,14 @@ function plugins(window) {
   const $ = jquery(window);
   const light = jest.fn();
   const justified = jest.fn();
-  $.fn.lightGallery = function (options) {
-    this.each((i, element) => {
-      light(element, options);
-      $(element).data('lightGallery', {
-        s: options,
-        $items: $(element).find(options.selector),
-        init: jest.fn(),
-      });
-    });
-    return this;
+  window.lightGallery = (element, options) => {
+    light(element, options);
+    return {
+      refresh: jest.fn(),
+      updateSlides: jest.fn(),
+      openGallery: jest.fn(),
+      destroy: jest.fn(),
+    };
   };
   $.fn.justifiedGallery = function () {
     this.each((i, element) => {
@@ -88,6 +86,83 @@ test('Basic enhancement works without jQuery or Icarus and creates captions as t
   expect(document.querySelectorAll('script, style, link')).toHaveLength(0);
 });
 
+test('lightGallery is independent of jQuery, refreshes metadata and owns one binding per article', () => {
+  const window = setup(
+    '<article class="article"><img src="/a.png" alt="A"></article><article class="article"><img src="/b.png" alt="B"></article>',
+  );
+  const instances = [];
+  window.lightGallery = jest.fn((element, options) => {
+    const instance = {
+      options,
+      refresh: jest.fn(),
+      updateSlides: jest.fn(),
+      openGallery: jest.fn(),
+      destroy: jest.fn(),
+    };
+    instances.push(instance);
+    return instance;
+  });
+  const { document, HexoGallery } = window;
+  HexoGallery.init(document, enabled);
+  HexoGallery.init(document, enabled);
+  expect(window.lightGallery).toHaveBeenCalledTimes(2);
+  const link = document.querySelector('a');
+  link.dispatchEvent(
+    new window.MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey: true }),
+  );
+  expect(instances[0].openGallery).not.toHaveBeenCalled();
+  link.click();
+  expect(instances[0].openGallery).toHaveBeenCalledTimes(1);
+  expect(instances[1].openGallery).not.toHaveBeenCalled();
+  link.href = '/changed.png';
+  link.querySelector('img').alt = '<script>unsafe</script>';
+  HexoGallery.init(document, enabled);
+  expect(instances[0].refresh).toHaveBeenCalledWith([
+    expect.objectContaining({
+      src: 'https://example.com/changed.png',
+      subHtml: '&lt;script&gt;unsafe&lt;/script&gt;',
+    }),
+  ]);
+  expect(instances[1].refresh).not.toHaveBeenCalled();
+  instances[0].lgOpened = true;
+  instances[0].index = 0;
+  instances[0].settings = {};
+  link.querySelector('img').alt = '"Quoted"';
+  HexoGallery.init(document, enabled);
+  expect(instances[0].updateSlides).toHaveBeenCalledWith(
+    [expect.objectContaining({ subHtml: '"Quoted"', alt: '&quot;Quoted&quot;' })],
+    0,
+  );
+  HexoGallery.destroy(document);
+  HexoGallery.destroy(document);
+  instances.forEach((instance) => expect(instance.destroy).toHaveBeenCalledTimes(1));
+  link.click();
+  expect(instances[0].openGallery).toHaveBeenCalledTimes(1);
+  scriptLoaded(window);
+  expect(window.lightGallery).toHaveBeenCalledTimes(2);
+});
+
+test('Waits for configured lightGallery plugins before creating an instance', () => {
+  const window = setup();
+  const { light } = plugins(window);
+  window.HexoGallery.lightGalleryPlugins = ['lgZoom'];
+  window.HexoGallery.init(window.document, enabled);
+  expect(light).not.toHaveBeenCalled();
+  window.lgZoom = function () {};
+  scriptLoaded(window);
+  expect(light).toHaveBeenCalledTimes(1);
+  expect(light.mock.calls[0][1].plugins).toEqual([window.lgZoom]);
+});
+
+test('destroy cancels delayed SDK initialization before replacing an enabled page', () => {
+  const window = setup();
+  window.HexoGallery.init(window.document, enabled);
+  window.HexoGallery.destroy(window.document);
+  window.lightGallery = jest.fn();
+  scriptLoaded(window);
+  expect(window.lightGallery).not.toHaveBeenCalled();
+});
+
 test('An explicit content container is scoped and need not have an Icarus class', () => {
   const window = setup('<main><img src="/one.png"></main><aside><img src="/two.png"></aside>');
   const main = window.document.querySelector('main');
@@ -95,7 +170,7 @@ test('An explicit content container is scoped and need not have an Icarus class'
   window.HexoGallery.init(main, { lightGallery: true });
   expect(main.querySelectorAll('.gallery-item')).toHaveLength(1);
   expect(window.document.querySelector('aside a')).toBe(null);
-  expect(light).toHaveBeenCalledWith(main, { selector: '.gallery-item' });
+  expect(light).toHaveBeenCalledWith(main, expect.objectContaining({ dynamic: true }));
 });
 
 test('Disabled plugins are never initialized or downloaded, even when SDKs are present', () => {
@@ -294,10 +369,7 @@ test.each(['loading', 'interactive', 'complete'])(
 test('The compiled standalone HTML supports real deferred load ordering and PJAX SDK arrival', async () => {
   const errors = [];
   const jquerySource = require('fs').readFileSync(require.resolve('jquery'), 'utf8');
-  const lightSource = require('fs').readFileSync(
-    require.resolve('lightgallery/dist/js/lightgallery-all.min.js'),
-    'utf8',
-  );
+  const lightSource = require('fs').readFileSync(require.resolve('lightgallery'), 'utf8');
   const justifiedSource = require('fs').readFileSync(
     require.resolve('justifiedGallery/dist/js/jquery.justifiedGallery.min.js'),
     'utf8',
@@ -309,7 +381,7 @@ test('The compiled standalone HTML supports real deferred load ordering and PJAX
         return Promise.resolve(
           Buffer.from(
             lightSource +
-              ';(function () { var original = jQuery.fn.lightGallery; jQuery.fn.lightGallery = function () { window.lightCalls = (window.lightCalls || 0) + this.length; return original.apply(this, arguments); }; jQuery.fn.lightGallery.modules = original.modules; })();',
+              ';(function () { var original = lightGallery; window.lightGallery = function (element, options) { window.lightCalls = (window.lightCalls || 0) + 1; return original(element, options); }; })();',
           ),
         );
       }
@@ -330,6 +402,14 @@ test('The compiled standalone HTML supports real deferred load ordering and PJAX
     {
       url: 'https://example.com/',
       runScripts: 'dangerously',
+      pretendToBeVisual: true,
+      beforeParse(window) {
+        window.matchMedia = () => ({
+          matches: false,
+          addEventListener() {},
+          removeEventListener() {},
+        });
+      },
       resources: new Dependencies(),
       virtualConsole: new VirtualConsole().on('jsdomError', (error) => errors.push(error.message)),
     },

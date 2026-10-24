@@ -10,6 +10,92 @@ function installGallery(window) {
   const document = window.document;
   const requests = new Map();
   const justifiedItems = new WeakMap();
+  const lightboxes = new Map();
+
+  function destroyLightbox(container) {
+    const state = lightboxes.get(container);
+    if (!state) return;
+    container.removeEventListener('click', state.click);
+    // The SDK removes its container through parentNode, even after a host replaced the body.
+    const dialog = state.instance.$container && state.instance.$container.get();
+    if (dialog && !dialog.parentNode) {
+      dialog.style.display = 'none';
+      document.body.appendChild(dialog);
+    }
+    if (state.instance.lgOpened) {
+      state.instance.settings.startAnimationDuration = 0;
+      state.instance.settings.backdropDuration = 0;
+    }
+    state.instance.destroy();
+    lightboxes.delete(container);
+  }
+
+  function lightbox(container, enabled) {
+    if (!enabled) {
+      destroyLightbox(container);
+      return;
+    }
+    if (typeof window.lightGallery !== 'function') return;
+    const plugins = (window.HexoGallery.lightGalleryPlugins || []).map((name) => window[name]);
+    if (plugins.some((plugin) => typeof plugin !== 'function')) return;
+    const items = Array.from(container.querySelectorAll('a.gallery-item[href]'));
+    if (!items.length) {
+      destroyLightbox(container);
+      return;
+    }
+    const elements = items.map((link) => {
+      const image = link.querySelector('img');
+      const caption = document.createElement('span');
+      caption.textContent = image ? image.alt : '';
+      return {
+        src: link.href,
+        thumb: image ? image.currentSrc || image.src : link.href,
+        subHtml: caption.innerHTML,
+        alt: caption.innerHTML.replace(/"/g, '&quot;'),
+      };
+    });
+    const signature = JSON.stringify(elements);
+    let state = lightboxes.get(container);
+    if (state) {
+      if (!sameItems(state.items, items) || state.signature !== signature) {
+        if (state.instance.lgOpened) {
+          state.instance.updateSlides(
+            elements,
+            Math.min(state.instance.index, elements.length - 1),
+          );
+        } else {
+          state.instance.refresh(elements);
+        }
+        state.items = items;
+        state.signature = signature;
+      }
+      return;
+    }
+    const instance = window.lightGallery(container, {
+      dynamic: true,
+      dynamicEl: elements,
+      plugins,
+    });
+    state = { instance, items, signature, click: null };
+    state.click = (event) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+      const link = event.target.closest('a.gallery-item');
+      const index = state.items.indexOf(link);
+      if (index < 0) return;
+      event.preventDefault();
+      instance.openGallery(index, link);
+    };
+    container.addEventListener('click', state.click);
+    lightboxes.set(container, state);
+  }
 
   function sameItems(items, current) {
     return (
@@ -38,33 +124,11 @@ function installGallery(window) {
   function apply(root, options) {
     const containers = root === document ? root.querySelectorAll('.article') : [root];
     containers.forEach(enhance);
-    // Do not let lightGallery capture an incomplete article while HTML is still being parsed.
+    // Do not capture an incomplete article while HTML is still being parsed.
     if (document.readyState === 'loading') return;
+    containers.forEach((container) => lightbox(container, options.lightGallery));
     const $ = window.jQuery || window.$;
     if (!$ || !$.fn) return;
-
-    if (options.lightGallery && typeof $.fn.lightGallery === 'function') {
-      containers.forEach((container) => {
-        const $container = $(container);
-        const instance = $container.data('lightGallery');
-        if (!instance) {
-          $container.lightGallery({ selector: '.gallery-item' });
-          return;
-        }
-        // 1.10.0's entry point calls init again even for existing instances, duplicating handlers.
-        // There is no refresh API: retain its settings and refresh only changed DOM memberships.
-        if (instance.s.dynamic) return;
-        const $scope = instance.s.selectWithin ? $(instance.s.selectWithin) : $container;
-        let $items = $container;
-        if (instance.s.selector !== 'this') {
-          $items = instance.s.selector ? $scope.find(instance.s.selector) : $container.children();
-        }
-        if (sameItems(instance.$items, $items)) return;
-        instance.$items.off('click.lgcustom');
-        instance.$items = $items;
-        instance.init();
-      });
-    }
     if (options.justifiedGallery && typeof $.fn.justifiedGallery === 'function') {
       const galleries = Array.from(root.querySelectorAll('.justified-gallery'));
       if (root !== document && root.matches('.justified-gallery')) galleries.unshift(root);
@@ -103,6 +167,9 @@ function installGallery(window) {
   }
 
   function prune() {
+    lightboxes.forEach((state, container) => {
+      if (!container.isConnected) destroyLightbox(container);
+    });
     requests.forEach((options, root) => {
       if (root !== document && !root.isConnected) requests.delete(root);
     });
@@ -119,8 +186,8 @@ function installGallery(window) {
      * Repeated calls reuse existing wrappers, captions and plugin instances. Missing SDKs can be
      * retried by calling init again; DOM ready, window load and subsequent script loads also retry
      * connected containers with their latest options. SDK initialization waits for DOM readiness.
-     * Changed item collections refresh their existing SDK instance; disabled flags do not tear it
-     * down. An unchanged pre-existing third-party instance is reused without rebinding.
+     * Changed item collections refresh their existing SDK instance. Disabling the lightbox destroys
+     * it; the independently managed layout plugin is unchanged.
      * @param {Document|Element} [root=document] Content container; document targets .article images
      *     and lightboxes, and all .justified-gallery elements.
      * @param {Object} [options={}] SDK opt-ins; omitted flags disable plugin initialization.
@@ -137,6 +204,17 @@ function installGallery(window) {
       prune();
       requests.set(root, enabled);
       apply(root, enabled);
+    },
+    /** Destroy lightboxes and pending retries before a content root is replaced (e.g. PJAX). */
+    destroy: function (root) {
+      root = root || document;
+      lightboxes.forEach((state, container) => {
+        if (root === document || root === container || root.contains(container))
+          destroyLightbox(container);
+      });
+      requests.forEach((options, target) => {
+        if (root === document || root === target || root.contains(target)) requests.delete(target);
+      });
     },
   };
 
