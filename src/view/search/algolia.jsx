@@ -5,6 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const { toJs } = require('../../util/script');
+const searchbox = require('../../util/searchbox');
 
 /**
  * Algolia search engine JSX component.
@@ -48,9 +49,14 @@ class Algolia extends Component {
     }
 
     const config = { applicationId, apiKey, indexName, excerpt };
-    const js = `document.addEventListener('DOMContentLoaded', function () {
+    const js = `function initAlgolia() {
             loadAlgolia(${toJs(config)}, ${toJs(translation)});
-        });`;
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAlgolia, { once: true });
+        } else {
+            initAlgolia();
+        }`;
 
     return (
       <>
@@ -72,6 +78,7 @@ class Algolia extends Component {
             <div class="searchbox-footer"></div>
           </div>
         </div>
+        <script dangerouslySetInnerHTML={{ __html: searchbox }}></script>
         <script src={algoliaSearchUrl} crossorigin="anonymous" defer={true}></script>
         <script src={instantSearchUrl} crossorigin="anonymous" defer={true}></script>
         <script src={jsUrl} defer={true}></script>

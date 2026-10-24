@@ -4,12 +4,9 @@
  */
 const Ajv = require('ajv');
 const path = require('path');
-const yaml = require('../util/yaml');
-
-/**
- * A magic string for reformating comment lines in the YAML output.
- */
-const MAGIC = 'c823d4d4';
+const { MAGIC } = require('./commented_yaml');
+const DefaultValue = require('./default_value');
+const { typeOf, hasOwnProperty } = require('./schema_util');
 
 /**
  * Deep copy a value of a JSON schema definition, so that changing a default value does not change the
@@ -34,22 +31,6 @@ const PRIMITIVE_DEFAULTS = {
   object: {},
 };
 
-const typeOf = (value) => {
-  if (value === undefined) {
-    return 'undefined';
-  }
-  return Object.prototype.toString
-    .call(value)
-    .replace(/^\[object\s+([a-z]+)\]$/i, '$1')
-    .toLowerCase();
-};
-
-const hasOwnProperty = (obj, prop) => {
-  return obj === null || typeOf(obj) === 'undefined'
-    ? false
-    : Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
 function traverseObj(obj, targetKey, handler) {
   if (typeOf(obj) === 'array') {
     for (const child of obj) {
@@ -63,197 +44,6 @@ function traverseObj(obj, targetKey, handler) {
         traverseObj(obj[key], targetKey, handler);
       }
     }
-  }
-}
-
-/**
- * The default value wrapper class.
- */
-class DefaultValue {
-  /**
-   * @param {any} value The wrapped default value.
-   * @param {string} description A description of the contained value. Used to produce
-   * the comment string.
-   */
-  constructor(value, description) {
-    this.value = value;
-    this.description = description;
-  }
-
-  /**
-   * Duplicate the current default value.
-   * <p>
-   * Wrapped value will be shallow copied.
-   *
-   * @returns {module:core/schema~DefaultValue} A new instance of the current default value.
-   */
-  clone() {
-    const result = new DefaultValue(this.value, this.description);
-    if (result.value instanceof DefaultValue) {
-      result.value = result.value.clone();
-    } else if (typeOf(result.value) === 'array') {
-      result.value = [].concat(result.value);
-    } else if (typeOf(result.value) === 'object') {
-      result.value = Object.assign({}, result.value);
-    }
-    return result;
-  }
-
-  /**
-   * Unwrap current {module:core/schema~DefaultValue} if its wrapped value is also a
-   * {module:core/schema~DefaultValue}.
-   * <p>
-   * The description will also be replaced with wrapped value description, if exists.
-   */
-  flatten() {
-    if (this.value instanceof DefaultValue) {
-      this.value.flatten();
-      if (hasOwnProperty(this.value, 'description') && this.value.description) {
-        this.description = this.value.description;
-      }
-      this.value = this.value.value;
-    }
-  }
-
-  /**
-   * Merge current default value with another default value.
-   *
-   * @param {module:core/schema~DefaultValue} source The input object to be merged with. Should have the
-   * same wrapped value type as current wrapped default value.
-   */
-  merge(source) {
-    if (hasOwnProperty(source, 'value') && source.value !== null) {
-      this.flatten();
-      if (source.value instanceof DefaultValue) {
-        source = source.clone();
-        source.flatten();
-      }
-      if (typeOf(source.value) === typeOf(this.value)) {
-        if (typeOf(this.value) === 'array') {
-          this.value = this.value.concat(source.value);
-        } else if (typeOf(this.value) === 'object') {
-          Object.keys(source.value).forEach((key) => {
-            this.value[key] = source.value[key];
-          });
-        } else {
-          this.value = source.value;
-        }
-      } else if (typeOf(this.value) === 'undefined' || typeOf(this.value) === 'null') {
-        this.value = source.value;
-      }
-    }
-    if (hasOwnProperty(source, 'description') && source.description) {
-      this.description = source.description;
-    }
-  }
-
-  /**
-   * Create a new array with comments inserted as new elements right before each child element.
-   * <p>
-   * If current wrapped value is an array and some of its elements are instances of
-   * {@link module:core/schema~DefaultValue}, the element's description will be inserted as a new child
-   * right before the element.
-   * The element itself will also be converted into its commented version using the <code>toCommented</code>
-   * method.
-   *
-   * @returns {Array} A new array with comments and the original elements in the commented form.
-   */
-  toCommentedArray() {
-    return [].concat(
-      ...this.value.map((item) => {
-        if (item instanceof DefaultValue) {
-          if (typeOf(item.description) !== 'string' || !item.description.trim()) {
-            return [item.toCommented()];
-          }
-          return item.description
-            .split('\n')
-            .map((line, i) => {
-              return MAGIC + i + ': ' + line;
-            })
-            .concat(item.toCommented());
-        } else if (typeOf(item) === 'array' || typeOf(item) === 'object') {
-          return new DefaultValue(item).toCommented();
-        }
-        return [item];
-      }),
-    );
-  }
-
-  /**
-   * Create a new object with comments inserted as new properties right before every original properties.
-   * <p>
-   * Works similar to {@link module:core/schema~DefaultValue#toCommentedArray}.
-   *
-   * @returns {Object} A new object with comments and the original property values in the commented form.
-   */
-  toCommentedObject() {
-    if (this.value instanceof DefaultValue) {
-      return this.value.toCommented();
-    }
-    const result = {};
-    for (const key in this.value) {
-      const item = this.value[key];
-      if (item instanceof DefaultValue) {
-        if (typeOf(item.description) === 'string' && item.description.trim()) {
-          item.description.split('\n').forEach((line, i) => {
-            result[MAGIC + key + i] = line;
-          });
-        }
-        result[key] = item.toCommented();
-      } else if (typeOf(item) === 'array' || typeOf(item) === 'object') {
-        result[key] = new DefaultValue(item).toCommented();
-      } else {
-        result[key] = item;
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Call {@link module:core/schema~DefaultValue#toCommentedArray} or
-   * {@link module:core/schema~DefaultValue#toCommentedObject} based on the type of the wrapped value.
-   * <p>
-   * If neither applies, directly return the wrapped value.
-   *
-   * @returns {any} The commented object/array, or the original wrapped value.
-   */
-  toCommented() {
-    if (typeOf(this.value) === 'array') {
-      return this.toCommentedArray();
-    } else if (typeOf(this.value) === 'object') {
-      return this.toCommentedObject();
-    }
-    return this.value;
-  }
-
-  /**
-   * Create the YAML string with all the comments from current default value.
-   *
-   * @returns {string} The formatted YAML string.
-   */
-  toYaml() {
-    // Comments are written as properties or array elements, whose values the YAML writer may quote.
-    // Read them back with the YAML parser, rather than removing the quotes by hand.
-    const property = new RegExp(`^(\\s*)(['"]?)${MAGIC}.*?\\2: (.*)$`);
-    const element = new RegExp(`^(\\s*)- (.*${MAGIC}.*)$`);
-    const comment = (indent, text) =>
-      `${indent}# ${text === null || text === undefined ? '' : text}`;
-    return yaml
-      .stringify(this.toCommented())
-      .split('\n')
-      .map((line) => {
-        let match = property.exec(line);
-        if (match) {
-          return comment(match[1], yaml.parse(match[3]));
-        }
-        match = element.exec(line);
-        if (match) {
-          const text = String(yaml.parse(match[2]));
-          return comment(match[1], text.slice(text.indexOf(': ') + 2));
-        }
-        return line;
-      })
-      .join('\n');
   }
 }
 

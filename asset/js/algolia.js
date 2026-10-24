@@ -1,6 +1,15 @@
 /* global instantsearch, algoliasearch */
 // eslint-disable-next-line no-unused-vars
 function loadAlgolia(config, translation) {
+  const $main = $('.searchbox');
+  let search = null;
+  const controller = window.loadSearchbox($main, {
+    onDestroy: () => {
+      // 4.3.1 mounts widgets before its first search, which can throw before started becomes true.
+      // Its dispose() requires the index helper; a merely constructed instance has none.
+      if (search && search.mainIndex.getHelper()) search.dispose();
+    },
+  });
   function escapeHTML(text) {
     return String(text).replace(/[&<>"']/g, (char) => {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char];
@@ -23,7 +32,7 @@ function loadAlgolia(config, translation) {
       .replace(/\[\/algolia-highlight\]/g, '</em>');
   }
 
-  const search = instantsearch({
+  search = instantsearch({
     indexName: config.indexName,
     searchClient: algoliasearch(config.applicationId, config.apiKey),
   });
@@ -37,6 +46,10 @@ function loadAlgolia(config, translation) {
   search.addWidget(
     instantsearch.widgets.searchBox({
       container: '#algolia-input',
+      // Disposing removes the widget DOM, but callers may still hold its old input node.
+      queryHook: (query, refine) => {
+        if (controller.isCurrent()) refine(query);
+      },
       placeholder: translation.hint,
       showReset: false,
       showSubmit: false,
@@ -104,57 +117,4 @@ function loadAlgolia(config, translation) {
   if (location.hash.trim() === '#algolia-search') {
     $('.searchbox').addClass('show');
   }
-
-  const $main = $('.searchbox');
-  let opener = null;
-
-  function open() {
-    if (!$main.hasClass('show')) {
-      opener = document.activeElement;
-      $main.addClass('show');
-    }
-    $main.find('.searchbox-input').focus();
-  }
-
-  // Return the focus to the element that opened the search box, unless it moved elsewhere
-  function close(restoreFocus = true) {
-    $main.removeClass('show');
-    if (restoreFocus && opener && document.contains(opener)) {
-      opener.focus();
-    }
-    opener = null;
-  }
-
-  // Open the search box with "/" (unless typing in a field) or Ctrl/Cmd+K
-  function isSearchShortcut(e) {
-    if (e.altKey) {
-      return false;
-    }
-    if (e.ctrlKey || e.metaKey) {
-      return !e.shiftKey && typeof e.key === 'string' && e.key.toLowerCase() === 'k';
-    }
-    // e.key is "/" whatever keys type it on the keyboard layout, so do not check e.shiftKey
-    const target = e.target;
-    const typing = target.isContentEditable || /^(input|textarea|select)$/i.test(target.tagName);
-    return e.key === '/' && !typing;
-  }
-
-  $(document)
-    .on('click', '.navbar-main .search', open)
-    .on('click', '.searchbox .searchbox-mask', () => close())
-    .on('click', '.searchbox-close', () => close())
-    .on('focusin', (e) => {
-      // Close the search box when the focus moves to the rest of the page, e.g., by Tab
-      if ($main.hasClass('show') && !$main[0].contains(e.target)) {
-        close(false);
-      }
-    })
-    .on('keydown', (e) => {
-      if (isSearchShortcut(e)) {
-        e.preventDefault();
-        open();
-      } else if (e.keyCode === 27 && $main.hasClass('show')) {
-        close();
-      }
-    });
 }

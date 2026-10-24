@@ -5,6 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const { toJs } = require('../../util/script');
+const searchbox = require('../../util/searchbox');
 
 /**
  * Algolia search engine JSX component.
@@ -26,9 +27,14 @@ class Insight extends Component {
   render() {
     const { translation, contentUrl, jsUrl } = this.props;
 
-    const js = `document.addEventListener('DOMContentLoaded', function () {
+    const js = `function initInsight() {
             loadInsight(${toJs({ contentUrl })}, ${toJs(translation)});
-        });`;
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initInsight, { once: true });
+        } else {
+            initInsight();
+        }`;
 
     return (
       <>
@@ -45,6 +51,7 @@ class Insight extends Component {
             <div class="searchbox-body"></div>
           </div>
         </div>
+        <script data-pjax dangerouslySetInnerHTML={{ __html: searchbox }}></script>
         <script data-pjax src={jsUrl} defer={true}></script>
         <script data-pjax dangerouslySetInnerHTML={{ __html: js }}></script>
       </>
