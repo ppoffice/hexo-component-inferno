@@ -3,15 +3,7 @@
  * @module hexo/tag/tabs
  */
 
-/**
- * Split a tag option at its first colon, so that the value can contain colons, as in
- * <code>'title:Step 1: Install'</code>.
- * @private
- */
-function splitOption(option) {
-  const index = option.indexOf(':');
-  return index === -1 ? [option] : [option.slice(0, index), option.slice(index + 1)];
-}
+const { splitOption, splitTabOptions } = require('../../util/tab-options');
 
 /**
  * Register custom Hexo tag {% tabs %}.
@@ -86,86 +78,6 @@ function splitOption(option) {
  * {% endtabs %}
  */
 module.exports = function (hexo) {
-  function splitTabOptions(s) {
-    const options = [];
-    const EOL = -1;
-
-    let i = 0;
-    let state = 1;
-    let begin = 0;
-
-    while (i <= s.length) {
-      const c = i < s.length ? s.charAt(i) : '';
-      switch (state) {
-        case 1:
-          if (c === ' ') {
-            state = 1;
-            begin = i + 1;
-          } else if (c === '"') {
-            state = 2;
-            begin = i + 1;
-          } else if (c === "'") {
-            state = 4;
-            begin = i + 1;
-          } else if (c === '') {
-            state = EOL;
-          } else {
-            state = 7;
-          }
-          break;
-        case 2:
-          if (c === '\\') {
-            state = 3;
-          } else if (c === '"') {
-            state = 6;
-          }
-          break;
-        case 3:
-          state = 2;
-          break;
-        case 4:
-          if (c === '\\') {
-            state = 5;
-          } else if (c === "'") {
-            state = 6;
-          }
-          break;
-        case 5:
-          state = 4;
-          break;
-        case 6:
-          options.push(s.substring(begin, i - 1));
-          begin = i + 1;
-          if (c === ' ') {
-            state = 1;
-          } else if (c === '') {
-            state = EOL;
-          } else {
-            throw new Error(`malformatted tab options: ${s}`);
-          }
-          break;
-        case 7:
-          if (c === ' ') {
-            options.push(s.substring(begin, i));
-            begin = i + 1;
-            state = 1;
-          } else if (c === '') {
-            options.push(s.substring(begin, i));
-            begin = i + 1;
-            state = EOL;
-          }
-          break;
-      }
-      i++;
-    }
-
-    if (state !== EOL) {
-      throw new Error(`malformatted tab options: ${s}`);
-    }
-
-    return options;
-  }
-
   let tabCount = 0;
 
   function processTag(options, content) {
