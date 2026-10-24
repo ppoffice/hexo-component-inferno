@@ -15,8 +15,7 @@ function stringify(value) {
   // The YAML writer may quote comments. Parse them rather than removing quotes by hand.
   const property = new RegExp(`^(\\s*)(['"]?)${MAGIC}.*?\\2: (.*)$`);
   const element = new RegExp(`^(\\s*)- (.*${MAGIC}.*)$`);
-  const comment = (indent, text) =>
-    `${indent}# ${text === null || text === undefined ? '' : text}`;
+  const comment = (indent, text) => `${indent}# ${text === null || text === undefined ? '' : text}`;
   return yaml
     .stringify(value)
     .split('\n')

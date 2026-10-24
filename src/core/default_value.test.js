@@ -3,7 +3,9 @@ const { MAGIC, stringify } = require('./commented_yaml');
 
 test('Default values and comment serialization do not load AJV or the schema loader', () => {
   jest.isolateModules(() => {
-    jest.doMock('ajv', () => { throw new Error('DefaultValue must not load AJV'); });
+    jest.doMock('ajv', () => {
+      throw new Error('DefaultValue must not load AJV');
+    });
     const Value = require('./default_value');
     const value = new Value({ enabled: new Value(true, 'Enabled: yes') });
     expect(value.toYaml()).toBe('# Enabled: yes\nenabled: true\n');
@@ -13,7 +15,10 @@ test('Default values and comment serialization do not load AJV or the schema loa
 
 test('Keep merge identity, nested descriptions, shallow cloning and exact commented YAML', () => {
   const child = new DefaultValue('x', 'Child: "x"\nUse it');
-  const value = new DefaultValue(new DefaultValue({ list: new DefaultValue([child], 'Items') }, 'Inner'), 'Outer');
+  const value = new DefaultValue(
+    new DefaultValue({ list: new DefaultValue([child], 'Items') }, 'Inner'),
+    'Outer',
+  );
   const source = new DefaultValue({ count: new DefaultValue(2, "Don't quote") });
   value.merge(source);
   expect(value.description).toBe('Inner');
@@ -28,7 +33,8 @@ test('Keep merge identity, nested descriptions, shallow cloning and exact commen
     count: 2,
   };
   expect(value.toCommented()).toEqual(commented);
-  const expected = '# Items\nlist:\n    # Child: "x"\n    # Use it\n    - x\n# Don\'t quote\ncount: 2\n';
+  const expected =
+    '# Items\nlist:\n    # Child: "x"\n    # Use it\n    - x\n# Don\'t quote\ncount: 2\n';
   expect(value.toYaml()).toBe(expected);
   expect(stringify(commented)).toBe(expected);
 });

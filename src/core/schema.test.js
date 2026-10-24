@@ -3,9 +3,18 @@ const { MAGIC, DefaultValue, Schema, SchemaLoader } = require('./schema');
 test('The schema entry point preserves the extracted constructor and comment marker identities', () => {
   expect(DefaultValue).toBe(require('./default_value'));
   expect(MAGIC).toBe(require('./commented_yaml').MAGIC);
-  expect(Object.keys(require('./schema')).sort()).toEqual(['DefaultValue', 'MAGIC', 'Schema', 'SchemaLoader']);
+  expect(Object.keys(require('./schema')).sort()).toEqual([
+    'DefaultValue',
+    'MAGIC',
+    'Schema',
+    'SchemaLoader',
+  ]);
   const loader = new SchemaLoader();
-  loader.addSchema({ $id: '/identity.json', type: 'object', properties: { enabled: { type: 'boolean' } } });
+  loader.addSchema({
+    $id: '/identity.json',
+    type: 'object',
+    properties: { enabled: { type: 'boolean' } },
+  });
   const schema = loader.getSchema('/identity.json');
   expect(schema).toBeInstanceOf(Schema);
   const value = schema.getDefaultValue();

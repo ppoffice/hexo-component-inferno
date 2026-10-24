@@ -34,7 +34,10 @@ function key(key, extra = {}, target = document.body) {
 function algoliaLoader(sdk, client = jest.fn()) {
   const source = fs.readFileSync(path.join(__dirname, '../../../asset/js/algolia.js'), 'utf8');
   // eslint-disable-next-line no-new-func
-  return new Function('instantsearch', 'algoliasearch', `${source}; return loadAlgolia;`)(sdk, client);
+  return new Function('instantsearch', 'algoliasearch', `${source}; return loadAlgolia;`)(
+    sdk,
+    client,
+  );
 }
 
 function algoliaSdk(failure) {
@@ -94,10 +97,13 @@ function algoliaSdk(failure) {
     return search;
   };
   sdk.widgets = Object.fromEntries(
-    ['configure', 'searchBox', 'poweredBy', 'hits', 'pagination'].map((name) => [name, (options) => {
-      failAt('widget');
-      return options;
-    }]),
+    ['configure', 'searchBox', 'poweredBy', 'hits', 'pagination'].map((name) => [
+      name,
+      (options) => {
+        failAt('widget');
+        return options;
+      },
+    ]),
   );
   return { sdk, instances };
 }
@@ -218,15 +224,18 @@ test.each([
   expect(event.isDefaultPrevented()).toBe(opens);
 });
 
-test.each(['input', 'textarea', 'select', 'div'])('Do not intercept / while typing in %s', (tag) => {
-  window.loadSearchbox($('.searchbox'));
-  const field = document.createElement(tag);
-  if (tag === 'div') Object.defineProperty(field, 'isContentEditable', { value: true });
-  document.body.appendChild(field);
-  expect(key('/', {}, field).isDefaultPrevented()).toBe(false);
-  expect($('.searchbox').hasClass('show')).toBe(false);
-  expect(key('k', { metaKey: true }, field).isDefaultPrevented()).toBe(true);
-});
+test.each(['input', 'textarea', 'select', 'div'])(
+  'Do not intercept / while typing in %s',
+  (tag) => {
+    window.loadSearchbox($('.searchbox'));
+    const field = document.createElement(tag);
+    if (tag === 'div') Object.defineProperty(field, 'isContentEditable', { value: true });
+    document.body.appendChild(field);
+    expect(key('/', {}, field).isDefaultPrevented()).toBe(false);
+    expect($('.searchbox').hasClass('show')).toBe(false);
+    expect(key('k', { metaKey: true }, field).isDefaultPrevented()).toBe(true);
+  },
+);
 
 test('Reinstall and PJAX initialization replace only search handlers and target the new DOM', () => {
   const oldKey = jest.fn();
@@ -273,49 +282,80 @@ test('The mask closes Algolia and Google search boxes', () => {
 });
 
 test.each([
-  [Insight, { jsUrl: '/custom/insight.js', contentUrl: '/content.json', translation: { hint: 'Find' } }],
-  [Algolia, { jsUrl: '/custom/algolia.js', applicationId: 'app', apiKey: 'key', indexName: 'posts',
-    translation: {}, algoliaSearchUrl: '/client.js', instantSearchUrl: '/widgets.js' }],
+  [
+    Insight,
+    { jsUrl: '/custom/insight.js', contentUrl: '/content.json', translation: { hint: 'Find' } },
+  ],
+  [
+    Algolia,
+    {
+      jsUrl: '/custom/algolia.js',
+      applicationId: 'app',
+      apiKey: 'key',
+      indexName: 'posts',
+      translation: {},
+      algoliaSearchUrl: '/client.js',
+      instantSearchUrl: '/widgets.js',
+    },
+  ],
   [GoogleCSE, { jsUrl: '/custom/google.js', cx: 'cx', hint: 'Find' }],
-])('Standalone %p installs interactions before its engine without extra asset URLs', (Component, props) => {
-  document.body.innerHTML = renderToString(createElement(Component, props));
-  const scripts = Array.from(document.scripts);
-  const installer = scripts.findIndex((element) => element.textContent.includes('loadSearchbox'));
-  const engine = scripts.findIndex((element) => element.getAttribute('src') === props.jsUrl);
-  expect(installer).toBeGreaterThanOrEqual(0);
-  expect(installer).toBeLessThan(engine);
-  expect(scripts.filter((element) => element.src).map((element) => element.getAttribute('src')))
-    .not.toContain('/js/searchbox.js');
-  // Check the compiled function is self-contained, rather than depending on Babel helpers.
-  delete window.loadSearchbox;
-  // eslint-disable-next-line no-new-func
-  new Function(scripts[installer].textContent)();
-  expect(typeof window.loadSearchbox).toBe('function');
-});
+])(
+  'Standalone %p installs interactions before its engine without extra asset URLs',
+  (Component, props) => {
+    document.body.innerHTML = renderToString(createElement(Component, props));
+    const scripts = Array.from(document.scripts);
+    const installer = scripts.findIndex((element) => element.textContent.includes('loadSearchbox'));
+    const engine = scripts.findIndex((element) => element.getAttribute('src') === props.jsUrl);
+    expect(installer).toBeGreaterThanOrEqual(0);
+    expect(installer).toBeLessThan(engine);
+    expect(
+      scripts.filter((element) => element.src).map((element) => element.getAttribute('src')),
+    ).not.toContain('/js/searchbox.js');
+    // Check the compiled function is self-contained, rather than depending on Babel helpers.
+    delete window.loadSearchbox;
+    // eslint-disable-next-line no-new-func
+    new Function(scripts[installer].textContent)();
+    expect(typeof window.loadSearchbox).toBe('function');
+  },
+);
 
 test.each([
   [Insight, 'loadInsight', { jsUrl: '/insight.js', translation: {} }],
-  [Algolia, 'loadAlgolia', { jsUrl: '/algolia.js', applicationId: 'app', apiKey: 'key',
-    indexName: 'posts', translation: {} }],
-])('%s initializes after deferred scripts on first load and immediately after PJAX', (Component, name, props) => {
-  document.body.innerHTML = renderToString(createElement(Component, props));
-  const source = Array.from(document.scripts).find((element) => element.textContent.includes(name)).textContent;
-  const initialize = jest.fn();
-  // eslint-disable-next-line no-new-func
-  const run = new Function(name, source);
-  const readyState = jest.spyOn(document, 'readyState', 'get').mockReturnValue('loading');
-  run(initialize);
-  expect(initialize).not.toHaveBeenCalled();
-  document.dispatchEvent(new Event('DOMContentLoaded'));
-  expect(initialize).toHaveBeenCalledTimes(1);
-  // The once listener must not initialize the engine a second time.
-  document.dispatchEvent(new Event('DOMContentLoaded'));
-  expect(initialize).toHaveBeenCalledTimes(1);
-  readyState.mockReturnValue('complete');
-  run(initialize);
-  expect(initialize).toHaveBeenCalledTimes(2);
-  readyState.mockRestore();
-});
+  [
+    Algolia,
+    'loadAlgolia',
+    {
+      jsUrl: '/algolia.js',
+      applicationId: 'app',
+      apiKey: 'key',
+      indexName: 'posts',
+      translation: {},
+    },
+  ],
+])(
+  '%s initializes after deferred scripts on first load and immediately after PJAX',
+  (Component, name, props) => {
+    document.body.innerHTML = renderToString(createElement(Component, props));
+    const source = Array.from(document.scripts).find((element) =>
+      element.textContent.includes(name),
+    ).textContent;
+    const initialize = jest.fn();
+    // eslint-disable-next-line no-new-func
+    const run = new Function(name, source);
+    const readyState = jest.spyOn(document, 'readyState', 'get').mockReturnValue('loading');
+    run(initialize);
+    expect(initialize).not.toHaveBeenCalled();
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+    expect(initialize).toHaveBeenCalledTimes(1);
+    // The once listener must not initialize the engine a second time.
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+    expect(initialize).toHaveBeenCalledTimes(1);
+    readyState.mockReturnValue('complete');
+    run(initialize);
+    expect(initialize).toHaveBeenCalledTimes(2);
+    readyState.mockRestore();
+  },
+);
 
 test('Algolia reinitialization disposes the previous instantsearch instance', () => {
   const { sdk, instances } = algoliaSdk();
@@ -335,9 +375,11 @@ test.each([
   ['query failed', false],
 ])('Switch from Algolia (%s, open: %s) to a connected, usable Insight input', (stage, wasOpen) => {
   const { sdk, instances } = algoliaSdk();
-  const client = { search: jest.fn(() => {
-    if (stage === 'query failed') throw new Error('client search failed');
-  }) };
+  const client = {
+    search: jest.fn(() => {
+      if (stage === 'query failed') throw new Error('client search failed');
+    }),
+  };
   const load = algoliaLoader(sdk, () => client);
   if (stage === 'query failed') expect(() => load({}, {})).toThrow('client search failed');
   else load({}, {});
@@ -348,7 +390,12 @@ test.each([
   const opener = document.querySelector('.search');
   opener.focus();
   if (wasOpen) $(opener).trigger('click');
-  const content = { posts: [{ title: 'Hello', text: 'World', link: '/hello' }], pages: [], tags: [], categories: [] };
+  const content = {
+    posts: [{ title: 'Hello', text: 'World', link: '/hello' }],
+    pages: [],
+    tags: [],
+    categories: [],
+  };
   const getJSON = jest.spyOn($, 'getJSON').mockImplementation((url, callback) => callback(content));
   const source = fs.readFileSync(path.join(__dirname, '../../../asset/js/insight.js'), 'utf8');
   try {
@@ -390,7 +437,11 @@ test.each([
 
 test('A client search failure releases the old listener before Algolia retries and accepts input', () => {
   const { sdk, instances } = algoliaSdk();
-  const failed = { search: jest.fn(() => { throw new Error('client search failed'); }) };
+  const failed = {
+    search: jest.fn(() => {
+      throw new Error('client search failed');
+    }),
+  };
   const recovered = { search: jest.fn() };
   const client = jest.fn().mockReturnValueOnce(failed).mockReturnValue(recovered);
   const load = algoliaLoader(sdk, client);
@@ -404,13 +455,16 @@ test('A client search failure releases the old listener before Algolia retries a
   expect(instances[0].dispose).toHaveBeenCalledTimes(1);
 });
 
-test.each(['Algolia', 'Insight', 'Google'])('A missing Algolia SDK does not block %s initialization', (next) => {
-  const { sdk } = algoliaSdk();
-  expect(() => algoliaLoader(undefined)({}, {})).toThrow();
-  expect(() => initializeEngine(next, algoliaLoader(sdk))).not.toThrow();
-  key('/');
-  expect(document.activeElement).toBe(document.querySelector('input'));
-});
+test.each(['Algolia', 'Insight', 'Google'])(
+  'A missing Algolia SDK does not block %s initialization',
+  (next) => {
+    const { sdk } = algoliaSdk();
+    expect(() => algoliaLoader(undefined)({}, {})).toThrow();
+    expect(() => initializeEngine(next, algoliaLoader(sdk))).not.toThrow();
+    key('/');
+    expect(document.activeElement).toBe(document.querySelector('input'));
+  },
+);
 
 test.each(
   ['constructor', 'widget', 'start'].flatMap((stage) =>
