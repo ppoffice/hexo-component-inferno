@@ -5,34 +5,7 @@
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const { translate } = require('../../util/i18n');
-
-/**
- * Get the first value that is set, i.e., neither null nor undefined.
- * @private
- */
-function firstSet(...values) {
-  return values.find((value) => value !== null && typeof value !== 'undefined');
-}
-
-/**
- * Convert a Hexo language code into a Moment.js locale name.
- * <p>
- * Same as Hexo's internal <code>toMomentLocale</code>, copied here so that the component does not
- * depend on Hexo's private modules.
- *
- * @param {string} lang Hexo language code, such as <code>zh-CN</code> or <code>en_US</code>.
- * @returns {string|undefined} Moment.js locale name.
- */
-function toMomentLocale(lang) {
-  if (lang === undefined) {
-    return undefined;
-  }
-  // moment.locale('') and moment.locale(null) both equal moment.locale('en')
-  if (!lang || lang === 'en' || lang === 'default') {
-    return 'en';
-  }
-  return lang.toLowerCase().replace('_', '-');
-}
+const { resolveArchiveOptions, groupArchives } = require('../../util/archives');
 
 /**
  * Archives widget JSX component.
@@ -126,12 +99,7 @@ class Archives extends Component {
  */
 Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
   const { site, config, page, helper, widget } = props;
-  // Options left empty in the config are null, which also take the defaults
-  const groupBy = firstSet(widget.group_by, 'monthly');
-  const order = firstSet(widget.order, -1);
-  const { format, amount } = widget;
-  // show_count, like the tags widget, or showCount, which this widget used to read
-  const showCount = firstSet(widget.show_count, widget.showCount, true);
+  const { groupBy, order, format, amount, showCount } = resolveArchiveOptions(widget);
 
   const { url_for, _p, __ } = helper;
   const posts = site.posts.sort('date', order);
@@ -139,37 +107,12 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
     return null;
   }
 
-  const language = toMomentLocale(page.lang || page.language || config.language);
-
-  const data = [];
-  let length = 0;
-
-  posts.forEach((post) => {
-    // Clone the date object to avoid pollution
-    let date = post.date.clone();
-
-    if (config.timezone) {
-      date = date.tz(config.timezone);
-    }
-    if (language) {
-      date = date.locale(language);
-    }
-
-    const year = date.year();
-    const month = date.month() + 1;
-    const name = date.format(format || (groupBy === 'monthly' ? 'MMMM YYYY' : 'YYYY'));
-    const lastData = data[length - 1];
-
-    if (!lastData || lastData.name !== name) {
-      length = data.push({
-        name,
-        year,
-        month,
-        count: 1,
-      });
-    } else {
-      lastData.count++;
-    }
+  const { groups, hasMore } = groupArchives(posts, {
+    groupBy,
+    format,
+    amount,
+    language: page.lang || page.language || config.language,
+    timezone: config.timezone,
   });
 
   const link = (item) => {
@@ -183,11 +126,8 @@ Archives.Cacheable = cacheComponent(Archives, 'widget.archives', (props) => {
     return url_for(url);
   };
 
-  // Link to the archive page when some of the archives are not shown
-  const hasMore = amount > 0 && data.length > amount;
-
   return {
-    items: (hasMore ? data.slice(0, amount) : data).map((item) => ({
+    items: groups.map((item) => ({
       name: item.name,
       count: item.count,
       url: link(item),
