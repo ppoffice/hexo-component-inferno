@@ -18,7 +18,7 @@ class AddThis extends Component {
   render() {
     deprecate(
       'share.addthis',
-      'AddThis shut down on May 31, 2023. Use AddToAny or ShareThis instead.',
+      'Service shut down. Use AddToAny or ShareThis.',
     );
     const { installUrl } = this.props;
     if (!installUrl) {

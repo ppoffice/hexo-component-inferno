@@ -13,7 +13,7 @@ const warned = new Set();
  * @param {string} name Name of the component, such as <code>share.addthis</code>.
  * @param {string} message Why the component is deprecated, and what to use instead.
  * @example
- * deprecate('share.addthis', 'AddThis shut down on May 31, 2023. Use AddToAny or ShareThis instead.');
+ * deprecate('share.addthis', 'Service shut down. Use AddToAny or ShareThis.');
  */
 function deprecate(name, message) {
   if (warned.has(name)) {

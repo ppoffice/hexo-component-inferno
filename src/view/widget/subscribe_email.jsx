@@ -23,7 +23,7 @@ class SubscribeEmail extends Component {
   render() {
     deprecate(
       'widget.subscribe_email',
-      'Google FeedBurner stopped email subscriptions in July 2021. Use the follow.it widget instead.',
+      'FeedBurner email ended. Use follow.it.',
     );
     const { title, description, feedburnerId, buttonTitle } = this.props;
 

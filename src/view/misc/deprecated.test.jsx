@@ -1,5 +1,6 @@
 const { renderToString } = require('inferno-server');
 const AddThis = require('../share/addthis');
+const BdShare = require('../share/bdshare');
 const Gitment = require('../comment/gitment');
 const SubscribeEmail = require('../widget/subscribe_email');
 const Valine = require('../comment/valine');
@@ -24,6 +25,37 @@ test.each([
   } finally {
     warn.mockRestore();
   }
+});
+
+test('Baidu Share retains direct and cacheable rendering and warns only once', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  try {
+    const html = renderToString(<BdShare.Cacheable share={{ type: 'bdshare' }} />);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      'hexo-component-inferno: share.bdshare is deprecated. ' +
+        'HTTP mixed content; use AddToAny or ShareThis.',
+    );
+    expect(html).toContain('class="bdsharebuttonbox"');
+    expect(html).toContain('data-cmd="weixin"');
+    expect(html).toContain('http://bdimg.share.baidu.com/static/api/js/share.js');
+    expect(renderToString(<BdShare />)).toBe(html);
+    expect(renderToString(<BdShare.Cacheable share={{ type: 'bdshare' }} />)).toBe(html);
+    expect(warn).toHaveBeenCalledTimes(1);
+  } finally {
+    warn.mockRestore();
+  }
+});
+
+test('Baidu Share schema keeps the legacy configuration and marks it deprecated', () => {
+  const Ajv = require('ajv');
+  const schema = require('../../schema/share/bdshare.json');
+  const validate = new Ajv().compile(schema);
+  expect(validate({ type: 'bdshare' })).toBe(true);
+  expect(validate({})).toBe(false);
+  expect(validate({ type: 'addtoany' })).toBe(false);
+  expect(schema.description).toMatch(/deprecated/i);
+  expect(schema.description).not.toMatch(/discontinued|shut down/);
 });
 
 describe('Configuration of the deprecated components', () => {
