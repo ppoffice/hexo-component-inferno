@@ -58,6 +58,7 @@ function loadAddedScripts(globals = {}) {
 let calls;
 
 beforeEach(() => {
+  document.dispatchEvent(new Event('hexo:page:before-replace'));
   document.head.innerHTML = '';
   document.body.innerHTML = '';
   calls = [];
@@ -77,12 +78,88 @@ test('DisqusJS', () => {
   const urls = loadAddedScripts({
     DisqusJS: function (options) {
       calls.push(options);
+      this.render = (container) => expect(container.id).toBe('disqusjs');
+      this.destroy = () => {};
     },
   });
   expect(urls).toEqual(['/disqusjs.js']);
   expect(calls).toEqual([
     { shortname: 'name', apikey: 'key', identifier: '/post/', url: '/post/' },
   ]);
+});
+
+test('DisqusJS keeps configuration and destroys the old widget before PJAX replaces the page', () => {
+  const instances = [];
+  window.DisqusJS = function (options) {
+    this.options = options;
+    this.render = jest.fn();
+    this.destroy = jest.fn();
+    instances.push(this);
+  };
+  const helper = { cdn: (name, version, file) => `/cdn/${name}@${version}/${file}` };
+  const comment = {
+    shortname: 'name',
+    api_key: ['key1', 'key2'],
+    api: 'https://api.example.com/',
+    admin: 'owner',
+    admin_label: 'Moderator',
+    nesting: 6,
+  };
+  const element = (page) => (
+    <DisqusJs.Cacheable comment={comment} helper={helper} page={page} config={{ title: '站点' }} />
+  );
+  renderAndRun(
+    element({
+      path: 'first/',
+      permalink: 'https://example.com/first/',
+      title: '第一页',
+      disqusId: 'first-id',
+    }),
+  );
+  expect(document.querySelector('link').getAttribute('href')).toBe(
+    '/cdn/disqusjs@3.2.2/dist/browser/styles/disqusjs.css',
+  );
+  expect(loadAddedScripts()).toEqual([
+    '/cdn/disqusjs@3.2.2/dist/browser/disqusjs.es2015.umd.min.js',
+  ]);
+  expect(instances[0].options).toEqual({
+    shortname: 'name',
+    apikey: ['key1', 'key2'],
+    api: 'https://api.example.com/',
+    admin: 'owner',
+    adminLabel: 'Moderator',
+    nesting: 6,
+    siteName: '站点',
+    identifier: 'first-id',
+    url: 'https://example.com/first/',
+    title: '第一页',
+  });
+  expect(instances[0].render).toHaveBeenCalledWith(document.getElementById('disqusjs'));
+  document.dispatchEvent(new Event('hexo:page:before-replace'));
+  expect(instances[0].destroy).toHaveBeenCalledTimes(1);
+  document.body.innerHTML = '';
+  renderAndRun(
+    element({ path: 'second/', permalink: 'https://example.com/second/', title: '第二页' }),
+  );
+  expect(instances).toHaveLength(2);
+  expect(instances[1].options).toMatchObject({
+    identifier: 'second/',
+    url: 'https://example.com/second/',
+    title: '第二页',
+  });
+  expect(document.head.querySelectorAll('script')).toHaveLength(1);
+  document.dispatchEvent(new Event('hexo:page:before-replace'));
+  expect(instances[0].destroy).toHaveBeenCalledTimes(1);
+  expect(instances[1].destroy).toHaveBeenCalledTimes(1);
+});
+
+test('DisqusJS does not mount an obsolete page when the SDK finishes loading after navigation', () => {
+  const construct = jest.fn();
+  renderAndRun(<DisqusJs shortname="name" apiKey="key" path="first/" jsUrl="/disqusjs.js" />);
+  document.dispatchEvent(new Event('hexo:page:before-replace'));
+  document.body.innerHTML = '';
+  loadAddedScripts({ DisqusJS: construct });
+  expect(construct).not.toHaveBeenCalled();
 });
 
 test('Gitalk', () => {

@@ -1,5 +1,20 @@
 const { resolveCdn, resolveFontCdn, resolveIconCdn } = require('./cdn');
 
+test.each(['jsdelivr', 'unpkg', 'cdnjs', 'loli'])(
+  'DisqusJS 3 browser assets use the %s path layout',
+  (cdn) => {
+    const prefix = {
+      jsdelivr: 'https://cdn.jsdelivr.net/npm/disqusjs@3.2.2/dist/browser/',
+      unpkg: 'https://unpkg.com/disqusjs@3.2.2/dist/browser/',
+      cdnjs: 'https://cdnjs.cloudflare.com/ajax/libs/disqusjs/3.2.2/',
+      loli: 'https://cdnjs.loli.net/ajax/libs/disqusjs/3.2.2/',
+    }[cdn];
+    for (const file of ['disqusjs.es2015.umd.min.js', 'styles/disqusjs.css']) {
+      expect(resolveCdn({ cdn }, 'disqusjs', '3.2.2', `dist/browser/${file}`)).toBe(prefix + file);
+    }
+  },
+);
+
 test.each([
   ['moment', 'min/moment.min.js', 'moment.js/1/moment.min.js'],
   [

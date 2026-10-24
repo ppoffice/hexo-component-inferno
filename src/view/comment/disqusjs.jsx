@@ -24,7 +24,7 @@ const { toJs } = loadScripts;
  *     permalink="/page/permanent/path"
  *     pageTitle="******"
  *     siteTitle="******"
- *     jsUrl="/path/to/disqus.js"
+ *     jsUrl="/path/to/disqusjs.es2015.umd.min.js"
  *     cssUrl="/path/to/disqusjs.css" />
  */
 class DisqusJs extends Component {
@@ -54,7 +54,8 @@ class DisqusJs extends Component {
     }
     const url = permalink || path;
     const identifier = disqusId || path;
-    const js = `new DisqusJS({
+    const js = `if (!container.isConnected) return;
+        instance = new DisqusJS({
             shortname: ${toJs(shortname)},
             apikey: ${toJs(apiKey)},
             ${siteTitle ? `siteName: ${toJs(siteTitle)},` : ''}
@@ -65,17 +66,28 @@ class DisqusJs extends Component {
             ${admin ? `admin: ${toJs(admin)},` : ''}
             ${adminLabel ? `adminLabel: ${toJs(adminLabel)},` : ''}
             ${nesting ? `nesting: ${toJs(nesting)},` : ''}
-        });`;
+        });
+        instance.render(container);`;
+    const script = `(function () {
+        var container = document.getElementById('disqusjs');
+        var instance;
+        function destroy() {
+            document.removeEventListener('hexo:page:before-replace', destroy);
+            if (instance) instance.destroy();
+        }
+        document.addEventListener('hexo:page:before-replace', destroy);
+        ${loadScripts(jsUrl, js)}
+    })();`;
     return (
       <>
         <link rel="stylesheet" href={cssUrl} media="print" onload="this.media='all'" />
-        <div id="disqus_thread">
+        <div id="disqusjs">
           <noscript>
             Please enable JavaScript to view the{' '}
             <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
           </noscript>
         </div>
-        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
+        <script dangerouslySetInnerHTML={{ __html: script }}></script>
       </>
     );
   }
@@ -122,8 +134,8 @@ DisqusJs.Cacheable = cacheComponent(DisqusJs, 'comment.disqusjs', (props) => {
     permalink: page.permalink,
     pageTitle: page.title,
     siteTitle: config.title,
-    jsUrl: helper.cdn('disqusjs', '1.3.0', 'dist/disqus.js'),
-    cssUrl: helper.cdn('disqusjs', '1.3.0', 'dist/disqusjs.css'),
+    jsUrl: helper.cdn('disqusjs', '3.2.2', 'dist/browser/disqusjs.es2015.umd.min.js'),
+    cssUrl: helper.cdn('disqusjs', '3.2.2', 'dist/browser/styles/disqusjs.css'),
   };
 });
 

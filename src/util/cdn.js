@@ -24,6 +24,11 @@ const PROVIDERS = {
 };
 
 const CDNJS_FIXTURES = {
+  disqusjs: (ver, fname) => [
+    'disqusjs',
+    ver,
+    fname.startsWith('dist/browser/') ? fname.substr(13) : fname,
+  ],
   moment: (ver, fname) => ['moment.js', ver, fname.startsWith('min/') ? fname.substr(4) : fname],
   outdatedbrowser: (ver, fname) => [
     'outdated-browser',
@@ -65,7 +70,7 @@ const UNPKG_FIXTURES = {
   disqusjs: (ver, fname) => [
     'disqusjs',
     ver,
-    fname.indexOf('.min.') > -1 ? fname.replace(/\.min\./gi, '.') : fname,
+    fname.startsWith('dist/browser/') ? fname : fname.replace(/\.min\./gi, '.'),
   ],
 };
 
