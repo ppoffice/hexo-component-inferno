@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/comment/gitalk.json",
-  "description": "Gitalk comment plugin configurations",
+  "description": "Gitalk 2 comment plugin configurations",
   "type": "object",
   "properties": {
     "type": {
@@ -14,11 +14,28 @@
     },
     "client_secret": {
       "type": "string",
-      "description": "GitHub application client secret"
+      "description": "Legacy option, ignored; configure the secret on your proxy"
     },
     "repo": {
       "type": "string",
       "description": "GitHub repository"
+    },
+    "backend": {
+      "type": "string",
+      "enum": ["issues", "discussions"],
+      "default": "issues",
+      "description": "Comment storage backend"
+    },
+    "number": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Issue or Discussion number; overrides page ID lookup",
+      "nullable": true
+    },
+    "category": {
+      "type": "string",
+      "description": "Discussion category name or slug",
+      "nullable": true
     },
     "owner": {
       "type": "string",
@@ -52,17 +69,17 @@
     "create_issue_manually": {
       "type": "boolean",
       "description": "Create GitHub issues manually for each page",
-      "default": false,
+      "default": true,
       "nullable": true
     },
     "proxy": {
       "type": "string",
-      "description": "GitHub oauth request reverse proxy for CORS",
+      "description": "Your Gitalk 2 proxy origin",
       "nullable": true
     },
     "flip_move_options": {
       "type": "object",
-      "description": "Comment list animation",
+      "description": "Legacy animation option, ignored",
       "nullable": true
     },
     "enable_hotkey": {
@@ -77,5 +94,5 @@
       "nullable": true
     }
   },
-  "required": ["type", "client_id", "client_secret", "repo", "owner", "admin"]
+  "required": ["type", "client_id", "proxy", "repo", "owner", "admin"]
 }

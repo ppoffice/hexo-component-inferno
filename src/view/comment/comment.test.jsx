@@ -95,6 +95,7 @@ test('Gitalk', () => {
       clientId="client"
       clientSecret="secret"
       jsUrl="/gitalk.js"
+      proxy="https://proxy.example.test"
       cssUrl="/gitalk.css"
     />,
   );
@@ -102,6 +103,7 @@ test('Gitalk', () => {
   const urls = loadAddedScripts({
     Gitalk: function (options) {
       this.render = (el) => calls.push([options.id, el]);
+      this.destroy = () => {};
     },
   });
   expect(urls).toEqual(['/gitalk.js']);
@@ -735,7 +737,13 @@ describe('Page values in the inline scripts', () => {
 
 describe('Options and missing settings', () => {
   const helper = { cdn: (name, version, file) => `/cdn/${name}@${version}/${file}` };
-  const gitalk = { repo: 'r', owner: 'o', admin: ['o'], client_id: 'i', client_secret: 's' };
+  const gitalk = {
+    repo: 'r',
+    owner: 'o',
+    admin: ['o'],
+    client_id: 'i',
+    proxy: 'https://proxy.example.test',
+  };
 
   function render(element) {
     const container = document.createElement('div');

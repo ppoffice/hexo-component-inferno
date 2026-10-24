@@ -7,6 +7,7 @@ const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
 const { toJs } = loadScripts;
+const { isDark } = require('../../util/appearance');
 
 /**
  * Gitalk comment JSX component.
@@ -19,13 +20,12 @@ const { toJs } = loadScripts;
  *     owner="******",
  *     admin={["******"]},
  *     clientId="******",
- *     clientSecret="******",
+ *     backend="issues",
  *     createIssueManually={false},
  *     distractionFreeMode={false},
  *     pagerDirection="last",
  *     perPage={10},
  *     proxy="******",
- *     flipMoveOptions={...},
  *     enableHotKey={true},
  *     language="zh-CN",
  *     jsUrl="/path/to/gitalk.js",
@@ -39,50 +39,79 @@ class Gitalk extends Component {
       owner,
       admin,
       clientId,
-      clientSecret,
-      createIssueManually = false,
+      backend = 'issues',
+      number,
+      category,
+      createIssueManually = true,
       distractionFreeMode = false,
       pagerDirection = 'last',
       perPage = 10,
       proxy,
-      flipMoveOptions,
       enableHotKey = true,
       language,
       jsUrl,
       cssUrl,
     } = this.props;
 
-    if (!id || !repo || !owner || !admin || !clientId || !clientSecret) {
+    if (!id || !repo || !owner || !admin || !clientId || !proxy) {
       return (
         <div class="notification is-danger">
           You forgot to set the <code>owner</code>, <code>admin</code>, <code>repo</code>,
-          <code>client_id</code>, or <code>client_secret</code> for Gitalk. Please set it in{' '}
+          <code>client_id</code>, or <code>proxy</code> for Gitalk. Please set it in{' '}
           <code>_config.yml</code>.
         </div>
       );
     }
-    const js = `var gitalk = new Gitalk({
+    const js = `if (!container || !container.isConnected || document.getElementById('comment-container') !== container) return;
+        if (window.__gitalkInstance) window.__gitalkInstance.destroy();
+        var gitalk = new Gitalk({
             id: ${toJs(id)},
             repo: ${toJs(repo)},
             owner: ${toJs(owner)},
             clientID: ${toJs(clientId)},
-            clientSecret: ${toJs(clientSecret)},
+            backend: ${toJs(backend)},
+            ${number ? `number: ${toJs(number)},` : ''}
+            ${category ? `category: ${toJs(category)},` : ''}
             admin: ${toJs(admin)},
             createIssueManually: ${!!createIssueManually},
             distractionFreeMode: ${!!distractionFreeMode},
             perPage: ${toJs(perPage)},
-            pagerDirection: ${toJs(pagerDirection)},
+            sortDirection: ${toJs(pagerDirection)},
             ${proxy ? `proxy: ${toJs(proxy)},` : ''}
-            ${flipMoveOptions ? `flipMoveOptions: ${toJs(flipMoveOptions)},` : ''}
+            mode: 'inline',
+            maxHeight: null,
+            stickyComposer: false,
             enableHotKey: ${!!enableHotKey},
             ${language ? `language: ${toJs(language)},` : ''}
         })
-        gitalk.render('comment-container')`;
+        gitalk.render('comment-container');
+        window.__gitalkInstance = gitalk;
+        var media = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        function appearance() { container.setAttribute('data-theme', ${isDark()} ? 'dark' : 'light'); }
+        appearance();
+        var observer = new MutationObserver(appearance);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-appearance'] });
+        if (media && media.addEventListener) media.addEventListener('change', appearance);
+        var destroy = gitalk.destroy;
+        gitalk.destroy = function () {
+            document.removeEventListener('hexo:page:before-replace', gitalk.destroy);
+            observer.disconnect();
+            if (media && media.removeEventListener) media.removeEventListener('change', appearance);
+            destroy.call(gitalk);
+            if (window.__gitalkInstance === gitalk) window.__gitalkInstance = null;
+        };
+        document.addEventListener('hexo:page:before-replace', gitalk.destroy);`;
     return (
       <>
         <div id="comment-container"></div>
         <link rel="stylesheet" href={cssUrl} media="print" onload="this.media='all'" />
-        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+          var container = document.getElementById('comment-container');
+          ${loadScripts(jsUrl, js)}
+        })();`,
+          }}></script>
       </>
     );
   }
@@ -102,13 +131,12 @@ class Gitalk extends Component {
  *         owner: '******',
  *         admin: ['******'],
  *         client_id: '******',
- *         client_secret: '******',
+ *         backend: 'issues',
  *         create_issue_manually: false,
  *         distraction_free_mode: false,
  *         pager_direction: 'last',
  *         per_page: 10,
  *         proxy: '******',
- *         flip_move_options: {...},
  *         enable_hotkey: true,
  *         language: 'zh-CN'
  *     }}
@@ -126,17 +154,18 @@ Gitalk.Cacheable = cacheComponent(Gitalk, 'comment.gitalk', (props) => {
     owner: comment.owner,
     admin: comment.admin,
     clientId: comment.client_id,
-    clientSecret: comment.client_secret,
+    backend: comment.backend || 'issues',
+    number: comment.number,
+    category: comment.category,
     createIssueManually: comment.create_issue_manually,
     distractionFreeMode: comment.distraction_free_mode,
     pagerDirection: comment.pager_direction,
     perPage: comment.per_page,
     proxy: comment.proxy,
-    flipMoveOptions: comment.flip_move_options,
     enableHotKey: comment.enable_hotkey,
     language: comment.language,
-    cssUrl: helper.cdn('gitalk', '1.7.2', 'dist/gitalk.css'),
-    jsUrl: helper.cdn('gitalk', '1.7.2', 'dist/gitalk.min.js'),
+    cssUrl: helper.cdn('@aifire/gitalk', '2.0.0-beta.2', 'dist/gitalk.css'),
+    jsUrl: helper.cdn('@aifire/gitalk', '2.0.0-beta.2', 'dist/gitalk.js'),
   };
 });
 

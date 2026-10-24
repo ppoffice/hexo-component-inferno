@@ -14,7 +14,7 @@ const { deprecate } = require('../../util/deprecate');
  * Gitment comment JSX component.
  *
  * @deprecated Gitment is no longer maintained, and the GitHub sign-in proxy it uses no longer works. Use
- *     Giscus, Utterances or Gitalk instead.
+ *     Giscus or Utterances instead.
  * @see https://github.com/imsun/gitment
  * @example
  * <Gitment
@@ -30,7 +30,7 @@ class Gitment extends Component {
   render() {
     deprecate(
       'comment.gitment',
-      'Gitment is no longer maintained, and the GitHub sign-in proxy it uses no longer works. Use Giscus, Utterances or Gitalk instead.',
+      'Sign-in no longer works. Use Giscus or Utterances.',
     );
     const {
       id,
