@@ -1,5 +1,28 @@
 const { resolveCdn, resolveFontCdn, resolveIconCdn } = require('./cdn');
 
+test.each([
+  'lightgallery.min.js',
+  'css/lightgallery-bundle.min.css',
+  'plugins/zoom/lg-zoom.min.js',
+  'plugins/thumbnail/lg-thumbnail.min.js',
+  'plugins/fullscreen/lg-fullscreen.min.js',
+])('Use the published lightGallery 3 asset instead of the missing loli mirror: %s', (file) => {
+  expect(resolveCdn({ cdn: 'loli' }, 'lightgallery', '3.0.0', file)).toBe(
+    `https://cdn.jsdelivr.net/npm/lightgallery@3.0.0/${file}`,
+  );
+  expect(resolveCdn({ cdn: 'cdnjs' }, 'lightgallery', '3.0.0', file)).toBe(
+    `https://cdnjs.cloudflare.com/ajax/libs/lightgallery/3.0.0/${file}`,
+  );
+});
+
+test.each(['cdnjs', 'loli'])('Justified Gallery 4 falls back from %s to npm assets', (cdn) => {
+  for (const file of ['dist/justified-gallery.js', 'dist/assets/justified-gallery.css']) {
+    expect(resolveCdn({ cdn }, 'justified-gallery', '4.0.2', file)).toBe(
+      `https://cdn.jsdelivr.net/npm/justified-gallery@4.0.2/${file}`,
+    );
+  }
+});
+
 test('MathJax and its font support independent local resource roots', () => {
   const providers = {
     cdn: 'cdnjs',
