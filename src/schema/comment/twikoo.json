@@ -10,16 +10,16 @@
     },
     "env_id": {
       "type": "string",
-      "description": "envId from Tencent CloudBase or Vercel URL"
+      "description": "CloudBase environment ID or backend URL"
     },
     "region": {
       "type": "string",
-      "description": "Region of Tencent CloudBase",
+      "description": "CloudBase region",
       "nullable": true
     },
     "lang": {
       "type": "string",
-      "description": "i18n support",
+      "description": "Comment UI language; defaults to the page or site language",
       "default": "zh-CN",
       "nullable": true
     }

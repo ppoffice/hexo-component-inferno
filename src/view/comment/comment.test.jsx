@@ -204,7 +204,7 @@ test('Twikoo', () => {
   renderAndRun(<Twikoo envId="env" jsUrl="/twikoo.js" />);
   const urls = loadAddedScripts({ twikoo: { init: (options) => calls.push(options) } });
   expect(urls).toEqual(['/twikoo.js']);
-  expect(calls).toEqual([{ envId: 'env' }]);
+  expect(calls).toEqual([{ envId: 'env', el: document.getElementById('twikoo') }]);
 });
 
 test('Valine loads LeanCloud before Valine', () => {
@@ -234,7 +234,10 @@ test('Run the inline script again after the library is loaded', () => {
   loadAddedScripts({ twikoo: { init: (options) => calls.push(options) } });
   renderAndRun(element);
   expect(document.head.querySelectorAll('script').length).toBe(1);
-  expect(calls).toEqual([{ envId: 'env' }, { envId: 'env' }]);
+  expect(calls).toEqual([
+    { envId: 'env', el: document.getElementById('twikoo') },
+    { envId: 'env', el: document.getElementById('twikoo') },
+  ]);
 });
 
 test('Isso adds a new script every time', () => {

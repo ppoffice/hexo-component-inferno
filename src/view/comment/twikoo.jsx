@@ -29,7 +29,11 @@ class Twikoo extends Component {
         </div>
       );
     }
-    const js = `twikoo.init({
+    // init() unmounts the previous widget. Bind it to this page's element, not a selector that
+    // could resolve to a different page after an asynchronous SDK or locale load.
+    const js = `if (!container.isConnected) return;
+        twikoo.init({
+            el: container,
             envId: ${toJs(envId)},
             ${region ? `region: ${toJs(region)},` : ''}
             ${lang ? `lang: ${toJs(lang)},` : ''}
@@ -37,7 +41,13 @@ class Twikoo extends Component {
     return (
       <Fragment>
         <div id="twikoo" class="content twikoo"></div>
-        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+          var container = document.getElementById('twikoo');
+          ${loadScripts(jsUrl, js)}
+        })();`,
+          }}></script>
       </Fragment>
     );
   }
@@ -65,7 +75,7 @@ Twikoo.Cacheable = cacheComponent(Twikoo, 'comment.twikoo', (props) => {
     envId: comment.env_id,
     region: comment.region,
     lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
-    jsUrl: helper.cdn('twikoo', '1.6.30', 'dist/twikoo.all.min.js'),
+    jsUrl: helper.cdn('twikoo', '2.0.17', 'dist/twikoo.all.min.js'),
   };
 });
 
