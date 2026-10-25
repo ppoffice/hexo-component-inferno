@@ -39,16 +39,16 @@ test('Profile adapts real Hexo collections and url_for without a theme or filesy
     },
     widget: {
       type: 'profile',
+      avatar: '/author.png',
       social_links: { Blog: '/posts/', External: 'https://other.example/' },
     },
-    defaultAvatar: '/theme-default.png',
   });
   expect(element.props.counter).toEqual({
     post: { count: 3, title: 'common.post (3)', url: '/blog/archives/' },
     category: { count: 1, title: 'common.category (1)', url: '/blog/categories/' },
     tag: { count: 2, title: 'common.tag (2)', url: '/blog/tags/' },
   });
-  expect(element.props.avatar).toBe('/blog/theme-default.png');
+  expect(element.props.avatar).toBe('/blog/author.png');
   expect(element.props.socialLinks.map((link) => link.url)).toEqual([
     '/blog/posts/',
     'https://other.example/',
@@ -103,7 +103,6 @@ test('Profile schema and its polymorphic link reference resolve from the library
   const defaults = loader.getSchema('/widget/profile.json').getDefaultValue().value;
   expect(defaults.avatar_rounded.value).toBe(false);
   expect(defaults.avatar.value).toBe(null);
-  expect(Object.keys(defaults)).not.toContain('defaultAvatar');
 });
 
 test('The core view resolver finds the library Profile without a theme override', () => {

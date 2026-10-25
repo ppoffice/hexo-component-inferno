@@ -136,9 +136,8 @@ class Profile extends Component {
 
 /**
  * Adapt Hexo widget options, helpers and site collections to the profile presentation props.
- * Gravatar takes precedence over widget.avatar and the optional defaultAvatar. defaultAvatar is an
- * unresolved path or URL supplied by the caller, not a widget config field; url_for resolves the
- * chosen avatar exactly once. With no avatar source the component renders no figure or image.
+ * Gravatar takes precedence over widget.avatar; url_for resolves the chosen avatar exactly once.
+ * With no avatar source the component renders no figure or image.
  *
  * @see module:util/cache.cacheComponent
  * @example
@@ -146,11 +145,10 @@ class Profile extends Component {
  *     site={site}
  *     config={config}
  *     helper={helper}
- *     widget={{ author: 'Author', avatar_rounded: true }}
- *     defaultAvatar="/theme-assets/default-author.png" />
+ *     widget={{ author: 'Author', avatar: '/author.png', avatar_rounded: true }} />
  */
 Profile.Cacheable = cacheComponent(Profile, 'widget.profile', (props) => {
-  const { site, helper, widget, config = {}, defaultAvatar } = props;
+  const { site, helper, widget, config = {} } = props;
   const {
     avatar,
     gravatar,
@@ -165,8 +163,7 @@ Profile.Cacheable = cacheComponent(Profile, 'widget.profile', (props) => {
 
   function getAvatar() {
     if (gravatar) return gravatarHelper(gravatar, 128);
-    if (avatar) return url_for(avatar);
-    return defaultAvatar ? url_for(defaultAvatar) : undefined;
+    return avatar ? url_for(avatar) : undefined;
   }
 
   const postCount = site.posts.length;

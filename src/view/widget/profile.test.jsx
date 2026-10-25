@@ -171,32 +171,22 @@ test.each([false, null, undefined])('Falsy options (%p) stay optional', (value) 
   expect(render(element).querySelector('.is-primary, .is-multiline')).toBe(null);
 });
 
-test('Gravatar wins over both configured and caller-provided avatar paths', () => {
-  const { data, helper } = adapt(
-    { gravatar: 'a@example.com', avatar: '/chosen.png' },
-    { defaultAvatar: '/default.png' },
-  );
+test('Gravatar wins over the configured avatar path', () => {
+  const { data, helper } = adapt({ gravatar: 'a@example.com', avatar: '/chosen.png' });
   expect(data.avatar).toMatch(/gravatar\.com\/avatar\/[a-f0-9]{32}\?s=128/);
   expect(helper.url_for).not.toHaveBeenCalledWith('/chosen.png');
-  expect(helper.url_for).not.toHaveBeenCalledWith('/default.png');
 });
 
 test('Only the chosen avatar path is resolved once, with no hidden theme default', () => {
-  const chosen = adapt(
-    { gravatar: null, avatar: '/chosen.png' },
-    { defaultAvatar: '/default.png' },
-  );
+  const chosen = adapt({ gravatar: null, avatar: '/chosen.png' });
   expect(chosen.data.avatar).toBe('resolved:/chosen.png');
   expect(chosen.helper.url_for.mock.calls.filter(([url]) => url === '/chosen.png')).toHaveLength(1);
-  expect(chosen.helper.url_for).not.toHaveBeenCalledWith('/default.png');
-  const fallback = adapt({ avatar: null }, { defaultAvatar: '/default.png' });
-  expect(fallback.data.avatar).toBe('resolved:/default.png');
-  expect(fallback.helper.url_for.mock.calls.filter(([url]) => url === '/default.png')).toHaveLength(
-    1,
-  );
-  const absent = adapt({}, { defaultAvatar: null });
-  expect(absent.data.avatar).toBeUndefined();
-  expect(render(absent.element).querySelector('figure, img')).toBe(null);
+  for (const avatar of [undefined, null, '']) {
+    const absent = adapt({ avatar });
+    expect(absent.data.avatar).toBeUndefined();
+    expect(render(absent.element).querySelector('figure, img')).toBe(null);
+    expect(absent.helper.url_for.mock.calls.flat()).not.toContain('/img/avatar.png');
+  }
 });
 
 test('Cacheable maps polymorphic social URLs once, preserving order, names and icons', () => {
