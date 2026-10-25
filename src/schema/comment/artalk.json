@@ -27,9 +27,15 @@
       "description": "Language of Artalk, e.g., en, zh-CN, or auto",
       "nullable": true
     },
+    "prefer_remote_conf": {
+      "type": "boolean",
+      "default": false,
+      "description": "Prefer server settings over local options",
+      "nullable": true
+    },
     "dark_mode": {
       "type": ["boolean", "string"],
-      "description": "Dark mode: true, false, or 'auto' to follow the system color scheme. Follows the appearance of the theme (the data-appearance attribute of <html>) if not set",
+      "description": "Dark mode: true, false, or auto; follows page appearance when unset",
       "nullable": true
     }
   },

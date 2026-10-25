@@ -555,11 +555,23 @@ describe('Artalk', () => {
   const Artalk_ = {
     init: (options) => {
       calls.push(['init', options]);
-      return { destroy: () => calls.push(['destroy']) };
+      const handlers = new Map();
+      return {
+        on: (name, handler) => {
+          if (!handlers.has(name)) handlers.set(name, []);
+          handlers.get(name).push(handler);
+        },
+        update: jest.fn(),
+        destroy: () => {
+          calls.push(['destroy']);
+          (handlers.get('unmounted') || []).forEach((handler) => handler());
+        },
+      };
     },
   };
 
   afterEach(() => {
+    if (window.__artalkInstance) window.__artalkInstance.destroy();
     delete window.__artalkInstance;
     document.documentElement.removeAttribute('data-appearance');
   });
@@ -605,6 +617,21 @@ describe('Artalk', () => {
     const container = document.createElement('div');
     container.innerHTML = renderToString(<Artalk jsUrl="/artalk.js" />);
     expect(container.querySelector('.notification.is-danger')).not.toBe(null);
+  });
+
+  test('Disconnect the appearance observer when the instance is unmounted', async () => {
+    renderAndRun(<Artalk {...props} />);
+    loadAddedScripts({ Artalk: Artalk_ });
+    const instance = window.__artalkInstance;
+    document.documentElement.setAttribute('data-appearance', 'dark');
+    await Promise.resolve();
+    expect(instance.update).toHaveBeenLastCalledWith({ darkMode: true });
+    instance.destroy();
+    delete window.__artalkInstance;
+    instance.update.mockClear();
+    document.documentElement.setAttribute('data-appearance', 'light');
+    await Promise.resolve();
+    expect(instance.update).not.toHaveBeenCalled();
   });
 });
 
@@ -753,12 +780,12 @@ describe('Configuration of the comment plugins', () => {
       dark_mode: 'auto',
     });
     const js = container.querySelector('script').textContent;
-    expect(js).toContain('"/cdn/artalk@2.9.1/dist/Artalk.js"');
+    expect(js).toContain('"/cdn/artalk@2.10.0/dist/Artalk.js"');
     expect(js).toContain('pageKey: "/post/"');
     expect(js).toContain('pageTitle: "Post"');
     expect(js).toContain('darkMode: "auto"');
     expect(container.querySelector('link').getAttribute('href')).toBe(
-      '/cdn/artalk@2.9.1/dist/Artalk.css',
+      '/cdn/artalk@2.10.0/dist/Artalk.css',
     );
   });
 

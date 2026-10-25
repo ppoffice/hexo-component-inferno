@@ -25,7 +25,18 @@ const { getAppearance, isDark } = require('../../util/appearance');
  */
 class Artalk extends Component {
   render() {
-    const { server, site, pageKey, pageTitle, locale, darkMode, jsUrl, cssUrl } = this.props;
+    const {
+      server,
+      site,
+      pageKey,
+      pageTitle,
+      locale,
+      darkMode,
+      preferRemoteConf,
+      jsUrl,
+      cssUrl,
+      localeUrls = [],
+    } = this.props;
     if (!server) {
       return (
         <div class="notification is-danger">
@@ -35,12 +46,13 @@ class Artalk extends Component {
       );
     }
     // Without the dark_mode option, follow the appearance of the page
-    const darkModeOption =
-      darkMode === null || typeof darkMode === 'undefined'
-        ? `${getAppearance()} === 'auto' ? 'auto' : ${isDark()}`
-        : toJs(darkMode);
+    const followAppearance = darkMode === null || typeof darkMode === 'undefined';
+    const darkModeOption = followAppearance
+      ? `${getAppearance()} === 'auto' ? 'auto' : ${isDark()}`
+      : toJs(darkMode);
     // PJAX replaces the element of the previous instance, so destroy it before initializing again
-    const js = `if (window.__artalkInstance) {
+    let js = `if (!container || !container.isConnected) return;
+        if (window.__artalkInstance) {
             window.__artalkInstance.destroy();
         }
         window.__artalkInstance = Artalk.init({
@@ -50,13 +62,29 @@ class Artalk extends Component {
             ${pageKey ? `pageKey: ${toJs(pageKey)},` : ''}
             ${pageTitle ? `pageTitle: ${toJs(pageTitle)},` : ''}
             ${locale ? `locale: ${toJs(locale)},` : ''}
+            ${typeof preferRemoteConf === 'boolean' ? `preferRemoteConf: ${preferRemoteConf},` : ''}
             darkMode: ${darkModeOption},
         });`;
+    if (followAppearance) {
+      js += `
+        var instance = window.__artalkInstance;
+        var observer = new MutationObserver(function () {
+            instance.update({ darkMode: ${darkModeOption} });
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-appearance'] });
+        instance.on('unmounted', function () { observer.disconnect(); });`;
+    }
     return (
       <>
         <div id="artalk-thread"></div>
         <link rel="stylesheet" href={cssUrl} media="print" onload="this.media='all'" />
-        <script dangerouslySetInnerHTML={{ __html: loadScripts(jsUrl, js) }}></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+          var container = document.getElementById('artalk-thread');
+          ${loadScripts([jsUrl].concat(localeUrls), js)}
+        })();`,
+          }}></script>
       </>
     );
   }
@@ -82,6 +110,17 @@ class Artalk extends Component {
  */
 Artalk.Cacheable = cacheComponent(Artalk, 'comment.artalk', (props) => {
   const { comment, helper, page } = props;
+  // The full bundle includes en and zh-CN only. Other published dictionaries register themselves
+  // on window.ArtalkI18n before initialization. For auto, make every supported dictionary available.
+  const externalLocales = ['zh-TW', 'ja', 'ko', 'fr', 'ru', 'tr'];
+  const language = String(comment.locale || '').toLowerCase();
+  const localeNames = externalLocales.filter((name) => {
+    return (
+      language === 'auto' ||
+      language === name.toLowerCase() ||
+      language.startsWith(name.toLowerCase() + '-')
+    );
+  });
 
   return {
     server: comment.server,
@@ -90,8 +129,10 @@ Artalk.Cacheable = cacheComponent(Artalk, 'comment.artalk', (props) => {
     pageTitle: page.title,
     locale: comment.locale,
     darkMode: comment.dark_mode,
-    jsUrl: helper.cdn('artalk', '2.9.1', 'dist/Artalk.js'),
-    cssUrl: helper.cdn('artalk', '2.9.1', 'dist/Artalk.css'),
+    preferRemoteConf: comment.prefer_remote_conf,
+    jsUrl: helper.cdn('artalk', '2.10.0', 'dist/Artalk.js'),
+    cssUrl: helper.cdn('artalk', '2.10.0', 'dist/Artalk.css'),
+    localeUrls: localeNames.map((name) => helper.cdn('artalk', '2.10.0', `dist/i18n/${name}.js`)),
   };
 });
 
