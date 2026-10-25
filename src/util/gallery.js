@@ -105,7 +105,10 @@ function installGallery(window) {
 
   function enhance(container) {
     container.querySelectorAll('img:not(.not-gallery-item)').forEach((image) => {
-      if (image.closest('a')) return;
+      // Third-party SDK icons are controls, not article images. Script-load retries also
+      // scan icons inserted after the article's initial enhancement.
+      if (image.closest('a, .sharethis-inline-share-buttons, .a2a_kit, [data-share-provider]'))
+        return;
       const link = document.createElement('a');
       link.className = 'gallery-item';
       const src = image.getAttribute('src');

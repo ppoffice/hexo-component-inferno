@@ -87,6 +87,39 @@ test('Basic enhancement works without jQuery or theme code and creates captions 
   expect(document.querySelectorAll('script, style, link')).toHaveLength(0);
 });
 
+test.each(['sharethis-inline-share-buttons', 'a2a_kit', 'custom-share'])(
+  'Never enhance %s SDK images, including icons arriving before subsequent script loads',
+  (className) => {
+    const attribute = className === 'custom-share' ? 'data-share-provider="custom"' : '';
+    const window = setup(`<article class="article">
+      <img src="/article.png" alt="Article">
+      <div id="sharing" class="${className}" ${attribute}>
+        <span><img src="/facebook.svg" alt="Facebook sharing button"></span>
+      </div>
+    </article>`);
+    const { document, HexoGallery } = window;
+    const { light } = plugins(window);
+    const sharing = document.querySelector('#sharing');
+    HexoGallery.init(document, enabled);
+    expect(sharing.querySelector('a, .caption')).toBe(null);
+    expect(document.querySelectorAll('.gallery-item')).toHaveLength(1);
+    expect(light.mock.calls[0][1].dynamicEl).toEqual([
+      expect.objectContaining({ src: 'https://example.com/article.png' }),
+    ]);
+
+    const icon = document.createElement('img');
+    icon.src = '/late-sdk.svg';
+    icon.alt = 'Late sharing button';
+    sharing.appendChild(icon);
+    scriptLoaded(window);
+    HexoGallery.init(document, enabled);
+    expect(sharing.querySelector('a, .caption')).toBe(null);
+    expect(icon.parentNode).toBe(sharing);
+    expect(document.querySelectorAll('.gallery-item')).toHaveLength(1);
+    expect(light).toHaveBeenCalledTimes(1);
+  },
+);
+
 test('lightGallery is independent of jQuery, refreshes metadata and owns one binding per article', () => {
   const window = setup(
     '<article class="article"><img src="/a.png" alt="A"></article><article class="article"><img src="/b.png" alt="B"></article>',
