@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/share/sharejs.json",
-  "description": "Web Share buttons with AddToAny fallback",
+  "description": "Share.js (retired; select web_share or addtoany)",
   "type": "object",
   "properties": {
     "type": {

@@ -16,24 +16,12 @@ const { deprecate } = require('../../util/deprecate');
  */
 class AddThis extends Component {
   render() {
-    deprecate(
-      'share.addthis',
-      'Service shut down. Use AddToAny or ShareThis.',
-    );
-    const { installUrl } = this.props;
-    if (!installUrl) {
-      return (
-        <div class="notification is-danger">
-          You need to set <code>install_url</code> to use AddThis. Please set it in{' '}
-          <code>_config.yml</code>.
-        </div>
-      );
-    }
+    deprecate('share.addthis', 'Service shut down. Use AddToAny or ShareThis.');
     return (
-      <>
-        <div class="addthis_inline_share_toolbox"></div>
-        <script src={installUrl} defer={true}></script>
-      </>
+      <div class="notification is-danger" role="status">
+        AddThis shut down on May 31, 2023. Set <code>share.type</code> to <code>web_share</code>,{' '}
+        <code>addtoany</code>, or <code>sharethis</code>.
+      </div>
     );
   }
 }

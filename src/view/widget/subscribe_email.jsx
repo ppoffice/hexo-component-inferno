@@ -21,37 +21,18 @@ const { deprecate } = require('../../util/deprecate');
  */
 class SubscribeEmail extends Component {
   render() {
-    deprecate(
-      'widget.subscribe_email',
-      'FeedBurner email ended. Use follow.it.',
-    );
-    const { title, description, feedburnerId, buttonTitle } = this.props;
+    deprecate('widget.subscribe_email', 'FeedBurner email ended. Use follow.it.');
+    const { title } = this.props;
 
     return (
       <div class="card widget" data-type="subscribe-email">
         <div class="card-content">
           <div class="menu">
             <h3 class="menu-label">{title}</h3>
-            <form
-              action="https://feedburner.google.com/fb/a/mailverify"
-              method="post"
-              target="popupwindow"
-              onsubmit={`window.open('https://feedburner.google.com/fb/a/mailverify?uri=${feedburnerId}','popupwindow','scrollbars=yes,width=550,height=520');return true`}>
-              <input type="hidden" value={feedburnerId} name="uri" />
-              <input type="hidden" name="loc" value="en_US" />
-              <div class="field has-addons">
-                <div class="control has-icons-left is-expanded">
-                  <input class="input" name="email" type="email" placeholder="Email" />
-                  <span class="icon is-small is-left">
-                    <i class="fas fa-envelope"></i>
-                  </span>
-                </div>
-                <div class="control">
-                  <input class="button" type="submit" value={buttonTitle} />
-                </div>
-              </div>
-              {description ? <p class="help">{description}</p> : null}
-            </form>
+            <div class="notification is-danger" role="status">
+              FeedBurner ended email subscriptions in July 2021. Use the <code>followit</code>{' '}
+              widget or another email subscription service.
+            </div>
           </div>
         </div>
       </div>

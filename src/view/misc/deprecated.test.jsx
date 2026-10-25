@@ -36,9 +36,9 @@ test('Baidu Share retains direct and cacheable rendering and warns only once', (
       'hexo-component-inferno: share.bdshare is deprecated. ' +
         'HTTP mixed content; use AddToAny or ShareThis.',
     );
-    expect(html).toContain('class="bdsharebuttonbox"');
-    expect(html).toContain('data-cmd="weixin"');
-    expect(html).toContain('http://bdimg.share.baidu.com/static/api/js/share.js');
+    expect(html).toContain('notification is-danger');
+    expect(html).toContain('legacy Baidu Share integration is deprecated');
+    expect(html).not.toMatch(/<script|bdsharebuttonbox/);
     expect(renderToString(<BdShare />)).toBe(html);
     expect(renderToString(<BdShare.Cacheable share={{ type: 'bdshare' }} />)).toBe(html);
     expect(warn).toHaveBeenCalledTimes(1);
@@ -67,9 +67,10 @@ describe('Configuration of the deprecated components', () => {
   });
 
   test('AddThis', () => {
-    expect(renderToString(<AddThis.Cacheable share={{ install_url: '/addthis.js' }} />)).toContain(
-      'src="/addthis.js"',
-    );
+    const html = renderToString(<AddThis.Cacheable share={{ install_url: '/addthis.js' }} />);
+    expect(html).toContain('notification is-danger');
+    expect(html).toContain('AddThis shut down');
+    expect(html).not.toContain('<script');
     expect(renderToString(<AddThis.Cacheable share={{}} />)).toContain('notification is-danger');
   });
 
@@ -81,8 +82,9 @@ describe('Configuration of the deprecated components', () => {
         helper={helper}
       />,
     );
-    expect(html).toContain('value="feed"');
-    expect(html).toContain('<p class="help">Hint</p>');
+    expect(html).toContain('notification is-danger');
+    expect(html).toContain('FeedBurner ended email subscriptions');
+    expect(html).not.toMatch(/<form|<input|mailverify/);
     expect(html).toContain('widget.subscribe_email');
     expect(
       renderToString(
