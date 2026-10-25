@@ -21,28 +21,34 @@ class GoogleCSE extends Component {
   render() {
     const { cx, hint, jsUrl } = this.props;
 
-    const css = '.searchbox .searchbox-body { background: white; }';
-
     const js1 = `(function() {
             var cx = ${toJs(cx)};
             var gcse = document.createElement('script');
             gcse.type = 'text/javascript';
             gcse.async = true;
-            gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+            gcse.src = 'https://cse.google.com/cse.js?cx=' + encodeURIComponent(cx);
+            var body = document.querySelector('.searchbox .searchbox-body');
+            gcse.onerror = function() {
+                if (!body || !body.isConnected) return;
+                body.textContent = 'Google search could not load. Check the configured cx value and your network or content blocker settings.';
+                body.setAttribute('role', 'alert');
+            };
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(gcse, s);
         })();`;
 
     return (
       <>
-        <style dangerouslySetInnerHTML={{ __html: css }}></style>
-        <div class="searchbox">
+        <div class="searchbox searchbox-google">
           <div
             class="searchbox-mask"
             style="position:absolute;bottom:0px;left:0px;right:0px;top:0px;"></div>
           <div class="searchbox-container">
             <div class="searchbox-header">
               <div class="searchbox-input-container">
+                <span class="icon" aria-hidden="true">
+                  <i class="fas fa-search"></i>
+                </span>
                 <input type="text" class="searchbox-input" placeholder={hint} />
               </div>
               <a class="searchbox-close" href="javascript:;">
@@ -51,7 +57,9 @@ class GoogleCSE extends Component {
             </div>
             {(() => {
               if (cx) {
-                const innerHtml = '<gcse:searchresults-only></gcse:searchresults-only>';
+                // The theme owns narrow-screen layout; keep one result/pagination DOM on all devices.
+                const innerHtml =
+                  '<gcse:searchresults-only mobileLayout="disabled"></gcse:searchresults-only>';
                 return (
                   <div class="searchbox-body" dangerouslySetInnerHTML={{ __html: innerHtml }}></div>
                 );

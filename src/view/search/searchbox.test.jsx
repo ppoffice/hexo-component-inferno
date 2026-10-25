@@ -543,15 +543,15 @@ test('Google CSE reinitialization keeps one query handler and ignores stale debo
   // eslint-disable-next-line no-new-func
   const load = () => new Function('google', source)(google);
   load();
-  $('.searchbox-input').val('old').trigger('keydown');
+  $('.searchbox-input').val('old').trigger('input');
   load();
   jest.advanceTimersByTime(300);
   expect(element.execute).not.toHaveBeenCalled();
-  $('.searchbox-input').val('new').trigger('keydown');
+  $('.searchbox-input').val('new').trigger('input');
   jest.advanceTimersByTime(300);
   expect(element.execute).toHaveBeenCalledTimes(1);
   expect(element.execute).toHaveBeenCalledWith('new');
-  $('.searchbox-input').val('').trigger('keydown');
+  $('.searchbox-input').val('').trigger('input');
   jest.advanceTimersByTime(300);
   expect(element.clearAllResults).toHaveBeenCalledTimes(1);
 });

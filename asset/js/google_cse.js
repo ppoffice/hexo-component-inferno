@@ -20,7 +20,7 @@
   }
 
   $(document).on(
-    'keydown.googleSearch',
+    'input.googleSearch',
     '.searchbox-input',
     debounce(function () {
       if (!controller.isCurrent()) return;
