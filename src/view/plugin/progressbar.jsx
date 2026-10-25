@@ -15,11 +15,19 @@ const { cacheComponent } = require('../../util/cache');
 class ProgressBar extends Component {
   render() {
     const { jsUrl } = this.props;
-    const css = `.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}`;
+    const css = `.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:3px}`;
+    const js = `window.paceOptions = Object.assign({}, window.paceOptions, {
+      restartOnPushState: false,
+      restartOnRequestAfter: false
+    });
+    document.addEventListener('pjax:send', function () {
+      if (window.Pace) window.Pace.restart();
+    });`;
 
     return (
       <>
         <style>{css}</style>
+        <script dangerouslySetInnerHTML={{ __html: js }}></script>
         <script src={jsUrl}></script>
       </>
     );
