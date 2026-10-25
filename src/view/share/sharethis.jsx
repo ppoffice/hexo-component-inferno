@@ -4,6 +4,7 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * ShareThis share buttons JSX component.
@@ -14,7 +15,7 @@ const { cacheComponent } = require('../../util/cache');
  */
 class ShareThis extends Component {
   render() {
-    const { installUrl } = this.props;
+    const { installUrl, url, title } = this.props;
     if (!installUrl) {
       return (
         <div class="notification is-danger">
@@ -23,10 +24,31 @@ class ShareThis extends Component {
         </div>
       );
     }
+    const initialize = `
+      if (!container || !container.isConnected || container.querySelector('.st-btn')) return;
+      var sdk = window.__sharethis__;
+      // Reuse the account settings when PJAX replaces the container.
+      if (sdk && sdk.config && typeof sdk.load === 'function') {
+        var settings = Object.assign({}, sdk.config['inline-share-buttons']);
+        if (container.dataset.url) settings.url = container.dataset.url;
+        if (container.dataset.title) settings.title = container.dataset.title;
+        sdk.load('inline-share-buttons', settings);
+      }`;
     return (
       <>
-        <div class="sharethis-inline-share-buttons"></div>
-        <script src={installUrl} defer={true}></script>
+        <div
+          id="sharethis-share"
+          class="sharethis-inline-share-buttons"
+          data-share-provider="sharethis"
+          data-url={url}
+          data-title={title}></div>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+          var container = document.getElementById('sharethis-share');
+          ${loadScripts(installUrl, initialize)}
+        })();`,
+          }}></script>
       </>
     );
   }
@@ -43,10 +65,12 @@ class ShareThis extends Component {
  * <ShareThis.Cacheable share={{ install_url: '******' }} />
  */
 ShareThis.Cacheable = cacheComponent(ShareThis, 'share.sharethis', (props) => {
-  const { share } = props;
+  const { share, page = {} } = props;
 
   return {
     installUrl: share.install_url,
+    url: page.permalink,
+    title: page.title,
   };
 });
 
