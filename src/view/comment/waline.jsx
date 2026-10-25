@@ -28,7 +28,6 @@ const { getAppearance } = require('../../util/appearance');
  *     highlighter={true}
  *     texRenderer={false}
  *     search={true}
- *     visitor={false}
  *     pageview={false}
  *     comment={false}
  *     copyright={true}
@@ -68,10 +67,10 @@ class Waline extends Component {
     }
     // Without the dark option, follow the appearance of the page: the system color scheme for the auto
     // appearance, or the data-appearance="dark" attribute of <html> otherwise
-    const darkOption =
-      dark === null || typeof dark === 'undefined' || dark === ''
-        ? `${getAppearance()} === 'auto' ? 'auto' : 'html[data-appearance="dark"]'`
-        : toJs(dark);
+    const followAppearance = dark === null || typeof dark === 'undefined' || dark === '';
+    const darkOption = followAppearance
+      ? `${getAppearance()} === 'auto' ? 'auto' : 'html[data-appearance="dark"]'`
+      : toJs(dark);
     // A path, such as /posts/hello/, or a JavaScript expression, such as window.location.pathname
     let pathCode = path || 'window.location.pathname';
     if (pathCode.startsWith('/')) {
@@ -80,17 +79,35 @@ class Waline extends Component {
     // Use a classic script with a dynamic import instead of a module script, so that PJAX, which only
     // runs classic scripts, initializes Waline again after switching pages. The previous instance,
     // whose element PJAX has replaced, is destroyed first.
-    const js = `import(${toJs(jsUrl)}).then(function (Waline) {
+    const appearanceObserver = followAppearance
+      ? `var instance = window.__walineInstance;
+        if (instance) {
+          var observer = new MutationObserver(function () {
+            instance.update({ dark: ${darkOption}, path: path });
+          });
+          observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-appearance'] });
+          var destroy = instance.destroy;
+          instance.destroy = function () {
+            observer.disconnect();
+            destroy.call(instance);
+          };
+        }`
+      : '';
+    const js = `(function () {
+      var container = document.getElementById('waline-thread');
+      var path = ${pathCode};
+      return import(${toJs(jsUrl)}).then(function (Waline) {
+        if (!container || !container.isConnected || document.getElementById('waline-thread') !== container) return;
         if (window.__walineInstance) {
             window.__walineInstance.destroy();
         }
         window.__walineInstance = Waline.init({
             el: '#waline-thread',
             serverURL: ${toJs(serverURL)},
-            path: ${pathCode},
+            path: path,
             ${lang ? `lang: ${toJs(lang)},` : ''}
             ${locale ? `locale: ${toJs(locale)},` : ''}
-            ${emoji ? `emoji: ${toJs(emoji)},` : ''}
+            ${emoji !== null && typeof emoji !== 'undefined' ? `emoji: ${toJs(emoji)},` : ''}
             dark: ${darkOption},
             ${meta ? `meta: ${toJs(meta)},` : ''}
             ${Array.isArray(requiredMeta) ? `requiredMeta: ${toJs(requiredMeta)},` : ''}
@@ -103,9 +120,11 @@ class Waline extends Component {
             ${search === false ? `search: false,` : ''}
             ${typeof pageview !== 'undefined' ? `pageview: ${toJs(pageview)},` : ''}
             ${typeof comment !== 'undefined' ? `comment: ${toJs(comment)},` : ''}
-            ${`copyright: ${toJs(copyright)},`}
+            noCopyright: ${toJs(copyright === false)},
         });
-    });`;
+        ${appearanceObserver}
+      });
+    })();`;
     return (
       <>
         <div id="waline-thread" class="content"></div>
@@ -149,11 +168,12 @@ class Waline extends Component {
  */
 Waline.Cacheable = cacheComponent(Waline, 'comment.waline', (props) => {
   const { comment, helper, page, config } = props;
+  const language = comment.lang || page.lang || page.language || config.language;
 
   return {
     serverURL: comment.server_url,
     path: comment.path,
-    lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
+    lang: (Array.isArray(language) ? language[0] : language) || 'zh-CN',
     locale: comment.locale,
     emoji: comment.emoji,
     dark: comment.dark,
@@ -171,8 +191,8 @@ Waline.Cacheable = cacheComponent(Waline, 'comment.waline', (props) => {
     pageview: comment.pageview,
     comment: comment.comment,
     copyright: comment.copyright,
-    jsUrl: helper.cdn('@waline/client', '3.3.0', 'dist/waline.js'),
-    cssUrl: helper.cdn('@waline/client', '3.3.0', 'dist/waline.css'),
+    jsUrl: helper.cdn('@waline/client', '3.16.1', 'dist/waline.js'),
+    cssUrl: helper.cdn('@waline/client', '3.16.1', 'dist/waline.css'),
   };
 });
 

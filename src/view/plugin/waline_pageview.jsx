@@ -26,14 +26,18 @@ class WalinePageview extends Component {
     // Waline publishes the counter as an ES module, so load it with a dynamic import
     const js = `(function () {
         var abort = null;
+        var generation = 0;
         function count() {
+          var path = window.location.pathname;
+          var current = ++generation;
           import(${toJs(jsUrl)}).then(function (Waline) {
+            if (current !== generation || path !== window.location.pathname) return;
             if (abort) {
               abort();
             }
             abort = Waline.pageviewCount({
               serverURL: ${toJs(serverURL)},
-              path: window.location.pathname,
+              path: path,
             });
           });
         }
@@ -75,7 +79,7 @@ WalinePageview.Cacheable = cacheComponent(WalinePageview, 'plugin.walinepageview
   }
   return {
     serverURL,
-    jsUrl: helper.cdn('@waline/client', '3.3.0', 'dist/pageview.js'),
+    jsUrl: helper.cdn('@waline/client', '3.16.1', 'dist/pageview.js'),
   };
 });
 

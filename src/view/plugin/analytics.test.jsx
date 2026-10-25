@@ -150,7 +150,7 @@ describe('Waline page view counter', () => {
           return () => calls.push(['abort']);
         },
       });
-    const jsUrl = '/cdn/@waline/client@3.3.0/dist/pageview.js';
+    const jsUrl = '/cdn/@waline/client@3.16.1/dist/pageview.js';
     const path = window.location.pathname;
     const code = render(true).textContent.replace('import(', 'loadWaline(');
     // eslint-disable-next-line no-new-func

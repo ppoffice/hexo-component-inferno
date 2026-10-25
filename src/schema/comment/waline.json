@@ -19,7 +19,32 @@
     "lang": {
       "type": "string",
       "description": "Display language.",
-      "enum": ["zh", "zh-CN", "zh-TW", "en", "en-US", "jp", "jp-JP", "pt-BR", "ru", "ru-RU", null],
+      "enum": [
+        "zh",
+        "zh-CN",
+        "zh-TW",
+        "en",
+        "en-US",
+        "jp",
+        "jp-JP",
+        "pt-BR",
+        "ru",
+        "ru-RU",
+        "fr",
+        "fr-FR",
+        "es",
+        "es-MX",
+        "de",
+        "id",
+        "id-ID",
+        "it",
+        "it-IT",
+        "ko",
+        "ko-KR",
+        "vi",
+        "vi-VN",
+        null
+      ],
       "default": "zh-CN",
       "nullable": true
     },
@@ -29,7 +54,7 @@
       "nullable": true
     },
     "emoji": {
-      "type": "array",
+      "type": ["array", "boolean"],
       "items": {
         "oneOf": [
           {
@@ -167,7 +192,7 @@
     },
     "copyright": {
       "type": "boolean",
-      "description": "Whether show copyright and version in footer.",
+      "description": "Show copyright and version in the footer",
       "default": true,
       "nullable": true
     }

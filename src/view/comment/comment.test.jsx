@@ -259,6 +259,7 @@ test('Isso adds a new script every time', () => {
 function renderWaline(element) {
   const container = document.createElement('div');
   container.innerHTML = renderToString(element);
+  document.body.appendChild(container);
   const script = container.querySelector('script');
   // PJAX only runs classic scripts, so the script must not be a module
   expect(script.hasAttribute('type')).toBe(false);
@@ -269,7 +270,7 @@ function renderWaline(element) {
     return Promise.resolve({
       init: (options) => {
         calls.push(['init', options]);
-        return { destroy: () => calls.push(['destroy']) };
+        return { update: () => {}, destroy: () => calls.push(['destroy']) };
       },
     });
   };
@@ -300,7 +301,7 @@ describe('Waline options', () => {
     await renderWaline(
       <Waline.Cacheable comment={comment} helper={helper} page={page} config={config} />,
     )();
-    expect(calls[0]).toEqual(['import', '/cdn/@waline/client@3.3.0/dist/waline.js']);
+    expect(calls[0]).toEqual(['import', '/cdn/@waline/client@3.16.1/dist/waline.js']);
     return calls[1][1];
   }
 
@@ -318,7 +319,7 @@ describe('Waline options', () => {
       pageSize: 10,
       pageview: false,
       comment: false,
-      copyright: true,
+      noCopyright: false,
     });
   });
 
@@ -363,7 +364,7 @@ describe('Waline options', () => {
       search: false,
       pageview: true,
       comment: true,
-      copyright: false,
+      noCopyright: true,
     });
   });
 
