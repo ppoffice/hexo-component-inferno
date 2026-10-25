@@ -38,6 +38,11 @@ class CookieConsent extends Component {
     const { message, dismiss, allow, deny, link, policy } = text;
 
     const gated = type === 'opt-in' || type === 'opt-out';
+    const consentOptions = gated
+      ? `revokeBtn: '<button type="button" class="cc-revoke {{classes}}">{{policy}}</button>',
+         onStatusChange: function (status) { window.hexoComponentConsent.setStatus(status); },
+         onRevokeChoice: function () { this.setStatus('deny'); },`
+      : '';
     const js = `${gated ? consentRuntime(type) : ''}
       if (!window.hexoComponentCookieConsentPopup) {
       window.hexoComponentCookieConsentPopup = true;
@@ -46,11 +51,7 @@ class CookieConsent extends Component {
         theme: ${toJs(theme)},
         static: ${toJs(this.props.static)},
         position: ${toJs(position)},
-        ${gated ? `
-        revokeBtn: '<button type="button" class="cc-revoke {{classes}}">{{policy}}</button>',
-        onStatusChange: function (status) { window.hexoComponentConsent.setStatus(status); },
-        onRevokeChoice: function () { this.setStatus('deny'); },
-        ` : ''}
+        ${consentOptions}
         content: {
           message: ${toJs(message)},
           dismiss: ${toJs(dismiss)},

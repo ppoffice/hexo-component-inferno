@@ -46,7 +46,6 @@ function setup(response = { contributions }) {
   });
   const { window } = dom;
   const observers = [];
-  window.AbortController = global.AbortController;
   window.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => response });
   window.ResizeObserver = class {
     constructor(callback) {

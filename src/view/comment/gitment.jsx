@@ -28,10 +28,7 @@ const { deprecate } = require('../../util/deprecate');
  */
 class Gitment extends Component {
   render() {
-    deprecate(
-      'comment.gitment',
-      'Sign-in no longer works. Use Giscus or Utterances.',
-    );
+    deprecate('comment.gitment', 'Sign-in no longer works. Use Giscus or Utterances.');
     const {
       id,
       repo,

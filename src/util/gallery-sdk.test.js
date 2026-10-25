@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom');
 const jquery = require('jquery');
+const { transformSync } = require('@babel/core');
 const installer = require('./gallery');
 
 // Exact CDN releases, installed as test dependencies; no test-time network requests.
@@ -9,9 +10,18 @@ const lightSource = fs.readFileSync(require.resolve('lightgallery'), 'utf8');
 // The legacy eslint resolver does not understand this package's CSS export.
 // eslint-disable-next-line node/no-missing-require
 const justifiedStyle = require.resolve('justified-gallery/style.css');
-const justifiedSource = fs
-  .readFileSync(path.resolve(path.dirname(justifiedStyle), '../justified-gallery.js'), 'utf8')
-  .replace(/export \{ (\w+) as JustifiedGallery \};/, 'window.JustifiedGallery = $1;');
+// This is a browser SDK (Node >=18), but the package itself still supports Node 14.
+// Adapt syntax for the test runtime without replacing the released implementation.
+const justifiedSource = transformSync(
+  fs
+    .readFileSync(path.resolve(path.dirname(justifiedStyle), '../justified-gallery.js'), 'utf8')
+    .replace(/export \{ (\w+) as JustifiedGallery \};/, 'window.JustifiedGallery = $1;'),
+  {
+    babelrc: false,
+    configFile: false,
+    presets: [[require.resolve('@babel/preset-env'), { targets: { node: '14' }, modules: false }]],
+  },
+).code;
 const enabled = { lightGallery: true, justifiedGallery: true };
 let dom;
 
@@ -29,7 +39,7 @@ function setup(content = '<img src="/old.png" alt="Old">') {
   window.jQuery = $;
   window.$ = $;
   window.eval(lightSource);
-  // jsdom cannot execute ESM: only replace the export, leaving the released implementation intact.
+  // jsdom cannot execute ESM; the source above adapts the export and unsupported syntax.
   window.eval(justifiedSource);
   window.eval(installer);
   return { window, $, root: window.document.querySelector('article') };

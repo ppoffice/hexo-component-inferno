@@ -24,9 +24,9 @@ afterEach(() => {
 });
 
 test('use theme responsiveness instead of Google mobile dividers and alternate pagination', () => {
-  expect(
-    document.querySelector('gcse\\:searchresults-only').getAttribute('mobilelayout'),
-  ).toBe('disabled');
+  expect(document.querySelector('gcse\\:searchresults-only').getAttribute('mobilelayout')).toBe(
+    'disabled',
+  );
 });
 
 test('pasting or clearing the input executes or clears the search without a keydown', () => {

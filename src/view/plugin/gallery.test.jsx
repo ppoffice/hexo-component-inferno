@@ -29,7 +29,8 @@ test('Keep the head CSS URLs and body SDK script URLs and defer attributes', () 
   expect(scripts.filter((script) => script.src).every((script) => script.defer)).toBe(true);
   // Optional Gallery output must not change the global data-pjax node count on enabled pages.
   expect(scripts.some((script) => script.hasAttribute('data-pjax'))).toBe(false);
-  expect(scripts[1].textContent).toContain(installer);
+  // HTML parsing normalizes CRLF in inline scripts to LF.
+  expect(scripts[1].textContent.replace(/\r\n/g, '\n')).toContain(installer.replace(/\r\n/g, '\n'));
   expect(scripts[1].textContent).toContain('window.HexoGallery.init(document');
   expect(scripts[2].type).toBe('module');
   expect(scripts[2].textContent).toContain(

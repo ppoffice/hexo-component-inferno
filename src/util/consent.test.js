@@ -73,7 +73,9 @@ describe('analytics consent boundary', () => {
 
   test('cleanup failures cannot prevent the withdrawal reload boundary', () => {
     install('opt-in', 'allow');
-    api.register('custom', jest.fn(), () => { throw new Error('vendor cleanup failed'); });
+    api.register('custom', jest.fn(), () => {
+      throw new Error('vendor cleanup failed');
+    });
     expect(() => api.revoke()).toThrow('vendor cleanup failed');
     expect(api.allowed()).toBe(false);
     expect(context.window.location.reload).toHaveBeenCalledTimes(1);
@@ -82,9 +84,12 @@ describe('analytics consent boundary', () => {
 
   test('Matomo initializes at the current PJAX page only after allow, and denial blocks a fresh document', () => {
     install('opt-in');
-    const markup = renderToStaticMarkup(createElement(Matomo, {
-      url: 'https://matomo.example/', siteId: '1',
-    }));
+    const markup = renderToStaticMarkup(
+      createElement(Matomo, {
+        url: 'https://matomo.example/',
+        siteId: '1',
+      }),
+    );
     const code = gateMarkup('matomo', markup, 'opt-in');
     // Execute restored inline scripts as a browser would, but never load a network resource.
     const append = dom.window.document.head.appendChild.bind(dom.window.document.head);
@@ -101,10 +106,15 @@ describe('analytics consent boundary', () => {
     expect(dom.window.document.querySelectorAll('script[src]')).toHaveLength(0);
     api.setStatus('allow');
     expect(context.window._paq.filter((entry) => entry[0] === 'trackPageView')).toHaveLength(1);
-    expect(dom.window.document.querySelector('script[src]').src).toBe('https://matomo.example/matomo.js');
+    expect(dom.window.document.querySelector('script[src]').src).toBe(
+      'https://matomo.example/matomo.js',
+    );
     dom.window.history.pushState(null, '', '/after-allow/');
     dom.window.document.dispatchEvent(new dom.window.Event('pjax:complete'));
-    expect(context.window._paq).toContainEqual(['setCustomUrl', 'https://example.com/after-allow/']);
+    expect(context.window._paq).toContainEqual([
+      'setCustomUrl',
+      'https://example.com/after-allow/',
+    ]);
     expect(context.window._paq.filter((entry) => entry[0] === 'trackPageView')).toHaveLength(2);
     api.revoke();
     expect(context.window.location.reload).toHaveBeenCalledTimes(1);
@@ -118,7 +128,8 @@ describe('analytics consent boundary', () => {
 
   test('scripts and noscript pixels remain inert until allow; attributes and inline order survive', () => {
     install('opt-in');
-    const markup = '<script>window.queue = [];</script>' +
+    const markup =
+      '<script>window.queue = [];</script>' +
       '<script src="https://tracker.example/sdk.js" data-id="42" defer></script>' +
       '<noscript><img src="https://tracker.example/pixel"></noscript>';
     const code = gateMarkup('tracker', markup, 'opt-in');

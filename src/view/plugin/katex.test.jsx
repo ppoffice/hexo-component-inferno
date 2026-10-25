@@ -20,7 +20,9 @@ test('Use one KaTeX release for core, CSS, auto-render and mhchem, in deferred s
     cdn.mock.results[3].value,
   ]);
   expect(scripts.every((script) => script.defer)).toBe(true);
-  expect(container.querySelector('script:not([src])').textContent).toContain('renderMathInElement(element);');
+  expect(container.querySelector('script:not([src])').textContent).toContain(
+    'renderMathInElement(element);',
+  );
 });
 
 test('Do not load KaTeX in the head', () => {

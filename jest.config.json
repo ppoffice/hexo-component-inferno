@@ -17,7 +17,9 @@
         ],
         "\\.[jt]sx?$": "babel-jest"
       },
-      "transformIgnorePatterns": ["[\\\\/]node_modules[\\\\/](?!(.*[\\\\/]node_modules[\\\\/])?(strip-ansi|ansi-regex)[\\\\/])"]
+      "transformIgnorePatterns": [
+        "[\\\\/]node_modules[\\\\/](?!(.*[\\\\/]node_modules[\\\\/])?(strip-ansi|ansi-regex)[\\\\/])"
+      ]
     },
     {
       "displayName": "inferno",
@@ -34,7 +36,9 @@
         ],
         "\\.[jt]sx?$": "babel-jest"
       },
-      "transformIgnorePatterns": ["[\\\\/]node_modules[\\\\/](?!(.*[\\\\/]node_modules[\\\\/])?(strip-ansi|ansi-regex)[\\\\/])"],
+      "transformIgnorePatterns": [
+        "[\\\\/]node_modules[\\\\/](?!(.*[\\\\/]node_modules[\\\\/])?(strip-ansi|ansi-regex)[\\\\/])"
+      ],
       "testPathIgnorePatterns": ["<rootDir>/lib/view/widget/widgets\\.test\\.js$"]
     }
   ]
