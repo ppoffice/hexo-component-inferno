@@ -1,6 +1,6 @@
 /**
  * MathJax math renderer plugin JSX component.
- * @module view/plugin/katex
+ * @module view/plugin/mathjax
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
@@ -10,32 +10,26 @@ const { cacheComponent } = require('../../util/cache');
  *
  * @see https://www.mathjax.org/
  * @example
- * <Mathjax jsUrl="/path/to/mathjax.js" />
+ * <Mathjax jsUrl="/mathjax/tex-mml-chtml.js" fontPath="/mathjax-newcm-font" />
  */
 class Mathjax extends Component {
   render() {
-    const { jsUrl } = this.props;
+    const { jsUrl, fontPath } = this.props;
 
-    const js = `MathJax = {
+    const js = `window.MathJax = window.MathJax || {
       tex: {
         inlineMath: [['$', '$'], ['\\\\(', '\\\\)']]
       },
-      svg: {
-        fontCache: 'global'
-      },
-      chtml: {
-        matchFontHeight: false
+      output: {
+        font: 'mathjax-newcm',
+        ${fontPath ? `fontPath: ${JSON.stringify(fontPath).replace(/</g, '\\u003c')}` : ''}
       }
     };`;
 
     return (
       <>
-        <script
-          type="text/javascript"
-          id="MathJax-script"
-          async
-          dangerouslySetInnerHTML={{ __html: js }}></script>
-        <script src={jsUrl}></script>
+        <script type="text/javascript" dangerouslySetInnerHTML={{ __html: js }}></script>
+        <script id="MathJax-script" defer src={jsUrl}></script>
       </>
     );
   }
@@ -59,7 +53,10 @@ Mathjax.Cacheable = cacheComponent(Mathjax, 'plugin.mathjax', (props) => {
     return null;
   }
   return {
-    jsUrl: helper.cdn('mathjax', '3.2.2', 'es5/tex-mml-chtml.js'),
+    jsUrl: helper.cdn('mathjax', '4.1.3', 'tex-mml-chtml.js'),
+    fontPath: helper
+      .cdn('@mathjax/mathjax-newcm-font', '4.1.3', 'chtml.js')
+      .replace(/\/chtml\.js$/, ''),
   };
 });
 

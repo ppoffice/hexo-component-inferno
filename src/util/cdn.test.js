@@ -1,5 +1,40 @@
 const { resolveCdn, resolveFontCdn, resolveIconCdn } = require('./cdn');
 
+test('MathJax and its font support independent local resource roots', () => {
+  const providers = {
+    cdn: 'cdnjs',
+    cdn_overrides: {
+      mathjax: '/blog/vendor/mathjax/${filename}',
+      '@mathjax/mathjax-newcm-font': '/blog/vendor/mathjax-newcm-font/${filename}',
+    },
+  };
+  expect(resolveCdn(providers, 'mathjax', '4.1.3', 'tex-mml-chtml.js')).toBe(
+    '/blog/vendor/mathjax/tex-mml-chtml.js',
+  );
+  expect(resolveCdn(providers, '@mathjax/mathjax-newcm-font', '4.1.3', 'chtml.js')).toBe(
+    '/blog/vendor/mathjax-newcm-font/chtml.js',
+  );
+});
+
+test.each(['jsdelivr', 'unpkg', 'cdnjs', 'loli'])(
+  'MathJax v4 and its separate font resolve with %s',
+  (cdn) => {
+    const prefix = {
+      jsdelivr: 'https://cdn.jsdelivr.net/npm/mathjax@4.1.3/',
+      unpkg: 'https://unpkg.com/mathjax@4.1.3/',
+      cdnjs: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.1.3/',
+      loli: 'https://cdnjs.loli.net/ajax/libs/mathjax/4.1.3/',
+    }[cdn];
+    expect(resolveCdn({ cdn }, 'mathjax', '4.1.3', 'tex-mml-chtml.js')).toBe(
+      prefix + 'tex-mml-chtml.js',
+    );
+    const fontHost = cdn === 'unpkg' ? 'unpkg.com' : 'cdn.jsdelivr.net/npm';
+    expect(resolveCdn({ cdn }, '@mathjax/mathjax-newcm-font', '4.1.3', 'chtml.js')).toBe(
+      `https://${fontHost}/@mathjax/mathjax-newcm-font@4.1.3/chtml.js`,
+    );
+  },
+);
+
 test.each([
   ['algoliasearch', '5.60.0', 'lite/builds/browser.umd.js'],
   ['instantsearch.js', '4.120.0', 'instantsearch.production.min.js'],

@@ -24,6 +24,8 @@ const PROVIDERS = {
 };
 
 const CDNJS_FIXTURES = {
+  // MathJax v4 distributes fonts as separate npm packages, not on cdnjs.
+  '@mathjax/mathjax-newcm-font': () => [],
   disqusjs: (ver, fname) => [
     'disqusjs',
     ver,
