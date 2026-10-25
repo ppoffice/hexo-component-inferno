@@ -16,5 +16,5 @@ test('Correctly format to YAML string', () => {
   const expected = fs.readFileSync(path.join(__dirname, '../../fixture/misc/stringified.yaml'), {
     encoding: 'utf8',
   });
-  expect(yaml.stringify(example)).toBe(expected);
+  expect(yaml.stringify(example)).toBe(expected.replace(/\r\n/g, '\n'));
 });

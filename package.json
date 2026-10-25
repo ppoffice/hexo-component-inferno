@@ -12,12 +12,12 @@
   "scripts": {
     "test": "jest",
     "test-cov": "jest --coverage",
-    "lint": "eslint '{src,asset,fixture}/**/*.{js,jsx}'",
+    "lint": "eslint \"{src,asset,fixture}/**/*.{js,jsx}\"",
     "_format": "prettier \"*.{json,babelrc,prettierrc,md}\" \"{.github,*[^lib]}/**/*.{js,jsx,json,yml}\"",
     "format": "npm run _format -- --write",
     "format-check": "npm run _format -- --check",
     "docs": "jsdoc src/**/* -d doc -t node_modules/minami",
-    "build": "babel src --out-dir lib && mkdir -p lib/schema && cp -r src/schema/. lib/schema",
+    "build": "babel src --out-dir lib --copy-files",
     "clean": "rm -rf lib doc coverage",
     "prepare": "npm run build"
   },

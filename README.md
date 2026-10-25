@@ -13,8 +13,7 @@ for building [Hexo](https://hexo.io/) themes in JSX. It is the component library
   plugins, and SEO metadata, each with a JSON schema for its configuration.
 - **Hexo extensions**: generators, helpers, tag plugins, and a filter that merges the theme config into
   the template locals.
-- **Configuration tools**: a JSON schema loader that validates the theme config and generates its default
-  values, and a framework for migrating configs between theme versions.
+- **Configuration tools**: a JSON schema loader that validates the theme config and generates commented defaults.
 
 ## Requirements
 
@@ -104,9 +103,7 @@ const result = schema.validate(themeConfig); // true, or a list of errors
 const defaults = schema.getDefaultValue().toYaml(); // a commented default config
 ```
 
-For example, `{ "$ref": "/comment/giscus.json" }` in your schema refers to the Giscus schema of this
-library. `lib/core/migrate` upgrades existing configs between theme versions with a chain of `Migration`
-classes.
+For example, `{ "$ref": "/comment/giscus.json" }` in your schema refers to the Giscus schema of this library.
 
 ### Utilities
 
@@ -124,24 +121,14 @@ classes.
 
 | Category  | Components                                                                                                                                                                                                                             |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `comment` | Artalk, Beaudar, Changyan, Cusdis, Disqus, DisqusJS, Facebook, Giscus, Gitalk, Gitment, Isso, LiveRe, Twikoo, Utterances, Valine, Waline                                                                                               |
+| `comment` | Artalk, Beaudar, Changyan, Cusdis, Disqus, DisqusJS, Facebook, Giscus, Gitalk 2 (preview), Gitment (deprecated), Isso, LiveRe, Twikoo, Utterances, Valine (deprecated), Waline                                                                                               |
 | `search`  | Algolia, Baidu, Google CSE, Insight                                                                                                                                                                                                    |
-| `share`   | AddThis, AddToAny, Baidu Share, Share.js, ShareThis                                                                                                                                                                                    |
+| `share`   | AddThis (deprecated), AddToAny, Baidu Share (deprecated), Web Share + AddToAny, ShareThis                                                                                                                                                                       |
 | `donate`  | Afdian, Alipay, Buy Me a Coffee, Patreon, PayPal, WeChat                                                                                                                                                                               |
-| `widget`  | AdSense, archives, categories, follow.it, GitHub contribution calendar, links, profile, recent posts, email subscription, tags, table of contents                                                                                                                    |
+| `widget`  | AdSense, archives, categories, follow.it, GitHub contribution calendar, links, profile, recent posts, FeedBurner email (deprecated), tags, table of contents                                                                                                                    |
 | `plugin`  | Baidu Analytics, Bing Webmaster, Busuanzi, CNZZ, cookie consent, gallery, Google Analytics, Hotjar, KaTeX, MathJax, Matomo, outdated browser warning, progress bar, StatCounter, Twitter conversion tracking, Umami, Waline page views |
 | `misc`    | Article licensing, meta tags, Open Graph, paginator, structured data, web app                                                                                                                                                          |
 | `common`  | Article media (a thumbnail with a title and date)                                                                                                                                                                                      |
-
-The components below are deprecated because their services have shut down or are shutting down. They print
-a warning when they are rendered, and will be removed in the next major version.
-
-| Component                | Reason                                                                         | Alternatives               |
-| ------------------------ | ------------------------------------------------------------------------------ | -------------------------- |
-| `share/addthis`          | AddThis shut down on May 31, 2023.                                             | AddToAny, ShareThis        |
-| `comment/gitment`        | Gitment is no longer maintained, and its GitHub sign-in proxy no longer works. | Giscus, Utterances, Gitalk |
-| `comment/valine`         | LeanCloud, where Valine stores the comments, shuts down on January 12, 2027.   | Waline, Twikoo             |
-| `widget/subscribe_email` | Google FeedBurner stopped email subscriptions in July 2021.                    | follow.it                  |
 
 The [API documentation](https://ppoffice.github.io/hexo-component-inferno/) lists the props of every
 component and the options of every module.
