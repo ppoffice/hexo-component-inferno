@@ -33,7 +33,35 @@ class Disqus extends Component {
             this.page.identifier = ${toJs(disqusId || path)};
         };
         (function() {
-            var d = document, s = d.createElement('script');  
+            var d = document, s = d.createElement('script');
+            // Disqus parses computed link/background colors with a legacy RGB-only parser.
+            // Serialize the current theme colors to sRGB without changing the rest of the page.
+            var thread = d.getElementById('disqus_thread');
+            var canvas = d.createElement('canvas');
+            canvas.width = canvas.height = 1;
+            var context = canvas.getContext('2d');
+            function rgb(color) {
+                context.clearRect(0, 0, 1, 1);
+                context.fillStyle = color;
+                context.fillRect(0, 0, 1, 1);
+                var pixel = context.getImageData(0, 0, 1, 1).data;
+                return 'rgba(' + pixel[0] + ',' + pixel[1] + ',' + pixel[2] + ',' + pixel[3] / 255 + ')';
+            }
+            var link = d.createElement('a');
+            link.href = '#';
+            thread.appendChild(link);
+            var linkColor = rgb(getComputedStyle(link).color);
+            thread.removeChild(link);
+            var style = d.createElement('style');
+            style.textContent = '#disqus_thread a { color: ' + linkColor + '; }';
+            thread.parentNode.insertBefore(style, thread);
+            for (var node = thread; node; node = node.parentElement) {
+                var background = rgb(getComputedStyle(node).backgroundColor);
+                if (background !== 'rgba(0,0,0,0)') {
+                    thread.style.backgroundColor = background;
+                    break;
+                }
+            }
             s.src = ${toJs(`//${shortname}.disqus.com/embed.js`)};
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
