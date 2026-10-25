@@ -110,7 +110,7 @@ describe('Configuration of the deprecated components', () => {
         config={{ language: 'en' }}
       />,
     );
-    expect(html).toContain('/cdn/valine@1.4.16/dist/Valine.min.js');
+    expect(html).toContain('/cdn/valine@1.5.3/dist/Valine.min.js');
     expect(html).toContain('"en"');
   });
 });

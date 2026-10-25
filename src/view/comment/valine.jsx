@@ -36,10 +36,7 @@ const { deprecate } = require('../../util/deprecate');
  */
 class Valine extends Component {
   render() {
-    deprecate(
-      'comment.valine',
-      'LeanCloud, where Valine stores the comments, shuts down on January 12, 2027. Use Waline, Twikoo or another comment system instead.',
-    );
+    deprecate('comment.valine', 'LeanCloud closes on 2027-01-12. Use Waline or Twikoo.');
     const {
       appId,
       appKey,
@@ -132,6 +129,7 @@ class Valine extends Component {
  */
 Valine.Cacheable = cacheComponent(Valine, 'comment.valine', (props) => {
   const { comment, helper, page, config } = props;
+  const language = comment.lang || page.lang || page.language || config.language;
 
   return {
     appId: comment.app_id,
@@ -141,7 +139,7 @@ Valine.Cacheable = cacheComponent(Valine, 'comment.valine', (props) => {
     avatarForce: comment.avatar_force,
     meta: comment.meta,
     pageSize: comment.page_size,
-    lang: comment.lang || page.lang || page.language || config.language || 'zh-CN',
+    lang: (Array.isArray(language) ? language[0] : language) || 'zh-CN',
     visitor: comment.visitor,
     highlight: comment.highlight,
     recordIP: comment.record_ip,
@@ -150,7 +148,7 @@ Valine.Cacheable = cacheComponent(Valine, 'comment.valine', (props) => {
     emojiMaps: comment.emoji_maps,
     enableQQ: comment.enable_qq,
     requiredFields: comment.required_fields,
-    jsUrl: helper.cdn('valine', '1.4.16', 'dist/Valine.min.js'),
+    jsUrl: helper.cdn('valine', '1.5.3', 'dist/Valine.min.js'),
   };
 });
 
