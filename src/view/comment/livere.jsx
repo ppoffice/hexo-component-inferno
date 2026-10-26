@@ -28,7 +28,9 @@ class LiveRe extends Component {
           <livere-comment client-id={clientId}></livere-comment>
           <script
             dangerouslySetInnerHTML={{
-              __html: loadScripts('https://www.livere.org/livere-widget.js', '', { type: 'module' }),
+              __html: loadScripts('https://www.livere.org/livere-widget.js', '', {
+                type: 'module',
+              }),
             }}></script>
         </>
       );
