@@ -1,12 +1,14 @@
 const { renderToString } = require('inferno-server');
 const AddThis = require('../share/addthis');
 const BdShare = require('../share/bdshare');
+const Cusdis = require('../comment/cusdis');
 const Gitment = require('../comment/gitment');
 const SubscribeEmail = require('../widget/subscribe_email');
 const Valine = require('../comment/valine');
 
 test.each([
   ['share.addthis', <AddThis installUrl="/addthis.js" />],
+  ['comment.cusdis', <Cusdis appId="id" pageId="/page/" />],
   [
     'comment.gitment',
     <Gitment id="id" repo="repo" owner="owner" clientId="id" clientSecret="secret" />,

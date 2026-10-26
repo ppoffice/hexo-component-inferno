@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "/comment/cusdis.json",
-  "description": "Cusdis comment plugin configurations\nhttps://cusdis.com/doc",
+  "description": "Cusdis comment plugin configurations\nDEPRECATED: Cusdis was archived on July 17, 2026. Use another comment system instead.\nhttps://cusdis.com/doc",
   "type": "object",
   "properties": {
     "type": {

@@ -7,10 +7,12 @@ const { cacheComponent } = require('../../util/cache');
 const loadScripts = require('../../util/script');
 const { toJs } = loadScripts;
 const { getAppearance } = require('../../util/appearance');
+const { deprecate } = require('../../util/deprecate');
 
 /**
  * Cusdis comment JSX component.
  *
+ * @deprecated Cusdis was archived on July 17, 2026. Use another comment system instead.
  * @see https://cusdis.com/doc
  * @example
  * <Cusdis
@@ -24,6 +26,7 @@ const { getAppearance } = require('../../util/appearance');
  */
 class Cusdis extends Component {
   render() {
+    deprecate('comment.cusdis', 'Archived on 2026-07-17. Use another comment system.');
     const {
       host = 'https://cusdis.com',
       appId,
