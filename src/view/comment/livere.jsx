@@ -4,21 +4,39 @@
  */
 const { Component } = require('inferno');
 const { cacheComponent } = require('../../util/cache');
+const loadScripts = require('../../util/script');
 
 /**
  * LiveRe comment JSX component.
+ * <p>
+ * Renders the current LiveRe widget when <code>clientId</code> is set, and the legacy LiveRe City
+ * widget when only <code>uid</code> is set.
  *
- * @see https://livere.com/insight/myCode
+ * @see https://admin.livere.org/
  * @example
+ * <LiveRe clientId="******" />
  * <LiveRe uid="******" />
  */
 class LiveRe extends Component {
   render() {
-    const { uid } = this.props;
+    const { clientId, uid } = this.props;
+    if (clientId) {
+      // <livere-comment> is a custom element, so the widget also starts on pages that PJAX inserts
+      // after the script is loaded
+      return (
+        <>
+          <livere-comment client-id={clientId}></livere-comment>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: loadScripts('https://www.livere.org/livere-widget.js', '', { type: 'module' }),
+            }}></script>
+        </>
+      );
+    }
     if (!uid) {
       return (
         <div class="notification is-danger">
-          You forgot to set the <code>uid</code> for LiveRe. Please set it in{' '}
+          You forgot to set the <code>client_id</code> for LiveRe. Please set it in{' '}
           <code>_config.yml</code>.
         </div>
       );
@@ -51,12 +69,13 @@ class LiveRe extends Component {
  *
  * @see module:util/cache.cacheComponent
  * @example
- * <LiveRe.Cacheable comment={{ uid: '******' }} />
+ * <LiveRe.Cacheable comment={{ client_id: '******' }} />
  */
 LiveRe.Cacheable = cacheComponent(LiveRe, 'comment.livere', (props) => {
   const { comment } = props;
 
   return {
+    clientId: comment.client_id,
     uid: comment.uid,
   };
 });

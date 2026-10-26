@@ -7,6 +7,7 @@ const Twikoo = require('./twikoo');
 const Valine = require('./valine');
 const ChangYan = require('./changyan');
 const Isso = require('./isso');
+const LiveRe = require('./livere');
 const Waline = require('./waline');
 const Giscus = require('./giscus');
 const Utterances = require('./utterances');
@@ -225,6 +226,24 @@ test('ChangYan', () => {
   });
   expect(urls).toEqual(['https://changyan.sohu.com/upload/changyan.js']);
   expect(calls).toEqual([{ appid: 'id', conf: 'conf' }]);
+});
+
+test('LiveRe loads its widget module once for the client ID', () => {
+  renderAndRun(<LiveRe clientId="client" />);
+  expect(document.querySelector('livere-comment').getAttribute('client-id')).toBe('client');
+  const script = document.head.querySelector('script');
+  expect(script.getAttribute('type')).toBe('module');
+  expect(loadAddedScripts()).toEqual(['https://www.livere.org/livere-widget.js']);
+  renderAndRun(<LiveRe clientId="client" />);
+  expect(document.head.querySelectorAll('script').length).toBe(1);
+});
+
+test('LiveRe keeps the legacy City widget for a UID', () => {
+  const html = renderToString(<LiveRe uid="uid" />);
+  expect(html).toContain('data-uid="uid"');
+  expect(html).toContain('https://cdn-city.livere.com/js/embed.dist.js');
+  expect(html).not.toContain('livere-comment');
+  expect(renderToString(<LiveRe />)).toContain('client_id');
 });
 
 test('Run the inline script again after the library is loaded', () => {
@@ -686,6 +705,9 @@ test('Schemas of the new comment plugins', () => {
   expect(validate('artalk', { type: 'artalk' })).not.toBe(true);
   expect(validate('cusdis', { type: 'cusdis', app_id: 'app' })).toBe(true);
   expect(validate('cusdis', { type: 'cusdis', app_id: 'app', theme: 'blue' })).not.toBe(true);
+  expect(validate('livere', { type: 'livere', client_id: 'client' })).toBe(true);
+  expect(validate('livere', { type: 'livere', uid: 'uid' })).toBe(true);
+  expect(validate('livere', { type: 'livere' })).not.toBe(true);
   expect(validate('beaudar', { type: 'beaudar', repo: 'user/repo', issue_term: 'pathname' })).toBe(
     true,
   );
